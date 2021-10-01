@@ -1,0 +1,11 @@
+exports.OAUTH = "oauth:code" // Twitch oauth code
+exports.MYSQL_USER = ""; // Mysql database username, leave blank for no username
+exports.MYSQL_PASSWORD = ""; // Mysql database password, leave blank for no pass
+exports.MYSQL_DATABASE = ""; // Name of database
+exports.MYSQL_HOST = ""; // Address to host
+exports.TWITCH_CLIENT_ID = "" // Twitch client id 4Head
+exports.TWITCH_CLIENT_SECRET = "" // Twitch client secret 4Head
+exports.USERNAME = "" // Bots username
+exports.REDIRECT_URI = "SERVER/v1/twitch/code" // Redirect URI for twitch login
+exports.SERVER = "" // URL to the web server, example [http://localhost:3000, https://google.com]
+exports.PORT = 3000 // Port of web server

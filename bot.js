@@ -1,0 +1,64 @@
+require('dotenv').config()
+const tmi = require('tmi.js');
+const login = require('./credentials/login.js').options;
+const requireDir = require("require-dir");
+const fs = require('fs');
+
+const client = new tmi.client(login)
+client.connect();
+
+(async () => {
+
+    
+
+    async function messageHandler(channel, user, message, self) {
+        if(self) { return; };
+        let input = message.split(" ");
+        
+        let command = input[1];
+        
+        if (input[0] !== 'melon') {
+            return;
+        }
+        
+        const commands = requireDir("./commands");
+        
+        if(typeof commands[command] === "undefined") {
+            client.say(channel, `${user.username} undefined command FeelsDankMan`);
+            return;
+        }
+        
+        //[TODO]: Get perm done
+        const perm = 101;
+        if(perm < 100) {
+            return;
+        }
+        
+        let realchannel = channel.substring(1);
+        let realinput = input.slice(2);
+        let result = await commands[command].execute(realchannel, user, realinput, perm);
+        
+        if(!result || result === "") {
+            return;
+        }
+        
+        if(commands[command].ping === true){
+            result = `@${user['display-name']}, ${result}`;
+        }
+        
+        //[TODO]: Banphrase
+        
+        client.say(channel, result);
+    }
+
+    client.on('message', async (channel, user, message, self) => {
+        await messageHandler(channel, user, message, self);
+    });
+    
+    client.on('connected', (addr, port) => {
+        console.log(`* Connected to ${addr}:${port}`);
+    });
+
+})();
+
+module.exports = { client };

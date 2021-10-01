@@ -1,0 +1,32 @@
+{
+  "name": "melonbot",
+  "version": "1.0.0",
+  "description": "Cool twitch bot",
+  "main": "init.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node init.js",
+    "bot-dev": "nodemon --ignore ./website --ignore ./commands init.js",
+    "website-dev": "cd website && nodemon index.js",
+    "concun": "concurrently \"node init.js\" \"cd website && node index.js\"",
+    "concun-dev": "concurrently -n \"Bot,Website\" \"nodemon init.js\" \"cd website && nodemon index.js\""
+  },
+  "author": "Melon095",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.12"
+  },
+  "dependencies": {
+    "axios": "^0.21.4",
+    "concurrently": "^6.2.2",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "got": "^11.8.2",
+    "ms": "^3.0.0-canary.1",
+    "mysql": "^2.18.1",
+    "node-twitch": "^0.4.5",
+    "require-dir": "^1.2.0",
+    "tmi.js": "^1.8.5"
+  }
+}

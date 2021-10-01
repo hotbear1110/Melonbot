@@ -1,0 +1,15 @@
+{
+  "artificialDelayMilliseconds": 300,
+  "keepExistingTerminalsOpen": false,
+  "runOnStartup": true,
+  "terminals": [
+    {
+      "name": "Bot",
+      "commands": ["npm run bot-dev"]
+    }, 
+    {
+      "name": "Website",
+      "commands": ["npm run website-dev"]
+    }
+  ]
+}
