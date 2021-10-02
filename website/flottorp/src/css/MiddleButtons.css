@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Display&display=swap');
+
 .RedirectButtons {
     position: absolute;
     z-index: 15;
@@ -5,9 +7,27 @@
     left: 50%;
 }
 
-.Dropdown-Bot span {
+#Title-bot {
+    font-family: 'Noto Sans Display', sans-serif;
     font-size: xx-large;
     letter-spacing: 10px;
     margin-left: 15px;
-    background: #1f1f1f;
+}
+
+.Dropdown-Bot #basic-nav-dropdown:hover  {
+    transform: scale(2);  
+}
+
+
+/* .Dropdown-Bot:hover {
+    background-color: yellow;
+    transform: scale(1.5);
+} */
+
+#basic-nav-dropdown::after {
+    display: none;
+}
+
+#basic-nav-dropdown:hover {
+    display: absolute;
 }

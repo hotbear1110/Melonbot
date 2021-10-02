@@ -5,7 +5,7 @@ import {
   Route,
 } from "react-router-dom";
 import MiddleButtons from './components/MiddleButtons';
-
+import BotMain from "./components/BotMain"
 
 function App() {
   return (
@@ -16,7 +16,7 @@ function App() {
             <MiddleButtons />
           </Route>
           <Route exact path="/bot">
-            <p>Bot</p>
+            <BotMain />
           </Route>
           <Route exact path="/bot/login">
             <p>Bot Login</p>
