@@ -1,23 +1,28 @@
-import logo from './logo.svg';
 import './App.css';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+} from "react-router-dom";
+import MiddleButtons from './components/MiddleButtons';
+
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Router>
+        <Switch>
+          <Route exact path="/">
+            <MiddleButtons />
+          </Route>
+          <Route exact path="/bot">
+            <p>Bot</p>
+          </Route>
+          <Route exact path="/bot/login">
+            <p>Bot Login</p>
+          </Route>
+        </Switch>
+      </Router>
     </div>
   );
 }

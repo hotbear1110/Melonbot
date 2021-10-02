@@ -15,7 +15,7 @@ if (!fs.existsSync(LOG_FOLDER)) {
     fs.mkdirSync(LOG_FOLDER)
 }
 
-app.use(express.static(path.resolve(__dirname, 'twitchbot/build')))
+app.use(express.static(path.resolve(__dirname, 'flottorp/build')))
 
 app.use(cors());
 
@@ -33,8 +33,7 @@ app.use(logger)
 
 // Main
 app.get("/", async function(req, res) {
-    res.send("<h1>Hello</h1>")
-    // res.sendFile(path.resolve(__dirname, "twitchbot/build"));
+    res.sendFile(path.resolve(__dirname, "flottorp/build/index.html"));
 });
 
 // When the user clicks bot login.
@@ -45,6 +44,15 @@ app.get("/login", async function(req, res) {
     res.render("<h1>Hi</h1>")
     // res.redirect(301, path)
 })
+
+app.get("/Bot", async function(req, res) {
+    res.sendFile(path.resolve(__dirname, "flottorp/build/index.html"))
+})
+
+app.get("/bot/login", async function(req, res) {
+    res.sendFile(path.resolve(__dirname, "flottorp/build/index.html"))
+})
+
 
 // After user logs in to bot they get redirected here.
 app.get("/v1/twitch/code", async function(req, res) {
@@ -107,9 +115,7 @@ app.get("/v1/twitch/code", async function(req, res) {
     // })
 })
 
-app.get('*', async function(req, res) {
-    res.sendFile(path.resolve(__dirname, "public/index.html"))
-});
+
 
 app.use('/', router);
 app.listen(port, async function() {
