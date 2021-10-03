@@ -7,11 +7,15 @@ const readline = require('readline')
 
 exports.initDatabase = (website) => {
     var rl = readline.createInterface({
-        input: fs.createReadStream(website ? './../init.sql' : './init.sql'),
+        input: fs.createReadStream('./init.sql'),
+        // input: fs.createReadStream(website ? './../init.sql' : './init.sql'),
         terminal: false,
     });
     rl.on('line', async function(chunk) {
-        const a = await tools.query(chunk)
+        const a = await tools.query(chunk).catch((error) => {
+            fs.writeFile('INIT_DATABASE_ERROR.txt', `ERROR INITIALIZING TABLES ERROR: \r\n${error}`)
+            process.exit(1)
+        })
     })
 }
 
