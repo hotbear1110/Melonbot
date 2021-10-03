@@ -13,21 +13,24 @@
   letter-spacing: 10px;
   margin-left: 15px; }
 
+#basic-nav-dropdown {
+  transition: 500ms ease-in-out;
+}
+  
 #basic-nav-dropdown:hover {
-  transform: scale(2); }
+  transform: scale(2); 
+}
+
+.Dropdown-Bot .Title-bot {
+  transition: 500ms ease-in-out;
+} 
 
 .Dropdown-Bot:hover .Title-bot {
   transform: translateY(-20px); }
 
-#basic-nav-dropdown #item::after {
-  background-color: yellow;
-  transform: scale(2); }
-
 #basic-nav-dropdown::after {
-  display: none; }
-
-.dropdown-menu .show {
-  background-color: yellow; }
+  display: none; 
+}
 
 #image {
   top: 0%;

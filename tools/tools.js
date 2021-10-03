@@ -5,7 +5,7 @@ const fs = require('fs');
 const readline = require('readline')
 
 
-exports.initDatabase = (website) => {
+exports.initDatabase = () => {
     var rl = readline.createInterface({
         input: fs.createReadStream('./init.sql'),
         // input: fs.createReadStream(website ? './../init.sql' : './init.sql'),

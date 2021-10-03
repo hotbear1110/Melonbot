@@ -37,15 +37,6 @@ app.get("/", async function(req, res) {
     res.sendFile(path.resolve(__dirname, "flottorp/build/index.html"));
 });
 
-// When the user clicks bot login.
-app.get("/login", async function(req, res) {
-    log(creds.TWITCH_CLIENT_ID)
-    // const path =`https://id.twitch.tv/oauth2/authorize?client_id=${creds.TWITCH_CLIENT_ID}&redirect_uri=${creds.REDIRECT_URI}&response_type=code&scope=` + encodeURIComponent("user:read:email channel:manage:broadcast")
-    
-    res.render("<h1>Hi</h1>")
-    // res.redirect(301, path)
-})
-
 app.get("/Bot", async function(req, res) {
     res.sendFile(path.resolve(__dirname, "flottorp/build/index.html"))
 })
@@ -132,7 +123,9 @@ app.get("/v1/twitch/code", async function(req, res) {
     }
 })
 
-
+app.get("*", async function(req, res) {
+    res.sendFile(path.resolve(__dirname, "public/index.html"))
+})
 
 app.use('/', router);
 app.listen(port, async function() {

@@ -13,6 +13,12 @@ export default function BotStats() {
                         alt="Person looking at you, mouth wide open. celebration. Happy"
                     ></img>
                     wow! Cool bot stats
+                    <br/>
+                    <img
+                        src="https://cdn.7tv.app/emote/60420e5a77137b000de9e676/1x"
+                        alt="Green frog crying in hands"
+                    ></img>
+                    Nothing at the moment
                 </span>
             </p>
             <h1>Scuffed page</h1>
