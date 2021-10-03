@@ -4,3 +4,5 @@
 require("./tools/tools").initDatabase(false)
 // Bot
 require("./bot")
+// Website
+require("./website/index")

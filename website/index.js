@@ -2,18 +2,15 @@ const express = require("express");
 const router = express.Router();
 const path = require("path")
 const fs = require("fs");
-const cors = require("cors")
-const tools = require("./../tools/tools")
-const got = require("got")
-const creds = require('./../credentials/config')
+const cors = require("cors");
+const tools = require("./../tools/tools");
+const got = require("got");
+const creds = require('./../credentials/config');
 
 const app = express();
-const port = creds.PORT;
+const port = 3000;
 const LOG_FOLDER = "./logs/";
 
-(async () => {
-    tools.initDatabase(true);
-})();
 
 if (!fs.existsSync(LOG_FOLDER)) {
     fs.mkdirSync(LOG_FOLDER)
@@ -25,15 +22,15 @@ app.use(cors());
 
 app.use(express.json())
 
-const logger = (req, res, next) => {
+async function logger(req, res, next) {
     var logToFile = fs.createWriteStream(LOG_FOLDER + tools.YMD(), {flags: 'a'});
-    logToFile.write(process.platform === "win32" ? `\r\n${tools.YMDHMS()} ${req.ip} ${creds.SERVER}${req.path} ` : `\n${tools.YMDHMS()} ${req.ip} ${creds.SERVER}${req.path} `)
+    logToFile.write(process.platform === "win32" ? `\r\n${tools.YMDHMS()} ${creds.SERVER}${req.path} ` : `\n${tools.YMDHMS()} ${creds.SERVER}${req.path} `)
     logToFile.close();
     console.log(req.url)
     next();
 }
 
-app.use(logger)
+app.use(logger);
 
 // Main
 app.get("/", async function(req, res) {

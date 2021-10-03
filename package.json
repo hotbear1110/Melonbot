@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node init.js",
-    "bot-dev": "nodemon --ignore ./website --ignore ./commands init.js",
+    "bot-dev": "nodemon init.js",
     "website-dev": "cd website && nodemon index.js",
     "concun": "concurrently \"node init.js\" \"cd website && node index.js\"",
     "concun-dev": "concurrently -n \"Bot,Website\" \"nodemon init.js\" \"cd website && nodemon index.js\""
@@ -14,6 +14,7 @@
   "author": "Melon095",
   "license": "ISC",
   "devDependencies": {
+    "@types/tmi.js": "^1.7.2",
     "nodemon": "^2.0.12"
   },
   "dependencies": {
