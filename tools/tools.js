@@ -1,10 +1,18 @@
 const con = require('./../credentials/login.js').con
 const mysql = require("mysql");
-const tools = require("./tools.js")
+const tools = require("./tools.js");
+const fs = require('fs');
+const readline = require('readline')
 
 
-exports.initDatabase = () => {
-    
+exports.initDatabase = (website) => {
+    var rl = readline.createInterface({
+        input: fs.createReadStream(website ? './../init.sql' : './init.sql'),
+        terminal: false,
+    });
+    rl.on('line', async function(chunk) {
+        const a = await tools.query(chunk)
+    })
 }
 
 exports.query = (query, data = []) => new Promise((Resolve, Reject) => {

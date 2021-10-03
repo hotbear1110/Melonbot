@@ -9,7 +9,11 @@ const creds = require('./../credentials/config')
 
 const app = express();
 const port = creds.PORT;
-const LOG_FOLDER = "./logs/"
+const LOG_FOLDER = "./logs/";
+
+(async () => {
+    tools.initDatabase(true);
+})();
 
 if (!fs.existsSync(LOG_FOLDER)) {
     fs.mkdirSync(LOG_FOLDER)
@@ -129,46 +133,6 @@ app.get("/v1/twitch/code", async function(req, res) {
         res.end()
         return   
     }
-
-
-    // authorize(code).then((tokens) => {
-
-    //     users(tokens.data.access_token).then((id) => {
-            
-    //         const userInfo = {
-    //             user_id: id.data.data[0].id,
-    //             access_token: tokens.data.access_token,
-    //             login_name: id.data.data[0].login,
-    //             refresh_token: tokens.data.refresh_token,
-    //             scope: tokens.data.scope.join(" ")
-    //         }
-            
-    //         // Construct our SQL query
-    //         tools.query(`INSERT IGNORE INTO tokens (user_id, access_token, login_name, refresh_token, scope)
-    //         VALUES (?,"?","?","?","?"
-    //         );`, 
-    //         [userInfo.user_id, userInfo.access_token, userInfo.login_name, userInfo.refresh_token, userInfo.scope])
-
-    //         .then(() => {
-    //             logToFile.write(process.platform === "win32" ? `\r\n${tools.YMDHMS()} ${req.ip} ${process.env.SERVER}${req.path} ${userInfo.user_id} Added to database ` : `\n${tools.YMDHMS()} ${req.ip} ${process.env.SERVER}${req.path} ${userInfo.user_id} Added to database `)
-    //             logToFile.close();
-    //             console.log(userInfo.user_id + " Added to database")
-    //             res.status(301).redirect("/?loggedIn=true")
-    //         })
-    //         .catch((error) => {
-    //             logToFile.write(process.platform === "win32" ? `\r\n${tools.YMDHMS()} ${req.ip} ${process.env.SERVER}${req.path} ${userInfo.user_id} ${error} ` : `\n${tools.YMDHMS()} ${req.ip} ${process.env.SERVER}${req.path} ${userInfo.user_id} ${error} `)
-    //             logToFile.insert()
-    //             console.log(error)
-    //             res.status(500).send("Sorry, error. Contact Admin.")
-    //         })
-    //     }).catch((err) => {
-    //         console.log(err)
-    //         res.sendStatus(401)
-    //     })
-    // }).catch((err) => {
-    //     console.log(err)
-    //     res.sendStatus(401)
-    // })
 })
 
 
