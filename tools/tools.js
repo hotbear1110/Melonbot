@@ -6,6 +6,12 @@ const readline = require('readline')
 
 
 exports.initDatabase = () => {
+    con.ping((err) => {
+        if (err) {
+            console.log("No database exists or username, password, host, database is wrong.");
+            process.exit(1);
+        }
+    })
     var rl = readline.createInterface({
         input: fs.createReadStream('./init.sql'),
         // input: fs.createReadStream(website ? './../init.sql' : './init.sql'),
