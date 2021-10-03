@@ -88,30 +88,35 @@ app.get("/v1/twitch/code", async function(req, res) {
                 "Client-Id": creds.TWITCH_CLIENT_ID,
             }
         }).json();
-        console.log(user)
-
-        
 
         const userInfo = {
-            user_id: user[0].id,
+            user_id: user.data[0].id,
             access_token: authorize.access_token,
-            login_name: user[0].login,
+            login_name: user.data[0].login,
             refresh_token: authorize.refresh_token,
             scope: authorize.scope.join(" ")
         }
-        console.log(userInfo)
 
-        try {
-            const a = tools.query('SELECT * FROM tokens WHERE user_id = ?', userInfo.user_id)
-        } catch (error) {
-            console.log("asdasd")
-            res.json("Hey")
+        const token = await tools.query('SELECT * FROM tokens WHERE user_id = ?', [userInfo.user_id])
+
+        if (token.length !== 0) {
+            res.status(200).json({
+                    message: 
+                        "Seems like you are already in my database, if this seems like an error. Please contact admin."
+                })
+
+            res.end();
+            return
         }
         
+        await tools.query(`INSERT IGNORE INTO tokens 
+                            (user_id, access_token, 
+                            login_name, refresh_token, scope)
+                            VALUES (?,"?","?","?","?"
+                            );`, 
+                            [userInfo.user_id, userInfo.access_token, userInfo.login_name, userInfo.refresh_token, userInfo.scope])
 
-        console.log(a)
-        // res.send(JSON.stringify(a))
-        res.json({"authorize": authorize, "user": user, "userInfo": userInfo})
+        res.json({message: "User added to database. Thank you! FeelsOkayMan TeaTime"})
         res.end();
         return
     } catch (error) {
