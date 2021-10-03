@@ -6,10 +6,14 @@ import {
 } from "react-router-dom";
 import MiddleButtons from './components/MiddleButtons';
 import BotMain from "./components/BotMain"
+import BotStats from "./components/BotStats"
+import BotLogin from "./components/BotLogin"
+
 
 function App() {
   return (
     <div className="App">
+      <BotStats />
       <Router>
         <Switch>
           <Route exact path="/">
@@ -19,7 +23,7 @@ function App() {
             <BotMain />
           </Route>
           <Route exact path="/bot/login">
-            <p>Bot Login</p>
+            <BotLogin />
           </Route>
         </Switch>
       </Router>

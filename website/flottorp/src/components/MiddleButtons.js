@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Nav, NavDropdown, Image } from "react-bootstrap";
 import './../css/MiddleButtons.css'
 
@@ -10,13 +10,15 @@ export default function MiddleButtons() {
     }
 
     const HideDropdown = (event) => {
-        setShow(false)
+        setTimeout(() => {
+            setShow(false)
+        }, 1000);
     }
 
     return(
         <div className="RedirectButtons">
             <div className="Dropdown-Bot">
-                <span id="Title-bot">Bot</span>
+                <p className="Title-bot">Bot</p>
                 <Nav id="Nav-bot">
                     <NavDropdown eventKey={1}
                         title={

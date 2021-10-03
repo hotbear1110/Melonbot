@@ -53,6 +53,12 @@ app.get("/bot/login", async function(req, res) {
     res.sendFile(path.resolve(__dirname, "flottorp/build/index.html"))
 })
 
+app.get("/bot/login/redirect", async function(req, res) {
+    const path =`https://id.twitch.tv/oauth2/authorize?client_id=${creds.TWITCH_CLIENT_ID}&redirect_uri=${creds.REDIRECT_URI}&response_type=code&scope=` + encodeURIComponent("user:read:email channel:manage:broadcast")
+
+    
+    res.redirect(301, path);
+})
 
 // After user logs in to bot they get redirected here.
 app.get("/v1/twitch/code", async function(req, res) {
@@ -68,12 +74,19 @@ app.get("/v1/twitch/code", async function(req, res) {
             `&redirect_uri=${creds.REDIRECT_URI}`
     
     console.log(url)
-    const authorize = await got(url, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-        }
-    }).json();
+    try {
+        const authorize = await got(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            }
+        }).json();
+    } catch (error) {
+        res.status(500).json(error)
+        res.end()
+        return   
+    }
+    res.json(authorize)
     // authorize(code).then((tokens) => {
     //     // Ask twitch to authenticate our code and get the actual token we can use, with refresh token
     //     // Get some more info about the user, like user id and login name.
