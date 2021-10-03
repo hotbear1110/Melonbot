@@ -12,8 +12,7 @@ exports.query = (query, data = []) => new Promise((Resolve, Reject) => {
         if (err) {
             console.log(query, '\n//\n', err);
             await tools.query(`
-                INSERT INTO error_logs (error_message, date)
-                VALUES (?, CURRENT_TIMESTAMP())`,
+                INSERT INTO error_logs (error_message) VALUES (?)`,
                 [JSON.stringify(err)])
             Reject(err);
         } else {

@@ -64,32 +64,70 @@ app.get("/bot/login/redirect", async function(req, res) {
 app.get("/v1/twitch/code", async function(req, res) {
     var logToFile = fs.createWriteStream(LOG_FOLDER + tools.YMD(), {flags: 'a'});
     const code = req.query.code
-    // Get code from login
-
-    const url = `https://id.twitch.tv/oauth2/token` +
-            `?client_id=${creds.TWITCH_CLIENT_ID}` +
-            `&client_secret=${creds.TWITCH_CLIENT_SECRET}` +
-            `&code=${code}` +
-            `&grant_type=authorization_code` + 
-            `&redirect_uri=${creds.REDIRECT_URI}`
-    
-    console.log(url)
+    // Ask twitch to authenticate our code and get the actual token we can use, with refresh token
     try {
+        const url = `https://id.twitch.tv/oauth2/token` +
+        `?client_id=${creds.TWITCH_CLIENT_ID}` +
+        `&client_secret=${creds.TWITCH_CLIENT_SECRET}` +
+        `&code=${code}` +
+        `&grant_type=authorization_code` + 
+        `&redirect_uri=${creds.REDIRECT_URI}`
+        
         const authorize = await got(url, {
             method: "POST",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             }
         }).json();
+        
+        // Get some more info about the user, like user id and login name.
+        const user = await got("https://api.twitch.tv/helix/users", {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${authorize.access_token}`,
+                "Client-Id": creds.TWITCH_CLIENT_ID,
+            }
+        }).json();
+        console.log(user)
+
+        
+
+        const userInfo = {
+            user_id: user[0].id,
+            access_token: authorize.access_token,
+            login_name: user[0].login,
+            refresh_token: authorize.refresh_token,
+            scope: authorize.scope.join(" ")
+        }
+        console.log(userInfo)
+
+        try {
+            const a = tools.query('SELECT * FROM tokens WHERE user_id = ?', userInfo.user_id)
+        } catch (error) {
+            console.log("asdasd")
+            res.json("Hey")
+        }
+        
+
+        console.log(a)
+        // res.send(JSON.stringify(a))
+        res.json({"authorize": authorize, "user": user, "userInfo": userInfo})
+        res.end();
+        return
     } catch (error) {
-        res.status(500).json(error)
+        if(error.name === "HTTPError") {
+            res.status(400).json({message: "User error, try again? or contact admin.", error: error})
+            res.end();
+            return
+        }
+        res.status(500).json({"error": error})
         res.end()
         return   
     }
-    res.json(authorize)
+
+
     // authorize(code).then((tokens) => {
-    //     // Ask twitch to authenticate our code and get the actual token we can use, with refresh token
-    //     // Get some more info about the user, like user id and login name.
+
     //     users(tokens.data.access_token).then((id) => {
             
     //         const userInfo = {
