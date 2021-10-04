@@ -1,5 +1,6 @@
 const creds = require('./config.js');
 const mysql = require('mysql');
+const tools = require('./../tools/tools.js')
 const con = mysql.createConnection({
     host: creds.MYSQL_HOST,
     user: creds.MYSQL_USER,
@@ -13,6 +14,13 @@ con.on('error', (err) => {
     }
     throw err;
 });
+
+// Async function, keep pinging the sql server to keep it alive.
+(async () => {
+    setInterval(function() {
+        tools.query("SELECT 1");
+    }, 60000)
+})
 
 const getChannels = () => new Promise((resolve, reject) => {
     con.query('SELECT * FROM channels', (err, results) => {

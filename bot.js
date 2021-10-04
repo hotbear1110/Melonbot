@@ -9,8 +9,6 @@ client.connect();
 
 (async () => {
 
-    
-
     async function messageHandler(channel, user, message, self) {
         if(self) { return; };
         let input = message.split(" ");
