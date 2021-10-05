@@ -103,7 +103,7 @@ app.get("/v1/twitch/code", async function(req, res) {
 
         if (token.length !== 0) {
             // Delete old token if the user decides to login again.
-            tools.query("DELETE FROM tokens WHERE user_id = ?);", [userInfo.user_id])
+            tools.query("DELETE FROM tokens WHERE user_id = ?;", [userInfo.user_id])
         }
         
         await tools.query(`INSERT INTO tokens 

@@ -84,35 +84,32 @@ exports.token = async (id, debug = false) => {
     try {
         const token = await tools.query('SELECT access_token FROM tokens WHERE user_id = ?;', [id])
         if(!token.length) {
-            return "Sorry, user is not in our database. Please login: [ flottorp.org ]"
+            throw "Sorry, user is not in our database. Please login: [ flottorp.org ]"
         }
 
         if(debug) {
             console.log(token)
         }
         
-        const validate = await got('https://id.twitch.tv/oauth2/validate', {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token[0].access_token.replaceAll("'", "")}`,
-            }
-        }).json();
-
-        if(debug) {
+            const validate = await got({
+                url: 'https://id.twitch.tv/oauth2/validate',
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token[0].access_token.replaceAll("'", "")}`,
+                    'Content-Type': "application/json"
+                },
+                throwHttpErrors: false,
+            }).json();
             console.log(validate)
-        }
-
-        return token[0].access_token.replaceAll("'", "");
-    } catch (error) {
-        console.log(error.response.body)
-        if(error.response.body["message"] === "invalid access token" && error.response.body["status"] === 401) {
-        //     // Refresh token
-
-        //     const a = await tools.query('SELECT refresh_token FROM tokens WHERE user_id = ?', [id])
-        //     console.log(a[0].refresh_token)
+            // // If token is invalid
+            // console.log(error.response.body)
+            // // https://discuss.dev.twitch.tv/t/status-400-missing-client-id-when-refreshing-user-token-with-granttype-refresh-token-on-postman-it-works/26371/2
+            // // Refresh token
+            // const a = await tools.query('SELECT refresh_token FROM tokens WHERE user_id = ?', [id])[0].refresh_token.replaceAll("'", "");
+            // console.log(a[0].refresh_token)
             // const _ = {
             //     grant_type: "refresh_token",
-            //     refresh_token: await tools.query('SELECT refresh_token FROM tokens WHERE user_id = ?', [id])[0].refresh_token,
+            //     refresh_token: a,
             //     client_id: creds.TWITCH_CLIENT_ID,
             //     client_secret: creds.TWITCH_CLIENT_SECRET
             // }
@@ -124,21 +121,26 @@ exports.token = async (id, debug = false) => {
 
             //     query.push(encodedKey + "=" + encodedValue)
             // }
+            // query = query.join("&")
             
             // const refresh = await got("https://id.twitch.tv/oauth2/token", {
             //     method: 'POST',
             //     headers: {
-            //         'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
-            //         Accept: "*/*",
-            //         "Accept-Encoding": "gzip, deflate, br",
-            //         Connection: "keep-alive"
+            //         'Content-Type': 'application/json',
             //     },
-            //     data: query
+            //     body: query
             // }).json();
             // console.log(refresh)
-        } else {
-            // Different error.
-            return error
-        }
+
+            // // await tools.query(`UPDATE tokens SET access_token = "${}", refresh_token = "${}" WHERE user_id = ${id}`)
+            
+            // if(debug) {
+            //     console.log(validate)
+            // }
+            
+            // return token[0].access_token.replaceAll("'", "");
+            return ""
+    } catch (error) {
+        return error
     }
 }

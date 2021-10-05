@@ -17,17 +17,16 @@ module.exports = {
             if (title === "") {
                 throw "Sorry, i am unable to set the title to nothing."
             }
-            console.log(`{ "title": ${title} }`)
-
-            await got(`https://api.twitch.tv/helix/channels?broadcaster_id=${user['room-id']}`, {
-                method: "PATCH",
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${await tools.token(user['room-id'])}`,
-                    'Client-ID': `${creds.TWITCH_CLIENT_ID}`,
-                },
-                json: { "title": title }
-            })
+            await tools.token(user['room-id'], true)
+            // await got(`https://api.twitch.tv/helix/channels?broadcaster_id=${user['room-id']}`, {
+            //     method: "PATCH",
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //         'Authorization': `Bearer ${await tools.token(user['room-id'], true)}`,
+            //         'Client-ID': `${creds.TWITCH_CLIENT_ID}`,
+            //     },
+            //     json: { "title": title }
+            // })
             return "Successfully changed title to " + title;
         } catch (err) {
             return err

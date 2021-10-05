@@ -16,11 +16,11 @@ con.on('error', (err) => {
 });
 
 // Async function, keep pinging the sql server to keep it alive.
-(async () => {
+const pingDatabase = async => {
     setInterval(function() {
         tools.query("SELECT 1");
     }, 60000)
-})
+}
 
 const getChannels = () => new Promise((resolve, reject) => {
     con.query('SELECT * FROM channels', (err, results) => {
@@ -56,4 +56,4 @@ const options = {
     channels: channelOptions,
 }
 
-module.exports = { options, con }
+module.exports = { options, con, pingDatabase }
