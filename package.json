@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node init.js",
-    "dev": "nodemon init.js"
+    "dev": "nodemon init.js",
+    "build": "cd website/flottorp && npm install && npm run build"
   },
   "author": "Melon095",
   "license": "ISC",
