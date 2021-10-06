@@ -6,8 +6,8 @@ import {
 } from "react-router-dom";
 import MiddleButtons from './components/MiddleButtons';
 import BotMain from "./components/BotMain"
-import BotStats from "./components/BotStats"
-import BotLogin from "./components/BotLogin"
+import BotStats from "./components/BotStats";
+import BotLogin from "./components/BotLogin";
 
 
 function App() {
