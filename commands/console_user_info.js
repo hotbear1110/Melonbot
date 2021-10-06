@@ -1,9 +1,11 @@
+const creds = require("../credentials/config")
+
 module.exports = {
     name: "console_user_info",
     ping: true,
     execute: async (channel, user, input, perm) => {
         try {
-            if(user['user-id'] == 146910710) {
+            if(user['user-id'] == creds.OWNER_USER_ID) {
                 console.log(user);
                 return 'Check console log BloodTrail'
             }
