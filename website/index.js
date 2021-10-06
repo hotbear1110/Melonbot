@@ -117,7 +117,10 @@ app.get("/v1/twitch/code", async function(req, res) {
 
         logger += `User_id: ${userInfo.user_id} - ${userInfo.login_name} added to database`, 
         tools.logger(logger, "info")
-        res.json({message: "User added to database. Thank you! FeelsOkayMan TeaTime"})
+
+        const http = creds.HTTPS ? "https://" : "http://";
+        
+        res.redirect(`${http}${creds.SERVER}/bot/login?loggedIn=true`)
         res.end();
         return
     } catch (error) {

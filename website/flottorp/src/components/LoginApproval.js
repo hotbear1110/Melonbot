@@ -12,7 +12,7 @@ export default function LoginApproval() {
                 alt="Hot steaming tea"
             ></img>
             <p>
-                Thank you, you are now logged in
+                Thank you, you are now logged in.
             </p>
         </div>
     )
