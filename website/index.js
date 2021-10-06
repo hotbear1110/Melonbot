@@ -122,7 +122,7 @@ app.get("/v1/twitch/code", async function(req, res) {
         return
     } catch (error) {
         if(error.name === "HTTPError") {
-            res.status(400).json({message: "User error, try again? or contact admin.", error: error})
+            res.status(500).json({message: "Sorry, server error.", error: error})
             res.end();
             return
         }
