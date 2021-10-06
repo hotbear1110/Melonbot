@@ -5,6 +5,7 @@ const fs = require('fs');
 const readline = require('readline')
 const got = require('got')
 const creds = require('./../credentials/config')
+const axios = require("axios");
 
 
 exports.initDatabase = () => {
@@ -40,6 +41,27 @@ exports.query = (query, data = []) => new Promise((Resolve, Reject) => {
         }
     });
 })
+
+exports.logger = async (error_message, type = "info") => {
+    // Logs to a file stream and to the error_logs table.
+    // type can be info or error.
+    
+    const LOG_FOLDER = type === "info" ? "./logs/" : "./error_logs/"
+
+
+    if (!fs.existsSync(LOG_FOLDER)) {
+        fs.mkdirSync(LOG_FOLDER)
+    }
+
+    var logToFile = fs.createWriteStream(LOG_FOLDER + tools.YMD(), {flags: 'a'});
+    logToFile.write(process.platform === "win32" ? `\r\n${tools.YMDHMS()} - ${error_message}` : `\n${tools.YMDHMS()} - ${error_message}`)
+    
+    if (type === "error") {
+        await tools.query("INSERT INTO error_logs (error_message) VALUES (?)", [error_message]);
+    }
+    
+    logToFile.close();
+}
 
 exports.convertHMS = (timeInSeconds) => {
     try {
@@ -80,66 +102,63 @@ exports.isMod = (user, channel) => {
 // Get the token for a user, this also refreshes the token if needed.
 exports.token = async (id, debug = false) => {
     // Validate token [https://dev.twitch.tv/docs/authentication#validating-requests]
-
     try {
-        const token = await tools.query('SELECT access_token FROM tokens WHERE user_id = ?;', [id])
-        if(!token.length) {
+        var access_token = await tools.query('SELECT access_token FROM tokens WHERE user_id = ?;', [id])
+
+        access_token = access_token[0].access_token.replaceAll("'", "")
+
+        if(!access_token.length) {
             throw "Sorry, user is not in our database. Please login: [ flottorp.org ]"
         }
 
+        console.log(access_token)
+
         if(debug) {
-            console.log(token)
+            console.log(access_token)
         }
-        
-            const validate = await got({
-                url: 'https://id.twitch.tv/oauth2/validate',
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token[0].access_token.replaceAll("'", "")}`,
-                    'Content-Type': "application/json"
-                },
-                throwHttpErrors: false,
-            }).json();
-            console.log(validate)
-            // // If token is invalid
-            // console.log(error.response.body)
-            // // https://discuss.dev.twitch.tv/t/status-400-missing-client-id-when-refreshing-user-token-with-granttype-refresh-token-on-postman-it-works/26371/2
-            // // Refresh token
-            // const a = await tools.query('SELECT refresh_token FROM tokens WHERE user_id = ?', [id])[0].refresh_token.replaceAll("'", "");
-            // console.log(a[0].refresh_token)
-            // const _ = {
-            //     grant_type: "refresh_token",
-            //     refresh_token: a,
-            //     client_id: creds.TWITCH_CLIENT_ID,
-            //     client_secret: creds.TWITCH_CLIENT_SECRET
-            // }
-            // let query = []
+    
+        const verifiedToken = axios.get('https://id.twitch.tv/oauth2/validate', {
+            headers: {
+                Authorization: `Bearer ${access_token}`
+            }
+        }).then((data) => {
+            // Token works, no further action is required
+            tools.logger(`${id} has requested their access token and is alive for ${tools.convertHMS(data.data.expires_in)} hours`)
+            return access_token
+        }).catch(async function (error) {
+            if (error.response.data["message"] === "invalid access token") {
+                // // https://discuss.dev.twitch.tv/t/status-400-missing-client-id-when-refreshing-user-token-with-granttype-refresh-token-on-postman-it-works/26371/2
+                // Refresh token
+                const refresh_token = await tools.query('SELECT refresh_token FROM tokens WHERE user_id = ?', [id]);
 
-            // for (var property in _) {
-            //     var encodedKey = encodeURIComponent(property);
-            //     var encodedValue = encodeURIComponent(_[property]);
+                const params = new URLSearchParams();
+                params.append("grant_type", "refresh_token");
+                params.append("refresh_token", refresh_token[0].refresh_token.replaceAll("'", ""));
+                params.append("client_id", creds.TWITCH_CLIENT_ID);
+                params.append("client_secret", creds.TWITCH_CLIENT_SECRET);
 
-            //     query.push(encodedKey + "=" + encodedValue)
-            // }
-            // query = query.join("&")
-            
-            // const refresh = await got("https://id.twitch.tv/oauth2/token", {
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //     },
-            //     body: query
-            // }).json();
-            // console.log(refresh)
-
-            // // await tools.query(`UPDATE tokens SET access_token = "${}", refresh_token = "${}" WHERE user_id = ${id}`)
-            
-            // if(debug) {
-            //     console.log(validate)
-            // }
-            
-            // return token[0].access_token.replaceAll("'", "");
-            return ""
+                const refreshToken = axios({
+                    method: 'POST',
+                    url: "https://id.twitch.tv/oauth2/token",
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+                        Accept: "*/*",
+                        "Accept-Encoding": "gzip, deflate, br",
+                        Connection: "keep-alive"
+                    },
+                    data: params.toString()
+                }).then(async function (data) {
+                    console.log(data.data)
+                    await tools.query(`UPDATE tokens SET access_token = "${data.data.access_token}", refresh_token = "${data.data.refresh_token}" WHERE user_id = ${id}`)
+                    return data.data.access_token
+                }).catch((error) => {
+                    console.log(error)
+                    throw error
+                })
+                return refreshToken
+            }
+        })
+        return verifiedToken;
     } catch (error) {
         return error
     }

@@ -51,7 +51,7 @@ const options = {
         password: creds.OAUTH
     },
     connection: {
-        port: 80
+        port: 6697
     },
     channels: channelOptions,
 }

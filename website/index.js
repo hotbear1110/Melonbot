@@ -47,20 +47,20 @@ app.get("/bot/login", async function(req, res) {
 
 app.get("/bot/login/redirect", async function(req, res) {
     const path =`https://id.twitch.tv/oauth2/authorize?client_id=${creds.TWITCH_CLIENT_ID}&redirect_uri=${creds.REDIRECT_URI}&response_type=code&scope=` + encodeURIComponent("user:read:email channel:manage:broadcast")
-
     
     res.redirect(301, path);
 })
 
 // After user logs in to bot they get redirected here.
 app.get("/v1/twitch/code", async function(req, res) {
-    var logToFile = fs.createWriteStream(LOG_FOLDER + tools.YMD(), {flags: 'a'});
+    var logger = ""
     const code = req.query.code
     // Ask twitch to authenticate our code and get the actual token we can use, with refresh token
     try {
         
         if(typeof req.query.error !== "undefined") {
-            console.log(req.query.error)
+            logger += ` ${req.path} - ${req.query.error}`
+            tools.logger(logger, "error")
             res.status(500).json({error: "Error with server. Contact admin."})
             res.end();
             return
@@ -115,6 +115,8 @@ app.get("/v1/twitch/code", async function(req, res) {
                             userInfo.login_name, userInfo.refresh_token, 
                             userInfo.scope])
 
+        logger += `User_id: ${userInfo.user_id} - ${userInfo.login_name} added to database`, 
+        tools.logger(logger, "info")
         res.json({message: "User added to database. Thank you! FeelsOkayMan TeaTime"})
         res.end();
         return
@@ -124,6 +126,7 @@ app.get("/v1/twitch/code", async function(req, res) {
             res.end();
             return
         }
+        tools.logger(JSON.stringify(error), "error")
         res.status(500).json({"error": error})
         res.end()
         return   
