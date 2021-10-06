@@ -12,7 +12,7 @@ module.exports = {
                     amount = 64;
                 }
                 input = input.splice(1)
-                .toString().replaceAll(',', ' ');
+                .toString().replace(/,/g, ' ');
                 var message = "";
                 for (var i = 0; i < amount; i++) {
                     message += input + " ";
@@ -21,7 +21,7 @@ module.exports = {
             }
             else {
                 input = input.splice(0)
-                .toString().replaceAll(',', ' ');
+                .toString().replace(/,/g, ' ');
     
                 return `${input}`;
             }

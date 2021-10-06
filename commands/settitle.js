@@ -13,7 +13,7 @@ module.exports = {
             }
 
             title = input.splice(0)
-                .toString().replaceAll(',', ' ');
+                .toString().replace(/,/g, ' ');
                 
             if (title === "") {
                 throw "Sorry, i am unable to set the title to nothing."

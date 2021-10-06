@@ -105,7 +105,7 @@ exports.token = async (id, debug = false) => {
     try {
         var access_token = await tools.query('SELECT access_token FROM tokens WHERE user_id = ?;', [id])
 
-        access_token = access_token[0].access_token.replaceAll("'", "")
+        access_token = access_token[0].access_token.replace(/'/g, "")
 
         if(!access_token.length) {
             throw "Sorry, user is not in our database. Please login: [ flottorp.org ]"
@@ -133,7 +133,7 @@ exports.token = async (id, debug = false) => {
 
                 const params = new URLSearchParams();
                 params.append("grant_type", "refresh_token");
-                params.append("refresh_token", refresh_token[0].refresh_token.replaceAll("'", ""));
+                params.append("refresh_token", refresh_token[0].refresh_token.replace(/'/g, ""));
                 params.append("client_id", creds.TWITCH_CLIENT_ID);
                 params.append("client_secret", creds.TWITCH_CLIENT_SECRET);
 
