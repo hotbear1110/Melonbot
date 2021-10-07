@@ -12,7 +12,7 @@ pull_from_git() {
     echo "Trying to pull from git..."
 
     # If it updated
-    if not git pull | grep 'Already up-to-date' > /dev/null; then
+    if git pull | grep 'Already up-to-date' > /dev/null; then
 
         echo :)
         
