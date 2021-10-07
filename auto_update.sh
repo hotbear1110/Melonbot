@@ -25,4 +25,7 @@ pull_from_git() {
     fi
 }
 
+
+# Remove this
+(cd $(cat folder))
 pull_from_git
