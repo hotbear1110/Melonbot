@@ -12,12 +12,17 @@ pull_from_git() {
     echo "Trying to pull from git..."
 
     # If it updated
-    if git pull | grep 'Already up-to-date' > /dev/null; then
+    if not git pull | grep 'Already up-to-date' > /dev/null; then
+
+        echo :)
+        
+    else 
         # This tells phusion passenger to restart the application
         touch ./tmp/restart.txt
 
         # Log to a file
         echo Bot updated at $(date) with hash $(git rev-parse --short HEAD) >> ./logs/update 
+
     fi
 }
 
