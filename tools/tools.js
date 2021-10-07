@@ -15,17 +15,20 @@ exports.initDatabase = () => {
             process.exit(1);
         }
     })
+    // Create a table for every line in init.sql
     var rl = readline.createInterface({
         input: fs.createReadStream('./init.sql'),
-        // input: fs.createReadStream(website ? './../init.sql' : './init.sql'),
         terminal: false,
     });
     rl.on('line', async function(chunk) {
-        const a = await tools.query(chunk).catch((error) => {
+        await tools.query(chunk).catch((error) => {
             fs.writeFile('INIT_DATABASE_ERROR.txt', `ERROR INITIALIZING TABLES ERROR: \r\n${error}`)
             process.exit(1)
         })
     })
+
+    // Create a row in stats. We only require one row. and will update this when we want to.
+    tools.query("INSERT IGNORE INTO stats VALUES (1, 0)")
 }
 
 exports.query = (query, data = []) => new Promise((Resolve, Reject) => {
@@ -105,19 +108,17 @@ exports.token = async (id, debug = false) => {
     try {
         var access_token = await tools.query('SELECT access_token FROM tokens WHERE user_id = ?;', [id])
 
-        access_token = access_token[0].access_token.replace(/'/g, "")
-
-        if(!access_token.length) {
-            throw "Sorry, user is not in our database. Please login: [ flottorp.org ]"
+        if(access_token.length <= 0) {
+            return {status: "ERROR", token: `Sorry, user is not in our database. Please login: [ ${creds.HTTPS ? `https://${creds.SERVER}` : `http://${creds.SERVER}`} ]`}
         }
 
-        console.log(access_token)
+        access_token = access_token[0].access_token.replace(/'/g, "")
 
         if(debug) {
             console.log(access_token)
         }
     
-        const verifiedToken = axios.get('https://id.twitch.tv/oauth2/validate', {
+        const verifiedToken = await axios.get('https://id.twitch.tv/oauth2/validate', {
             headers: {
                 Authorization: `Bearer ${access_token}`
             }
@@ -158,7 +159,7 @@ exports.token = async (id, debug = false) => {
                 return refreshToken
             }
         })
-        return verifiedToken;
+        return {status: "OK", token: verifiedToken};
     } catch (error) {
         return error
     }

@@ -3,6 +3,7 @@ const tmi = require('tmi.js');
 const login = require('./credentials/login.js').options;
 const requireDir = require("require-dir");
 const fs = require('fs');
+const tools = require("./tools/tools")
 
 const client = new tmi.client(login)
 client.connect();
@@ -47,6 +48,9 @@ client.connect();
         //[TODO]: Banphrase
         
         client.say(channel, result);
+
+        // Increment the command to stats.
+        tools.query("UPDATE stats SET commandsHandled = commandsHandled + 1 WHERE where_placeholder = 1;")
     }
 
     client.on('message', async (channel, user, message, self) => {

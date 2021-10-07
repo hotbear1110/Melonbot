@@ -19,10 +19,16 @@ module.exports = {
                 throw "Sorry, i am unable to set the title to nothing."
             }
 
+            const token = await tools.token(user['room-id'])
+
+            if (token.status === "ERROR") {
+                throw token.token
+            }
+
             const options = {
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${await tools.token(user['room-id'])}`,
+                    'Authorization': `Bearer ${token.token}`,
                     'Client-ID': `${creds.TWITCH_CLIENT_ID}`,
                 }
             }

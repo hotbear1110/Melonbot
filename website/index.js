@@ -6,6 +6,7 @@ const cors = require("cors");
 const tools = require("./../tools/tools");
 const got = require("got");
 const creds = require('./../credentials/config');
+const shell = require("child_process")
 
 const app = express();
 const port = creds.PORT;
@@ -32,7 +33,7 @@ async function logger(req, res, next) {
 
 app.use(logger);
 
-// Main
+//////////////////// Website //////////////////// 
 app.get("/", async function(req, res) {
     res.sendFile(path.resolve(__dirname, "flottorp/build/index.html"));
 });
@@ -50,6 +51,30 @@ app.get("/bot/login/redirect", async function(req, res) {
     
     res.redirect(301, path);
 })
+
+//////////////////// API //////////////////// 
+
+/*
+    stats: {
+        commitHash: "foo",
+        commits: bar
+        uptime: "baz",
+        commandsHandled: taz,
+        //// More to come ////
+    }
+*/
+app.get("/v1/stats", async function(res, res) {
+    const ch = await tools.query("SELECT commandsHandled FROM stats;")
+    const stats = {
+        commitHash: shell.execSync("git rev-parse --short HEAD").toString().replace("\n", ""),
+        commits: Number(shell.execSync("git rev-list --all --count").toString()),
+        uptime: process.uptime(),
+        commandsHandled: Number(ch[0].commandsHandled),
+    }
+    res.json(stats)
+})
+
+//////////////////// LOGIN //////////////////// 
 
 // After user logs in to bot they get redirected here.
 app.get("/v1/twitch/code", async function(req, res) {
