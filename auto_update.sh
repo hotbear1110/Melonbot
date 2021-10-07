@@ -14,7 +14,7 @@ pull_from_git() {
     # If it updated
     if git pull | grep 'Already up-to-date' > /dev/null
     then
-        echo ":)"
+        echo "No new updates..."
     else
         # This tells phusion passenger to restart the application
         touch ./tmp/restart.txt
