@@ -20,7 +20,7 @@ pull_from_git() {
         touch ./tmp/restart.txt
 
         # Log to a file
-        echo Bot updated at $(date) with hash $(git rev-parse --short HEAD) >> ./logs/update 
+        echo "Bot updated at $(date) with hash $(git rev-parse --short HEAD)" >> ./logs/update 
 
     fi
 }
