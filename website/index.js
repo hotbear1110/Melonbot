@@ -64,11 +64,13 @@ app.get("/bot/login/redirect", async function(req, res) {
     }
 */
 app.get("/v1/stats", async function(res, res) {
+
     const ch = await tools.query("SELECT commandsHandled FROM stats;")
+    
     const stats = {
         commitHash: shell.execSync("git rev-parse --short HEAD").toString().replace("\n", ""),
         commits: Number(shell.execSync("git rev-list --all --count").toString()),
-        uptime: process.uptime(),
+        uptime: tools.humanizeDuration(process.uptime()),
         commandsHandled: Number(ch[0].commandsHandled),
     }
     res.json(stats)

@@ -82,7 +82,7 @@ export default class BotStats extends Component {
                                     alt="Person looking at you, mouth wide open. celebration. Happy"
                                 ></img>
                             </li>
-                            <li>Bot has been awake for: {uptime} hours</li>
+                            <li>Bot has been awake for: {uptime}</li>
                             <li>Total commits: {commits}</li>
                             <li>Commit hash: {commitHash}</li>
                             <li> <a href="https://github.com/JoachimFlottorp/Melonbot">

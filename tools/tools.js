@@ -6,6 +6,7 @@ const readline = require('readline')
 const got = require('got')
 const creds = require('./../credentials/config')
 const axios = require("axios");
+const humanize = require('humanize-duration');
 
 
 exports.initDatabase = () => {
@@ -163,4 +164,30 @@ exports.token = async (id, debug = false) => {
     } catch (error) {
         return error
     }
+}
+
+// https://github.com/KUNszg/kbot/blob/19b5ec0648ff539b345013f36c8bb667d45f9ba0/lib/utils/utils.js#L197
+// Yoink TriHard
+const shortHumanize = humanize.humanizer({
+    language: 'shortEn',
+    languages: {
+        shortEn: {
+            y: () => 'y',
+            mo: () => 'mo',
+            w: () => 'w',
+            d: () => 'd',
+            h: () => 'h',
+            m: () => 'm',
+            s: () => 's',
+        },
+    },
+});
+exports.humanizeDuration = (seconds) => {
+    const options = {
+        units: ['y', 'mo', 'd', 'h', 'm', 's'],
+        largest: 3,
+        round: true,
+        spacer: '',
+    };
+    return shortHumanize(seconds*1000, options);
 }

@@ -1,7 +1,7 @@
 # Twitch bot using NODE.JS
 
 As always, don't use it. It sucks.
-This is just a fun small project as is not meant to used as a 'commercial' bot.
+This is just a fun small project and is not meant to used as a 'commercial' bot.
 
 ## Setup
 
