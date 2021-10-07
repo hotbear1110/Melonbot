@@ -12,11 +12,10 @@ pull_from_git() {
     echo "Trying to pull from git..."
 
     # If it updated
-    if git pull | grep 'Already up-to-date' > /dev/null; then
-
-        echo :)
-        
-    else 
+    if git pull | grep 'Already up-to-date' > /dev/null
+    then
+        echo ":)"
+    else
         # This tells phusion passenger to restart the application
         touch ./tmp/restart.txt
 
