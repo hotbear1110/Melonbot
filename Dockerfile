@@ -13,3 +13,7 @@ EXPOSE 3306
 EXPOSE 443
 # TWITCH BOT
 EXPOSE 80
+
+RUN npm start
+
+CMD ["npm", "install"]
