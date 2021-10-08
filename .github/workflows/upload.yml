@@ -34,26 +34,26 @@ jobs:
       uses: actions/setup-node@v2.4.1
       with:
           node-version: '14'
-    - run: npm build      
+    - run: npm run build      
     
     - name: Stop previous Docker configuration off server.
-      run: ssh prod 'docker stop $IMAGE_NAME'
+      run: ssh prod 'docker stop Melonbot'
       continue-on-error: true
     
     - name: Uninstall Docker configuration
-      run: ssh prod 'docker rm $IMAGE_NAME'
+      run: ssh prod 'docker rm Melonbot'
       continue-on-error: true
     
     - name: Git pull
       run: ssh prod 'cd ${{ secrets.HOME_DIR }} && git pull'
         
     - name: Build Docker Image
-      run: ssh prod 'cd ${{ secrets.HOME_DIR }} && docker prune $IMAGE_NAME && docker build --tag $IMAGE_NAME
+      run: ssh prod 'cd ${{ secrets.HOME_DIR }} && docker prune Melonbot && docker build --tag Melonbot
     
     - name: Run newly built docker image
-      run: ssh prod 'docker run -d --name $IMAGE_NAME \ 
+      run: ssh prod 'docker run -d --name Melonbot \ 
           -v ${{ secrets.DOCKER_LOCATION }}/logs:/logs \
           -v ${{ secrets.DOCKER_LOCATION }}/error_logs:/error_logs \
-          $IMAGE_NAME'
+          Melonbot'
       
     
