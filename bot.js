@@ -13,7 +13,13 @@ client.connect();
 (async () => {
 
     async function messageHandler(channel, user, message, self) {
+        // Don't listen to your own messages.
         if (self) { return; }
+
+        // Sometimes self doesn't work.
+        if (user["username"] === creds.USERNAME) { return; }
+
+        
         let input = message.split(" ");
         
         let command = input[1];
