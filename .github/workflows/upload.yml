@@ -29,6 +29,13 @@ jobs:
        SSH_USER: ${{ secrets.SSH_USER }}
        SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
        SSH_HOST: ${{ secrets.SSH_HOST }}
+       
+    - name: Setup Node.js environment
+      uses: actions/setup-node@v2.4.1
+      with:
+          node-version: '14'
+    - run: npm build      
+    
     - name: Stop previous Docker configuration off server.
       run: ssh prod 'docker stop $IMAGE_NAME'
       continue-on-error: true
