@@ -4,6 +4,8 @@ const login = require('./credentials/login.js').options;
 const requireDir = require("require-dir");
 const fs = require('fs');
 const tools = require("./tools/tools")
+const creds = require("./credentials/config")
+const prefix = require("./tools/prefix").prefix
 
 const client = new tmi.client(login)
 client.connect();
@@ -11,15 +13,19 @@ client.connect();
 (async () => {
 
     async function messageHandler(channel, user, message, self) {
-        if(self) { return; };
+        if (self) { return; };
         let input = message.split(" ");
         
         let command = input[1];
-        
-        if (input[0] !== 'melon') {
-            return;
+
+        for (var i = 0; i < prefix.length; i++) {
+            if (input[0] !== prefix[i].prefix && prefix[i].allowed !== true) {
+                break;
+            }
         }
         
+        if (input.length === 1) { return; }
+
         const commands = requireDir("./commands");
         
         if(typeof commands[command] === "undefined") {
@@ -29,7 +35,7 @@ client.connect();
         
         //[TODO]: Get perm done
         const perm = 101;
-        if(perm < 100) {
+        if (perm < 100) {
             return;
         }
         

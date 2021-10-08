@@ -11,6 +11,8 @@ exports.REDIRECT_URI = "SERVER/v1/twitch/code" // Redirect URI for twitch login
 exports.SERVER = "" // URL to the web server, example [http://localhost:3000, https://google.com]
 exports.HTTPS = false // Will the server be running with https or not. set as bool
 exports.PORT = 3000 // Port of web server
+exports.DEVELOPMENT = false; // Default false, dont worry about this.
+
 
 
 /* 
