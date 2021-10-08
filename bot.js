@@ -24,7 +24,7 @@ client.connect();
             }
         }
         
-        if (input.length === 1) { return; }
+        if (input.length <= 1) { return; }
 
         const commands = requireDir("./commands");
         
