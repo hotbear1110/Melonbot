@@ -4,9 +4,6 @@ name: Upload to server.
 
 on: [push]
 
-env:
-  IMAGE_NAME: Melonbot
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -33,21 +30,6 @@ jobs:
     - name: Git pull
       run: ssh prod 'cd ${{ secrets.HOME_DIR }} && git pull'
     
-    - name: Stop previous Docker configuration off server.
-      run: ssh prod 'docker stop Melonbot'
-      continue-on-error: true
-    
-    - name: Uninstall Docker configuration
-      run: ssh prod 'docker rm Melonbot'
-      continue-on-error: true
-        
-    - name: Build Docker Image
-      run: ssh prod 'cd ${{ secrets.HOME_DIR }} && docker build --file Dockerfile --tag melonbot .'
-    
-    - name: Run newly built docker image
-      run: ssh prod 'docker run -d --name Melonbot \ 
-          -v ${{ secrets.DOCKER_LOCATION }}/logs:/logs \
-          -v ${{ secrets.DOCKER_LOCATION }}/error_logs:/error_logs \
-          Melonbot'
-      
+    - name: PM2 Restart
+      run: ssh prod 'pm2 restart Bot'
     
