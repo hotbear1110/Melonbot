@@ -147,7 +147,7 @@ app.get("/v1/twitch/code", async function(req, res) {
 
         const http = creds.HTTPS ? "https://" : "http://";
         
-        res.redirect(`${http}${creds.SERVER}/bot/login?loggedIn=true`)
+        res.redirect(`${creds.SERVER}/bot/login?loggedIn=true`)
         res.end();
         return
     } catch (error) {
