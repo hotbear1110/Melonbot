@@ -159,7 +159,7 @@ app.get("/v1/twitch/code", async function(req, res) {
 })
 
 app.get("*", async function(req, res) {
-    res.sendFile(path.resolve(__dirname, "public/index.html"))
+    res.sendFile(path.resolve(__dirname, "public/error_404.html"))
 })
 
 app.use('/', router);
