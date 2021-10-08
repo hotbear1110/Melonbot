@@ -13,7 +13,7 @@ client.connect();
 (async () => {
 
     async function messageHandler(channel, user, message, self) {
-        if (self) { return; };
+        if (self) { return; }
         let input = message.split(" ");
         
         let command = input[1];
