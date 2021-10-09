@@ -9,11 +9,6 @@
     "dev": "nodemon init.js",
     "build": "cd website/flottorp && npm install && npm run build"
   },
-  "nodemonConfig": {
-    "ignore": [
-      "commands/*"
-    ]
-  },
   "author": "Melon095",
   "license": "ISC",
   "devDependencies": {

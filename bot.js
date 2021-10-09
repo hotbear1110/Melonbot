@@ -30,12 +30,10 @@ client.connect();
         
         // No real reason for this. primarily just for fun. Checks the input against every prefix in [./tools/prefix.js] and does a condtitional
         const hasPrefix = prefix.prefix(channel, user, message, self).map((prefix, _) => {
-            console.log(prefix.prefix)
             let allowed = false;
             switch (input[0]) {
             case prefix.prefix:
                 allowed = eval(prefix.condition)
-                console.log(prefix.condition)
             }
             return allowed
         })

@@ -1,23 +1,18 @@
-
-const fs = require("fs");
-const dir = "./commands";
+const tools = require("./../tools/tools")
 
 module.exports = {
     name: "help",
-    ping: false,
+    ping: true,
     description: "Prints out the description of a command if a command is specified.",
     perm: 100,
     execute: async (channel, user, input, perm) => {
         try {
-            const files = fs.readdirSync(dir)
 
-            let commands = "Commands are: ";
-            for(let i = 0; i < files.length; i++) {
-                commands += files[i].replace('.js', '') + "\n";
-            }
+            if (input.length <= 0) { return; }
 
-        
-            return commands;
+            const description = await tools.query("SELECT description FROM commands WHERE name=?", input[0])
+
+            return description[0].description
         } catch (err) {
             return `Madge , bad command, you almost killed me! Notifying owner FeelsWeirdMan ${err}`
         }
