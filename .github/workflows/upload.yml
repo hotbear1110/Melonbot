@@ -33,7 +33,7 @@ jobs:
     - name: Install npm modules
       run: ssh prod 'cd ${{ secrets.HOME_DIR }} && npm install'
     
-    - name: Compile Reacth Website
+    - name: Compile React Website
       run: ssh prod 'cd ${{ secrets.HOME_DIR }} && npm run build'
       
     - name: PM2 Restart

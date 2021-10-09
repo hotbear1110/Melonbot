@@ -39,7 +39,7 @@ exports.initDatabase = () => {
  * @author JoachimFlottorp
  * @param {String} query - The query string. Any user input should be set to a ? Example: [SELECT * WHERE x=?] 
  * @param {Array} data - Array containing user input. Changes ? in query string to that of the array. 
- * @returns {Promise} - Array of json with data. If one element access as foo[0].element
+ * @returns {Promise} - Array of json with data. Access element as foo[0].element
  */
 exports.query = (query, data = []) => new Promise((Resolve, Reject) => {
     con.query(mysql.format(query, data), async (err, results) => {
@@ -153,10 +153,6 @@ exports.token = async (id) => {
 
         access_token = access_token[0].access_token.replace(/'/g, "")
 
-        if(debug) {
-            console.log(access_token)
-        }
-    
         const verifiedToken = await axios.get('https://id.twitch.tv/oauth2/validate', {
             headers: {
                 Authorization: `Bearer ${access_token}`
@@ -199,7 +195,7 @@ exports.token = async (id) => {
         })
         return {status: "OK", token: verifiedToken};
     } catch (error) {
-        return error
+        return {status: "ERROR", token: error}
     }
 }
 

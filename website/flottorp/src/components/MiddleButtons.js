@@ -22,6 +22,7 @@ export default function MiddleButtons() {
                         >
                         <NavDropdown.Item eventKey={1.1} href="/bot" id="item">Bot Stats</NavDropdown.Item>
                         <NavDropdown.Item eventKey={1.2} href="/bot/login" id="item">Login Twitch</NavDropdown.Item>
+                        <NavDropdown.Item eventKey={1.3} href="/bot/commands" id="item">View Commands</NavDropdown.Item>
                     </NavDropdown>
                 </Nav>
             </div>
