@@ -35,7 +35,10 @@ jobs:
     
     - name: Compile React Website
       run: ssh prod 'cd ${{ secrets.HOME_DIR }} && npm run build'
+
+    - name: PM2 Stop
+      run: ssh prod 'pm2 stop Bot'
       
-    - name: PM2 Restart
-      run: ssh prod 'pm2 restart Bot'
+    - name: PM2 Start
+      run: ssh prod 'pm2 start Bot'
     
