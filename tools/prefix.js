@@ -5,7 +5,7 @@ module.exports = {
     prefix: (channel, user, message, self) => [
         {
             prefix: "melon", 
-            condition: `${creds.DEVELOPMENT} === false`, 
+            condition: `"${creds.DEVELOPMENT}" === "false"`, 
             description: "Can only be used if development is set to false. Primarily allows you to work on dev bot while not triggering the production bot."
         },
         
