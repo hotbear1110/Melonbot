@@ -145,8 +145,6 @@ app.get("/v1/twitch/code", async function(req, res) {
         logger += `User_id: ${userInfo.user_id} - ${userInfo.login_name} added to database`, 
         tools.logger(logger, "info")
 
-        const http = creds.HTTPS ? "https://" : "http://";
-        
         res.redirect(`${creds.SERVER}/bot/login?loggedIn=true`)
         res.end();
         return

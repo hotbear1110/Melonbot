@@ -21,6 +21,8 @@ async function Command(channel, user, input, perm, command) {
 module.exports = {
     name: "pipe",
     ping: false,
+    description: "Pipes out the output of a command to another command. Only supports two commands, Example: pipe say 10 Okayge FeelsGoodMan | random",
+    perm: 100,
     execute: async (channel, user, input, perm) => {
         // return `${user.username}, Does not work at the moment FeelsBadMan`
         try {

@@ -3,6 +3,8 @@ const { client } = require("../bot");
 module.exports = {
     name: "say",
     ping: false,
+    description: "Says what the user inputs.",
+    perm: 100,
     execute: async (channel, user, input, perm) => {
         try {
             var amount = input[0];

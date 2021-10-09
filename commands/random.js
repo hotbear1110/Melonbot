@@ -17,6 +17,8 @@ function shuffle(input) {
 module.exports = {
     name: "random",
     ping: false,
+    description: "Randomizes input.",
+    perm: 100,
     execute: async (channel, user, input, perm) => {
         try {
             input = input.splice(0).toString().split(",");

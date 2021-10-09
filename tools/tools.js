@@ -111,7 +111,7 @@ exports.token = async (id, debug = false) => {
         var access_token = await tools.query('SELECT access_token FROM tokens WHERE user_id = ?;', [id])
 
         if(access_token.length <= 0) {
-            return {status: "ERROR", token: `Sorry, user is not in our database. Please login: [ ${creds.HTTPS ? `https://${creds.SERVER}` : `http://${creds.SERVER}`} ]`}
+            return {status: "ERROR", token: `Sorry, user is not in our database. Please login: [ ${creds.SERVER} ]`}
         }
 
         access_token = access_token[0].access_token.replace(/'/g, "")

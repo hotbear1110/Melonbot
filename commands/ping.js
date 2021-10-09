@@ -4,6 +4,8 @@ const tools = require("../tools/tools")
 module.exports = {
     name: "ping",
     ping: true,
+    description: "Pings the user with some small info.",
+    perm: 100,
     execute: async (channel, user, input, perm) => {
         try {
             const commitCount = shell.execSync("git rev-list --all --count")

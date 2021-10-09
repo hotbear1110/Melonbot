@@ -6,6 +6,7 @@ const fs = require('fs');
 const tools = require("./tools/tools")
 const creds = require("./credentials/config")
 const prefix = require("./tools/prefix")
+const _ = require("underscore")
 
 const client = new tmi.client(login)
 client.connect();
@@ -39,7 +40,7 @@ client.connect();
             return allowed
         })
 
-        if (!hasPrefix.includes(true)) { return; }       
+        if (!hasPrefix.includes(true)) { return; }
 
         const commands = requireDir("./commands");
         
@@ -82,8 +83,36 @@ client.connect();
         await messageHandler(channel, user, message, self);
     });
     
-    client.on('connected', (addr, port) => {
+    client.on('connected', async function (addr, port) {
         console.log(`* Connected to ${addr}:${port}`);
+
+        const commands = requireDir("./commands");
+        const dbCommands = await tools.query("SELECT * FROM commands")
+
+        _.each(commands, async function(command) {
+            let isCommand = 0;
+            _.each(dbCommands, async function (dbcommand) {
+                if (dbcommand.name === command.name) {
+                    if (dbcommand.description !== command.description || dbcommand.perm !== command.perm) {
+                        tools.query("UPDATE commands \
+                                    SET description=?, \
+                                    perm=?, \
+                                    WHERE name=?", 
+                                    [command.description, command.perm, command.name])
+                    }
+                    isCommand = 1;
+                    return;
+                }
+            })
+            if (isCommand === 0) {
+                await tools.query("INSERT INTO commands \
+                                    (name, description, perm) \
+                                    VALUES (?, ?, ?)", 
+                                    [command.name, command.description, command.perm])
+            } 
+        })
+
+
     });
 
 })();

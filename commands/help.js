@@ -5,6 +5,8 @@ const dir = "./commands";
 module.exports = {
     name: "help",
     ping: false,
+    description: "Prints out the description of a command if a command is specified.",
+    perm: 100,
     execute: async (channel, user, input, perm) => {
         try {
             const files = fs.readdirSync(dir)
