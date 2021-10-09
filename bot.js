@@ -13,24 +13,33 @@ client.connect();
 (async () => {
 
     async function messageHandler(channel, user, message, self) {
+    try {
         // Don't listen to your own messages.
         if (self) { return; }
-
+        
         // Sometimes self doesn't work.
         if (user["username"] === creds.USERNAME) { return; }
-
         
         let input = message.split(" ");
+
+        // If message only has the prefix for example
+        if (input.length <= 1) { return; }
         
         let command = input[1];
-
-        for (var i = 0; i < prefix.length; i++) {
-            if (input[0] !== prefix[i].prefix && prefix[i].allowed !== true) {
-                break;
-            }
-        }
         
-        if (input.length <= 1) { return; }
+        // No real reason for this. primarily just for fun. Checks the input against every prefix in [./tools/prefix.js] and does a condtitional
+        const hasPrefix = prefix.map((prefix, _) => {
+            console.log(prefix.prefix)
+            let allowed = false;
+            switch (input[0]) {
+            case prefix.prefix:
+                allowed = eval(prefix.condition)
+                console.log(prefix.condition)
+            }
+            return allowed
+        })
+
+        if (!hasPrefix.includes(true)) { return; }       
 
         const commands = requireDir("./commands");
         
@@ -52,7 +61,7 @@ client.connect();
         if(!result || result === "") {
             return;
         }
-        
+
         if(commands[command].ping === true){
             result = `@${user['display-name']}, ${result}`;
         }
@@ -63,6 +72,10 @@ client.connect();
 
         // Increment the command to stats.
         tools.query("UPDATE stats SET commandsHandled = commandsHandled + 1 WHERE where_placeholder = 1;")
+    } catch (error) {
+        console.log(error)
+        tools.logger(error, "error")
+    }
     }
 
     client.on('message', async (channel, user, message, self) => {

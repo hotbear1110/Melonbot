@@ -47,6 +47,7 @@ exports.query = (query, data = []) => new Promise((Resolve, Reject) => {
 })
 
 exports.logger = async (error_message, type = "info") => {
+    if (error_message === "") { return; }
     // Logs to a file stream and to the error_logs table.
     // type can be info or error.
     
