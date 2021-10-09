@@ -151,7 +151,7 @@ exports.token = async (id) => {
             return {status: "ERROR", token: `Sorry, user is not in our database. Please login: [ ${creds.SERVER} ]`}
         }
 
-        access_token = access_token[0].access_token.replace(/'/g, "")
+        access_token = access_token[0].access_token
 
         const verifiedToken = await axios.get('https://id.twitch.tv/oauth2/validate', {
             headers: {
@@ -169,7 +169,7 @@ exports.token = async (id) => {
 
                 const params = new URLSearchParams();
                 params.append("grant_type", "refresh_token");
-                params.append("refresh_token", refresh_token[0].refresh_token.replace(/'/g, ""));
+                params.append("refresh_token", refresh_token[0].refresh_token);
                 params.append("client_id", creds.TWITCH_CLIENT_ID);
                 params.append("client_secret", creds.TWITCH_CLIENT_SECRET);
 
