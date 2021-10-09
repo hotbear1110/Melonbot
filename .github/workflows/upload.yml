@@ -30,6 +30,12 @@ jobs:
     - name: Git pull
       run: ssh prod 'cd ${{ secrets.HOME_DIR }} && git pull'
     
+    - name: Install npm modules
+      run: ssh prod 'cd ${{ secrets.HOME_DIR }} && npm install'
+    
+    - name: Compile Reacth Website
+      run: ssh prod 'cd ${{ secrets.HOME_DIR }} && npm run build'
+      
     - name: PM2 Restart
       run: ssh prod 'pm2 restart Bot'
     
