@@ -8,7 +8,10 @@ const creds = require('./../credentials/config')
 const axios = require("axios");
 const humanize = require('humanize-duration');
 
-
+/**
+ * Initializes the database.
+ * @author JoachimFlottorp
+ */
 exports.initDatabase = () => {
     con.ping((err) => {
         if (err) {
@@ -32,6 +35,12 @@ exports.initDatabase = () => {
     tools.query("INSERT IGNORE INTO stats VALUES (1, 0)")
 }
 
+/**
+ * @author JoachimFlottorp
+ * @param {String} query - The query string. Any user input should be set to a ? Example: [SELECT * WHERE x=?] 
+ * @param {Array} data - Array containing user input. Changes ? in query string to that of the array. 
+ * @returns {Promise} - Array of json with data. If one element access as foo[0].element
+ */
 exports.query = (query, data = []) => new Promise((Resolve, Reject) => {
     con.query(mysql.format(query, data), async (err, results) => {
         if (err) {
@@ -46,6 +55,11 @@ exports.query = (query, data = []) => new Promise((Resolve, Reject) => {
     });
 })
 
+/**
+ * @author JoachimFlottorp
+ * @param {String} error_message - Error message
+ * @param {String} type - Info or Error. Default is info
+ */
 exports.logger = async (error_message, type = "info") => {
     if (error_message === "") { return; }
     // Logs to a file stream and to the error_logs table.
@@ -68,6 +82,11 @@ exports.logger = async (error_message, type = "info") => {
     logToFile.close();
 }
 
+/**
+ * @author JoachimFlottorp
+ * @param {Int} timeInSeconds - Converts time in seconds to HOUR:MINUTES:SECONDS 
+ * @returns HOUR:MINUTES:SECONDS as a String
+ */
 exports.convertHMS = (timeInSeconds) => {
     try {
         const sec = parseInt(timeInSeconds, 10); // convert value to number if it's string
@@ -84,11 +103,19 @@ exports.convertHMS = (timeInSeconds) => {
     }
 }
 
+/**
+ * @author JoachimFlottorp
+ * @returns Year Month Date 2021-10-09
+ */
 exports.YMD = () => {
     let date = new Date();
     return `${date.getFullYear()}-${("0" + (date.getMonth() + 1)).slice(-2)}-${("0" + date.getDate()).slice(-2)}.log` 
 }
 
+/**
+ * @author JoachimFlottorp
+ * @returns Year Month Date Hour Minute Second 2021-10-09 02:35:33
+ */
 exports.YMDHMS = () => {
     let date = new Date();
     let hours = date.getHours();
@@ -97,6 +124,12 @@ exports.YMDHMS = () => {
     return `${date.getFullYear()}-${("0" + (date.getMonth() + 1)).slice(-2)}-${("0" + date.getDate()).slice(-2)} ${hours < 10 ? "0" + hours : hours}:${minutes < 10 ? "0" + minutes : minutes}:${seconds < 10 ? "0" + seconds : seconds}` 
 }
 
+/**
+ * @author JoachimFlottorp
+ * @param {*} user - User variable TMI gives. 
+ * @param {*} channel - Channel variable TMI gives.
+ * @returns true | false | If is mod
+ */
 exports.isMod = (user, channel) => {
     let isMod = user.mod || user['user-type'] === 'mod';
     let isBroadcaster = channel === user.username;
@@ -104,8 +137,12 @@ exports.isMod = (user, channel) => {
     return isModUp
 }
 
-// Get the token for a user, this also refreshes the token if needed.
-exports.token = async (id, debug = false) => {
+/**
+    Returns the access token of a twitch account.
+    @author JoachimFlottorp
+    @param {Number} id - User id of the requested user.
+*/
+exports.token = async (id) => {
     // Validate token [https://dev.twitch.tv/docs/authentication#validating-requests]
     try {
         var access_token = await tools.query('SELECT access_token FROM tokens WHERE user_id = ?;', [id])
@@ -151,7 +188,6 @@ exports.token = async (id, debug = false) => {
                     },
                     data: params.toString()
                 }).then(async function (data) {
-                    console.log(data.data)
                     await tools.query(`UPDATE tokens SET access_token = "${data.data.access_token}", refresh_token = "${data.data.refresh_token}" WHERE user_id = ${id}`)
                     return data.data.access_token
                 }).catch((error) => {
@@ -183,6 +219,7 @@ const shortHumanize = humanize.humanizer({
         },
     },
 });
+
 exports.humanizeDuration = (seconds) => {
     const options = {
         units: ['y', 'mo', 'd', 'h', 'm', 's'],
