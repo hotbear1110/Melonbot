@@ -7,6 +7,7 @@ const tools = require("./tools/tools")
 const creds = require("./credentials/config")
 const prefix = require("./tools/prefix")
 const _ = require("underscore")
+const vm = require("vm")
 
 const client = new tmi.client(login)
 client.connect();
@@ -33,7 +34,8 @@ client.connect();
             let allowed = false;
             switch (input[0]) {
             case prefix.prefix:
-                allowed = eval(prefix.condition)
+                allowed = vm.runInNewContext(prefix.condition);
+                console.log(allowed)
             }
             return allowed
         })
