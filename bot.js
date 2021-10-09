@@ -5,7 +5,7 @@ const requireDir = require("require-dir");
 const fs = require('fs');
 const tools = require("./tools/tools")
 const creds = require("./credentials/config")
-const prefix = require("./tools/prefix").prefix
+const prefix = require("./tools/prefix")
 
 const client = new tmi.client(login)
 client.connect();
@@ -28,7 +28,7 @@ client.connect();
         let command = input[1];
         
         // No real reason for this. primarily just for fun. Checks the input against every prefix in [./tools/prefix.js] and does a condtitional
-        const hasPrefix = prefix.map((prefix, _) => {
+        const hasPrefix = prefix.prefix(channel, user, message, self).map((prefix, _) => {
             console.log(prefix.prefix)
             let allowed = false;
             switch (input[0]) {
