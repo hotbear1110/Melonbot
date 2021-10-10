@@ -2,14 +2,7 @@
 
 name: Upload to server.
 
-#on: [push]
-
-on:
-  workflow_run:
-    workflows: ["Build React App"]
-    types:
-      - completed
-      - neutral
+on: [push]
       
 jobs:
   build:
