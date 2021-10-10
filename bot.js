@@ -39,10 +39,13 @@ client.connect();
             return allowed
         })
 
+        // If the comment does not include a prefix
         if (!hasPrefix.includes(true)) { return; }
 
+        // Commands
         const commands = requireDir("./commands");
         
+        // Was the message a command
         if(typeof commands[command] === "undefined") {
             client.say(channel, `${user.username} undefined command FeelsDankMan`);
             return;
@@ -56,22 +59,26 @@ client.connect();
         
         let realchannel = channel.substring(1);
         let realinput = input.slice(2);
+        // Run the command
         let result = await commands[command].execute(realchannel, user, realinput, perm);
         
+        // Increment the command to stats.
+        tools.query("UPDATE stats SET commandsHandled = commandsHandled + 1 WHERE where_placeholder = 1;")
+
+        // Don't say anything if no message came back
         if(!result || result === "") {
             return;
         }
 
+        // Add a @username if command wants to ping
         if(commands[command].ping === true){
             result = `@${user['display-name']}, ${result}`;
         }
         
         //[TODO]: Banphrase
         
+        // Respond in the chat
         client.say(channel, result);
-
-        // Increment the command to stats.
-        tools.query("UPDATE stats SET commandsHandled = commandsHandled + 1 WHERE where_placeholder = 1;")
     } catch (error) {
         console.log(error)
         tools.logger(error, "error")
@@ -110,8 +117,6 @@ client.connect();
                                     [command.name, command.description, command.perm])
             } 
         })
-
-
     });
 
 })();
