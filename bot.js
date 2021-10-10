@@ -34,9 +34,7 @@ client.connect();
             let allowed = false;
             switch (input[0]) {
             case prefix.prefix:
-                console.log(prefix)
                 allowed = vm.runInNewContext(prefix.condition);
-                console.log(allowed)
             }
             return allowed
         })

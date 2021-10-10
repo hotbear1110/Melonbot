@@ -44,7 +44,6 @@ exports.initDatabase = () => {
 exports.query = (query, data = []) => new Promise((Resolve, Reject) => {
     con.query(mysql.format(query, data), async (err, results) => {
         if (err) {
-            console.log(query, '\n//\n', err);
             await tools.query(`
                 INSERT INTO error_logs (error_message) VALUES (?)`,
                 [JSON.stringify(err)])

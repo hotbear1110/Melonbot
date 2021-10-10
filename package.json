@@ -10,7 +10,7 @@
     "build": "cd website/flottorp && npm install && npm run build"
   },
   "nodemonConfig": {
-    "ext": "jsx"
+    "ext": "jsx, js, sql, sh, css"
   },
   "author": "Melon095",
   "license": "ISC",
