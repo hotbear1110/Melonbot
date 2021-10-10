@@ -9,6 +9,9 @@
     "dev": "nodemon init.js",
     "build": "cd website/flottorp && npm install && npm run build"
   },
+  "nodemonConfig": {
+    "ext": "jsx"
+  },
   "author": "Melon095",
   "license": "ISC",
   "devDependencies": {

@@ -1,7 +1,5 @@
 var React = require('react');
 
-function HelloMessage(props) {
-  return <div>Hello {props.name}</div>;
+module.exports = function Commands(props) {
+  return <div>Hello {props.name} This is a github actions test!!</div>;
 }
-
-module.exports = HelloMessage;

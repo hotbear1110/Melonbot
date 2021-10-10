@@ -26,4 +26,13 @@ router
         res.redirect(301, path);
     });
 
+
+// /Bot/Commands
+router
+    .route("/commands")
+    .get(async function(req, res) {
+        res.render('commands', { name: 'John' });
+    })
+
+
 module.exports = router;
