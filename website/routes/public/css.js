@@ -2,11 +2,11 @@ const express = require("express");
 const router = express.Router(); 
 const path = require("path")
 
-// /public/css/commands.css
 router
-    .route("/commands.css")
+    .route("/*.css")
     .get(async function(req, res) {
-        res.sendFile(path.resolve(WEBSITE_ROOT, "public/css/commands.css"))
+        console.log(req.originalUrl)
+        res.sendFile(path.resolve(WEBSITE_ROOT + req.originalUrl))
     });
 
 module.exports = router;

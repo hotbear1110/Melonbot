@@ -49,6 +49,7 @@ app.get("/", async function(req, res) {
 });
 
 app.use('/bot', require('./routes/bot'))
+
 app.use('/public/css', require('./routes/public/css'))
 
 //////////////////// API //////////////////// 

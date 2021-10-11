@@ -29,6 +29,8 @@ router
 
 
 // /Bot/Commands
+// Unsure if there is a way to use a static react app considering i have to query the database.
+// I don't personally like that i have one server rendered page. And then the rest of the page is static react.
 router
     .route("/commands")
     .get(async function(req, res) {
@@ -41,9 +43,12 @@ router
         */        
         
         const commands = await tools.query("SELECT * FROM commands");
-        // console.log(commands)
-        
-        res.render('commands', { commands: commands, WEBSITE_ROOT: WEBSITE_ROOT });
+        console.time('TimeRender')
+        res.render('Commands', { commands: commands, WEBSITE_ROOT: WEBSITE_ROOT }, function(err, html) {
+            if (err) return console.log('Render error: ', err);
+            res.send(html);
+            console.timeEnd('TimeRender')
+        });
     })
 
 

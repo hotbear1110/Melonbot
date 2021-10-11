@@ -8,11 +8,13 @@ import MiddleButtons from './components/MiddleButtons';
 import BotMain from "./components/BotMain"
 import BotStats from "./components/BotStats";
 import BotLogin from "./components/BotLogin";
+import Header from "./components/Header"
 
 
 function App() {
   return (
     <div className="App">
+      <Header />
       <BotStats />
       <Router>
         <Switch>
