@@ -52,6 +52,10 @@ app.use('/bot', require('./routes/bot'))
 
 app.use('/public/css', require('./routes/public/css'))
 
+app.get("/favicon.ico", async function(req, res) {
+    res.sendFile(path.resolve(WEBSITE_ROOT, "public/favicon.ico"))
+})
+
 //////////////////// API //////////////////// 
 
 app.use("/v1/stats", require("./routes/api/stats"))

@@ -2,7 +2,8 @@ const express = require("express");
 const router = express.Router(); 
 const creds = require('./../../credentials/config');
 const path = require("path")
-const tools = require("../../tools/tools")
+const tools = require("../../tools/tools");
+const { cp } = require("fs");
 
 // /Bot
 router
@@ -27,10 +28,12 @@ router
         res.redirect(301, path);
     });
 
+    
 
 // /Bot/Commands
 // Unsure if there is a way to use a static react app considering i have to query the database.
 // I don't personally like that i have one server rendered page. And then the rest of the page is static react.
+
 router
     .route("/commands")
     .get(async function(req, res) {
@@ -44,7 +47,8 @@ router
         
         const commands = await tools.query("SELECT * FROM commands");
         console.time('TimeRender')
-        res.render('Commands', { commands: commands, WEBSITE_ROOT: WEBSITE_ROOT }, function(err, html) {
+
+        res.render('Commands', { data: commands, }, function(err, html) {
             if (err) return console.log('Render error: ', err);
             res.send(html);
             console.timeEnd('TimeRender')

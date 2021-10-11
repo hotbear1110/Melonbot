@@ -46,7 +46,7 @@ export default class Header extends Component {
             onMouseEnter={this.hoverHome}
             onMouseLeave={this.removeHome}
             >Home</a>
-            <select name="Bot" id="Bot-Dropdowm" style={{
+            <select name="Bot" id="Bot-Dropdown" style={{
                 display: "inline-block",
                 backgroundColor: "transparent",
                 border: "none",

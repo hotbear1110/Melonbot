@@ -1,7 +1,9 @@
-const { Component } = require('react');
 const React = require('react');
+const ReactDOMServer = require("react-dom/server")
+import { Component } from "react";
 import Header from "./Header"
-// This is identical to the Header component in the static React App.
+// Modified version of static react header. i cba to create it in vanilla css.
+
 
 function CommandList(commands) {
     // Pipe every command into a table row element
@@ -13,43 +15,47 @@ function CommandList(commands) {
         <td>{command.perm}</td>
     </tr>
     )
-    return commandTable;
+    return(
+    <>
+        <Header />
+        <table className="commandsTable">
+            <tr className="TableHeader">
+                <th scope="col">ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Description</th>
+                <th scope="col">Perm</th>
+            </tr>
+            {commandTable}
+        </table>
+    </>
+    );
 }
 
 module.exports = class Commands extends Component {
-// module.exports = function Commands(props) {
-    constructor(props) {
-        super(props)
-
-        this.state = {
-            commands: props.commands
-        }
-    }
-    
-
     render() {
 
-        const { commands } = this.state
+        var data = this.props.data
+
+        var table = CommandList(data)
+        
+        var rootHtml = ReactDOMServer.renderToString(table);
+
+        var initScript = 'main(' + JSON.stringify(table).replace(/script/g, 'src'+'ipt') + ')';
 
         return (
             <html>
             <head>
                 <link rel="stylesheet" href="/public/css/commands.css"></link>
+                <link rel="stylesheet" href="/public/css/header.css"></link>
                 <title>Commands</title>
             </head>
             <body>
-                <Header />
-                <table className="commandsTable">
-                    <tr className="TableHeader">
-                        <th scope="col">ID</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Description</th>
-                        <th scope="col">Perm</th>
-                    </tr>
-                    {CommandList(commands)}
-                </table>
+                <div id="root" dangerouslySetInnerHTML={{__html: rootHtml}}/>
+
+                <script src="./Render.jsx"/>
+                <script dangerouslySetInnerHTML={{__html: initScript}}/>
             </body>
             </html>
         )
-    } 
+    }
 }

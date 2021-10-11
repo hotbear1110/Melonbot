@@ -3,7 +3,7 @@
   "terminals": [
     {
       "name": "asd",
-      "commands": ["npm run start"]
+      "commands": ["npm run dev"]
     }
   ]
 }

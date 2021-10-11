@@ -16,6 +16,7 @@ client.connect();
 
     async function messageHandler(channel, user, message, self) {
     try {
+        client.whisper("melon095", "Hey")
         // Don't listen to your own messages.
         if (self) { return; }
         
@@ -95,6 +96,7 @@ client.connect();
         const commands = requireDir("./commands");
         const dbCommands = await tools.query("SELECT * FROM commands")
 
+        // Add or Update commands to the database.
         _.each(commands, async function(command) {
             let isCommand = 0;
             _.each(dbCommands, async function (dbcommand) {
@@ -102,8 +104,8 @@ client.connect();
                     if (dbcommand.description !== command.description || dbcommand.perm !== command.perm) {
                         tools.query("UPDATE commands \
                                     SET description=?, \
-                                    perm=?, \
-                                    WHERE name=?", 
+                                    perm=? \
+                                    WHERE name=?;", 
                                     [command.description, command.perm, command.name])
                     }
                     isCommand = 1;

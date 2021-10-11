@@ -4,7 +4,7 @@ const isMod = require("../tools/tools").isMod
 module.exports = {
     name: "vanish",
     ping: false,
-    description: `Vanishes the person who requests the command.`,
+    description: `Vanishes the person who requests the command. Requires that the bot has the moderator role.`,
     perm: 100,
     execute: async (channel, user, input, perm) => {
         try {
