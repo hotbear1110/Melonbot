@@ -36,7 +36,6 @@ jobs:
     - name: Git pull and Build React
       run: ssh prod 'cd ${{ secrets.HOME_DIR }} && git pull && npm run build'
 
-
     - name: PM2 Stop
       run: ssh prod 'pm2 stop Bot'
       
