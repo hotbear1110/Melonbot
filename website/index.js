@@ -22,6 +22,7 @@ if (!fs.existsSync(LOG_FOLDER)) {
 app.use("/", router);
 
 app.use(express.static(path.resolve(__dirname, 'flottorp/build')))
+app.use(express.static(path.resolve(__dirname, 'public')))
 
 app.use(cors());
 
@@ -48,6 +49,7 @@ app.get("/", async function(req, res) {
 });
 
 app.use('/bot', require('./routes/bot'))
+app.use('/public/css', require('./routes/public/css'))
 
 //////////////////// API //////////////////// 
 
