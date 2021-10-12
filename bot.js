@@ -16,7 +16,6 @@ client.connect();
 
     async function messageHandler(channel, user, message, self) {
     try {
-        client.whisper("melon095", "Hey")
         // Don't listen to your own messages.
         if (self) { return; }
         
