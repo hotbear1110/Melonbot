@@ -8,6 +8,7 @@ const creds = require("./credentials/config")
 const prefix = require("./tools/prefix")
 const _ = require("underscore")
 const vm = require("vm")
+const UnixServer = require("./modules/socket")
 
 const client = new tmi.client(login)
 client.connect();
@@ -23,6 +24,14 @@ client.connect();
         if (user["username"] === creds.USERNAME) { return; }
         
         let input = message.split(" ");
+
+        // Send the input to the Socket Markov Program. 
+        // This is disabled if windows as to my knowledge, windows does not have the socket i want. but i could be wrong.
+        if (process.platform !== "win32") {
+            const socket = new UnixServer
+            UnixServer.connect();
+            UnixServer.write(message)
+        }
 
         // If message only has the prefix for example
         if (input.length <= 1) { return; }
@@ -119,7 +128,7 @@ client.connect();
             } 
         })
     });
-
+    
 })();
 
 module.exports = { client };

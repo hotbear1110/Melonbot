@@ -3,4 +3,4 @@ CREATE TABLE IF NOT EXISTS `error_logs` (`error_id` int(11) NOT NULL AUTO_INCREM
 CREATE TABLE IF NOT EXISTS `tokens` (`user_id` int(11) NOT NULL, `access_token` text, `login_name` text, `refresh_token` text, `scope` text, PRIMARY KEY (`user_id`) ) ENGINE=InnoDB DEFAULT CHARSET=latin1
 CREATE TABLE IF NOT EXISTS `stats` (`where_placeholder` int(1) NOT NULL, `commandsHandled` int(11) NOT NULL, PRIMARY KEY (`where_placeholder`), UNIQUE KEY `where_placeholder_UNIQUE` (`where_placeholder`) ) ENGINE=InnoDB DEFAULT CHARSET=latin1
 CREATE TABLE IF NOT EXISTS `commands` (`id` int(11) NOT NULL AUTO_INCREMENT, `name` text NOT NULL, `description` text NOT NULL, `perm` int(11) NOT NULL, PRIMARY KEY (`id`) ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Essentially all commands'
-CREATE TABLE IF NOT EXISTS `suggestions` (`suggestion_id` INT NOT NULL AUTO_INCREMENT, `suggestion` TEXT NULL, PRIMARY KEY (`suggestion_id`));
+CREATE TABLE IF NOT EXISTS `suggestions` (`suggestion_id` int(11) NOT NULL AUTO_INCREMENT, `suggestion` text NOT NULL, `request_username` text NOT NULL, PRIMARY KEY (`suggestion_id`) ) ENGINE=InnoDB DEFAULT CHARSET=latin1
