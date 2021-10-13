@@ -28,9 +28,11 @@ client.connect();
         // Send the input to the Socket Markov Program. 
         // This is disabled if windows as to my knowledge, windows does not have the socket i want. but i could be wrong.
         if (process.platform !== "win32") {
-            const socket = new UnixServer
-            socket.connect();
-            socket.write(message);
+            const socket = new UnixServer();
+            // Connect and write if it connected.
+            if(socket.connect()) {
+                socket.write(message);
+            }
         }
 
         // If message only has the prefix for example

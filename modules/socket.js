@@ -8,29 +8,24 @@ const SOCKETFILE = '/tmp/EPSNodeSocketMarkov.sock';
 class UnixSocket {
     constructor(port = 5863) {
         this.port = port
-        this.isConnected = false
     }
     
-    static connect() {
+    connect() {
         this.client = net.createConnection(SOCKETFILE)
             .on('connect', () => {
                 console.log("Connected");
             })
             .on('error', (error) => {
                 console.log(error.code, 'SOCKET ERROR')
+                return false
             })
         this.client.write("CONNECTED")
-        this.isConnected = true
+        return true;
     }
 
-    static async write(message) {
-        if(this.isConnected) {
-            this.client.write(message)
-            await this.client.on('close')
-        } else {
-            console.timeStamp();
-            console.log("Not connected to socket, unable to send message.")
-        }
+    async write(message) {
+        this.client.write(message)
+        await this.client.on('close')
     }
 }    
     
