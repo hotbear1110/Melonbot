@@ -6,10 +6,6 @@ var net = require('net');
 const SOCKETFILE = '/tmp/EPSNodeSocketMarkov.sock';
 
 class UnixSocket {
-    constructor(port = 5863) {
-        this.port = port
-    }
-    
     connect() {
         this.client = net.createConnection(SOCKETFILE)
             .on('connect', () => {
@@ -19,7 +15,6 @@ class UnixSocket {
                 console.log(error.code, 'SOCKET ERROR')
                 return false
             })
-        this.client.write("CONNECTED")
         return true;
     }
 

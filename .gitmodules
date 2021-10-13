@@ -1,0 +1,3 @@
+[submodule "NodeSocketMarkov"]
+	path = NodeSocketMarkov
+	url = https://github.com/JoachimFlottorp/NodeSocketMarkov
