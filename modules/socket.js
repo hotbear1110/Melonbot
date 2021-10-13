@@ -22,13 +22,16 @@ class UnixSocket {
             .on('error', (error) => {
                 console.log(err.code, 'SOCKET ERROR')
             })
-        this.client.write("CONNECTED", unic)
+        this.client.write("CONNECTED")
         isConnected = true
     }
 
     static async write(message) {
         if(isConnected) {
-            this.client.write()
+            this.client.write(message)
+            await this.client.on('close', () => {
+                return
+            })
         } else {
             console.timeStamp();
             console.log("Not connected to socket, unable to send message.")
