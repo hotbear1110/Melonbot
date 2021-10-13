@@ -2,9 +2,6 @@
 
 var net = require('net');
 
-// prevent duplicate exit messages
-var SHUTDOWN = false;
-
 // Our socket
 const SOCKETFILE = '/tmp/EPSNodeSocketMarkov.sock';
 

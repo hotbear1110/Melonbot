@@ -29,8 +29,8 @@ client.connect();
         // This is disabled if windows as to my knowledge, windows does not have the socket i want. but i could be wrong.
         if (process.platform !== "win32") {
             const socket = new UnixServer
-            UnixServer.connect();
-            UnixServer.write(message)
+            socket.connect();
+            socket.write(message);
         }
 
         // If message only has the prefix for example
