@@ -15,7 +15,7 @@ const humanize = require('humanize-duration');
 exports.initDatabase = () => {
     con.ping((err) => {
         if (err) {
-            console.log("No database exists or username, password, host, database is wrong.");
+            console.log(err)
             process.exit(1);
         }
     })
