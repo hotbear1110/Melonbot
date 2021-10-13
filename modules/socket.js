@@ -23,11 +23,11 @@ class UnixSocket {
                 console.log(error.code, 'SOCKET ERROR')
             })
         this.client.write("CONNECTED")
-        isConnected = true
+        this.isConnected = true
     }
 
     static async write(message) {
-        if(isConnected) {
+        if(this.isConnected) {
             this.client.write(message)
             await this.client.on('close')
         } else {
