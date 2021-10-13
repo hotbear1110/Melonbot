@@ -20,7 +20,7 @@ class UnixSocket {
                 console.log("Connected");
             })
             .on('error', (error) => {
-                console.log(err.code, 'SOCKET ERROR')
+                console.log(error.code, 'SOCKET ERROR')
             })
         this.client.write("CONNECTED")
         isConnected = true
