@@ -29,9 +29,7 @@ class UnixSocket {
     static async write(message) {
         if(isConnected) {
             this.client.write(message)
-            await this.client.on('close', () => {
-                return
-            })
+            await this.client.on('close')
         } else {
             console.timeStamp();
             console.log("Not connected to socket, unable to send message.")
