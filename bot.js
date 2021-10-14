@@ -27,12 +27,17 @@ client.connect();
 
         // Send the input to the Socket Markov Program. 
         // This is disabled if windows as to my knowledge, windows does not have the socket i want. but i could be wrong.
-        if (process.platform !== "win32") {
-            const socket = new UnixServer();
-            // Connect and write if it connected.
-            if(socket.connect()) {
-                socket.write(message);
-            }
+        // if (process.platform !== "win32") {
+        //     const socket = new UnixServer();
+        //     // Connect and write if it connected.
+        //     if(socket.connect()) {
+        //         socket.write(message);
+        //     }
+        // }
+
+        if (channel === "#nymn" && creds.DEVELOPMENT === false) {
+            client.say(channel, "Nime ❗ ")
+            return
         }
 
         // If message only has the prefix for example
