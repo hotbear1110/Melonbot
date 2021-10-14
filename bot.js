@@ -91,10 +91,13 @@ client.connect();
             result = `@${user['display-name']}, ${result}`;
         }
         
-        //[TODO]: Banphrase
-        
-        // Respond in the chat
-        client.say(channel, result);
+        const banPhrase = await tools.banPhrase(channel, message);
+        if(banPhrase) {
+            client.say(channel, "cmonBruh Banphrase detected.")
+        } else {
+            // Respond in the chat
+            client.say(channel, result);
+        }
     } catch (error) {
         console.log(error)
         tools.logger(error, "error")

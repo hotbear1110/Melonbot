@@ -7,6 +7,7 @@ const got = require('got')
 const creds = require('./../credentials/config')
 const axios = require("axios");
 const humanize = require('humanize-duration');
+const regex = require("./regex")
 
 /**
  * Initializes the database.
@@ -39,11 +40,11 @@ exports.initDatabase = () => {
  * @author JoachimFlottorp
  * @param {String} query - The query string. Any user input should be set to a ? Example: [SELECT * WHERE x=?] 
  * @param {Array} data - Array containing user input. Changes ? in query string to that of the array. 
- * @returns {Promise} - Array of json with data. Access element as foo[0].element
+ * @returns {Promise} - Array of json with data. Access element as foo[0].bar
  */
 exports.query = (query, data = []) => new Promise((Resolve, Reject) => {
     con.query(mysql.format(query, data), async (err, results) => {
-        if (typeof err !== "undefined") {
+        if (err !== null) {
             await tools.query(`
                 INSERT INTO error_logs (error_message) VALUES (?)`,
                 [JSON.stringify(err)])
@@ -223,4 +224,53 @@ exports.humanizeDuration = (seconds) => {
         spacer: '',
     };
     return shortHumanize(seconds*1000, options);
+}
+
+/**
+ * @author JoachimFlottorp
+ * @param {String} message 
+ * @return {Boolean} - Wether it is ascii or not.
+ */
+exports.ascii = async function(message) {
+    // return /^[\x00-\xFF]*$/.test(message);
+    return /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/.test(message)
+}
+
+/**
+ * @author JoachimFlottorp
+ * @param {String} channel - Channel the command got triggered 
+ * @param {String} message - The message that needs to get checked fo banphrases.
+ * @returns {Bool} - True if there is a banphrase. False if it is safe. 
+ */
+exports.banPhrase = async function(channel, message) {
+    // https://gist.github.com/RAnders00/5653be6d9bef01b314145062752e7aef | Example NymN's banphrases
+    // NymN, forsen and many others have personal banphrases tied to pajladas bot. 
+
+    let ban = [];
+    
+    ban.push(regex.racism1.test(message));
+    ban.push(regex.racism2.test(message));
+    ban.push(regex.racism3.test(message));
+    ban.push(regex.racism4.test(message));
+
+    // Does not work atm. Triggers on example: #
+    // ban.push(await tools.ascii(message));
+    
+    if (channel === "#nymn") {
+        ban.push(await axios.post("https://nymn.pajbot.com/api/v1/banphrases/test", {
+            headers: {
+                'content-type': 'application/json'
+            },
+            message: message
+        }).then((res => res.data)).then((data) => {
+            return data.banned
+        }).catch((err) => {
+            console.log(err)
+            tools.logger(err, "error")
+            throw err;
+        }))
+    }
+    
+    console.log(ban)
+    return ban.includes(true) ? true : false;
 }
