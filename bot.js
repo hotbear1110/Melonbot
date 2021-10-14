@@ -35,7 +35,7 @@ client.connect();
         //     }
         // }
 
-        if (channel === "#nymn" && creds.DEVELOPMENT === false) {
+        if (channel === "#nymn" && creds.DEVELOPMENT === false && message.toLowerCase() === "forsen") {
             client.say(channel, "Nime ❗ ")
             return
         }
