@@ -38,7 +38,7 @@ const socket = process.platform !== "win32" ? new UnixServer() : null;
         //     }
         // }
 
-        if ((channel === "#nymn" && creds.DEVELOPMENT === false) && (input[0].toLowerCase() === "forsen" || input[1].toLowerCase() === "forsen")) {
+        if ((channel === "#nymn" && creds.DEVELOPMENT === false) && (input[0].toLowerCase() === "forsen" || (input[0].toLowerCase() === "Nime" && input[1].toLowerCase() === "forsen"))) {
             client.say(channel, "Nime ❗ ")
             return
         }
