@@ -9,9 +9,13 @@ const prefix = require("./tools/prefix")
 const _ = require("underscore")
 const vm = require("vm")
 const UnixServer = require("./modules/socket")
+const process = require('process')
 
 const client = new tmi.client(login)
 client.connect();
+
+// Create socket object if unix based system.
+const socket = process.platform !== "win32" ? new UnixServer() : null;
 
 (async () => {
 
@@ -25,17 +29,16 @@ client.connect();
         
         let input = message.split(" ");
 
-        // Send the input to the Socket Markov Program. 
-        // This is disabled if windows as to my knowledge, windows does not have the socket i want. but i could be wrong.
+        // Send the input to the Markov Program. 
+        // This is disabled in windows as to my knowledge, windows does not have the socket i want. but i could be wrong.
         // if (process.platform !== "win32") {
-        //     const socket = new UnixServer();
         //     // Connect and write if it connected.
         //     if(socket.connect()) {
         //         socket.write(message);
         //     }
         // }
 
-        if (channel === "#nymn" && creds.DEVELOPMENT === false && message.toLowerCase() === "forsen") {
+        if ((channel === "#nymn" && creds.DEVELOPMENT === false) && (input[0].toLowerCase() === "forsen" || input[1].toLowerCase() === "forsen")) {
             client.say(channel, "Nime ❗ ")
             return
         }

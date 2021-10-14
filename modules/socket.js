@@ -17,7 +17,13 @@ class UnixSocket {
             })
         return true;
     }
-
+    
+    // Close connection, do this on SIGINT, which is triggered by nodemon, pm2 etc
+    // For hopefully a graceful disconnection.
+    close() {
+        this.client.destroy()
+    }
+    
     async write(message) {
         this.client.write(message)
         await this.client.on('close')

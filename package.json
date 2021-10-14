@@ -6,14 +6,14 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node init.js",
-    "dev": "nodemon init.js",
+    "dev": "nodemon --signal SIGTERM init.js",
     "build": "cd website/flottorp && npm install && npm audit fix && npm run build"
   },
   "nodemonConfig": {
     "ext": "jsx, js, sql, sh, css"
   },
   "author": "Melon095",
-  "license": "ISC",
+  "license": "MPL-2.0",
   "devDependencies": {
     "@types/node": "^16.10.5",
     "@types/tmi.js": "^1.7.2",

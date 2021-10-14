@@ -254,23 +254,28 @@ exports.banPhrase = async function(channel, message) {
         ban.push(regex.racism2.test(message));
         ban.push(regex.racism3.test(message));
         ban.push(regex.racism4.test(message));
+        ban.push(regex.url.test(message))
 
         // Does not work atm. Triggers on example: #
         // ban.push(await tools.ascii(message));
         
-        if (channel === "#nymn") {
-            ban.push(await axios.post("https://nymn.pajbot.com/api/v1/banphrases/test", {
-                headers: {
-                    'content-type': 'application/json'
-                },
-                message: message
-            }).then((res => res.data)).then((data) => {
-                return data.banned
-            }).catch((err) => {
-                console.log(err)
-                tools.logger(err, "error")
-                throw err;
-            }))
+        switch (channel) {
+            case "#nymn": {
+                ban.push(await axios.post("https://nymn.pajbot.com/api/v1/banphrases/test", {
+                    headers: {
+                        'content-type': 'application/json'
+                    },
+                    message: message
+                }).then((res => res.data)).then((data) => {
+                    return data.banned
+                }).catch((err) => {
+                    console.log(err)
+                    tools.logger(err, "error")
+                    throw err;
+                }))
+            }
+        default:
+            break;
         }
         
         console.log(ban)

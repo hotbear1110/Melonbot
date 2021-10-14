@@ -18,7 +18,7 @@ exports.DEVELOPMENT = false; // Default false, dont worry about this.
 /* 
 ///////////// OWNER USER ID EXAMPLE CURL /////////////
 
-TWITCH_AUTH_TOKEN can easily be gotten by going to the web server and logging in as the owner. 
+OWNER_USER_ID can easily be gotten by going to the web server and logging in as the owner. 
 
 curl https://api.twitch.tv/helix/users -H "Authorization: Bearer TWITCH_AUTH_TOKEN"  -H "Client-Id: TWITCH_CLIENT_ID"
 
