@@ -52,7 +52,7 @@ client.connect();
             (async () =>  {
                 // Send the input to the Markov Program. 
                 // This is disabled in windows as to my knowledge, windows does not have the socket i want. but i could be wrong.
-                if (process.platform !== "win32") {
+                if (process.platform !== "win32" && creds.DEVELOPMENT === true) { // Make sure production bot can't run it for now.
                     // Connect and write if it connected.
                     const socket = new UnixServer();
                     socket.connect()
