@@ -15,8 +15,6 @@ const client = new tmi.client(login)
 client.connect();
 
 // Create socket object if unix based system.
-const socket = process.platform !== "win32" ? new UnixServer() : null;
-
 (async () => {
 
     async function messageHandler(channel, user, message, self) {
@@ -31,12 +29,13 @@ const socket = process.platform !== "win32" ? new UnixServer() : null;
 
         // Send the input to the Markov Program. 
         // This is disabled in windows as to my knowledge, windows does not have the socket i want. but i could be wrong.
-        // if (process.platform !== "win32") {
-        //     // Connect and write if it connected.
-        //     if(socket.connect()) {
-        //         socket.write(message);
-        //     }
-        // }
+        if (process.platform !== "win32") {
+            // Connect and write if it connected.
+            const socket = new UnixServer();
+            if(socket.connect()) {
+                socket.write(message);
+            }
+        }
 
         if ((channel === "#nymn") && (message.toLowerCase() === "forsen" || (input[0] === "Nime" && input[1].toLowerCase() === "forsen"))) {
             client.say(channel, "Nime ❗ ")

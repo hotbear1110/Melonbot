@@ -3,7 +3,7 @@
 var net = require('net');
 
 // Our socket
-const SOCKETFILE = '/tmp/EPSNodeSocketMarkov.sock';
+const SOCKETFILE = '/tmp/NodeSocketMarkov.sock';
 
 class UnixSocket {
     connect() {
@@ -18,15 +18,10 @@ class UnixSocket {
         return true;
     }
     
-    // Close connection, do this on SIGINT, which is triggered by nodemon, pm2 etc
-    // For hopefully a graceful disconnection.
-    close() {
-        this.client.destroy()
-    }
-    
     async write(message) {
         this.client.write(message)
         await this.client.on('close')
+        this.client.destroy()
     }
 }    
     
