@@ -27,7 +27,7 @@ client.connect();
         
         let input = message.split(" ");
 
-        if ((channel === "#nymn") && (message.toLowerCase() === "forsen" || (input[0] === "Nime" && input[1].toLowerCase() === "forsen"))) {
+        if ((channel === "#nymn") && (message.toLowerCase() === "forsen" || (message.includes("Nime") && message.toLowerCase().includes("forsen")))) {
             client.say(channel, "Nime ❗ ")
             return
         }
