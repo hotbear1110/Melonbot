@@ -254,7 +254,7 @@ exports.banPhrase = async function(channel, message) {
         ban.push(regex.racism2.test(message));
         ban.push(regex.racism3.test(message));
         ban.push(regex.racism4.test(message));
-        ban.push(reges.racism5.test(message));
+        ban.push(regex.racism5.test(message));
         ban.push(regex.url.test(message));
         ban.push(regex.invisChar.test(message));
 
