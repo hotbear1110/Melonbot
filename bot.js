@@ -27,16 +27,6 @@ client.connect();
         
         let input = message.split(" ");
 
-        // Send the input to the Markov Program. 
-        // This is disabled in windows as to my knowledge, windows does not have the socket i want. but i could be wrong.
-        if (process.platform !== "win32") {
-            // Connect and write if it connected.
-            const socket = new UnixServer();
-            if(socket.connect()) {
-                socket.write(message);
-            }
-        }
-
         if ((channel === "#nymn") && (message.toLowerCase() === "forsen" || (input[0] === "Nime" && input[1].toLowerCase() === "forsen"))) {
             client.say(channel, "Nime ❗ ")
             return
@@ -57,8 +47,21 @@ client.connect();
             return allowed
         })
 
-        // If the comment does not include a prefix
-        if (!hasPrefix.includes(true)) { return; }
+        // If the comment does not include a prefix we add it to the markov bot and then return.
+        if (!hasPrefix.includes(true)) { 
+            (async () =>  {
+                // Send the input to the Markov Program. 
+                // This is disabled in windows as to my knowledge, windows does not have the socket i want. but i could be wrong.
+                if (process.platform !== "win32") {
+                    // Connect and write if it connected.
+                    const socket = new UnixServer();
+                    if(socket.connect()) {
+                        socket.write(message);
+                    }
+                }
+            }) 
+            return;
+        }
 
         // Commands
         const commands = requireDir("./commands");

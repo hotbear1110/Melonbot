@@ -7,7 +7,7 @@ const SOCKETFILE = '/tmp/NodeSocketMarkov.sock';
 
 class UnixSocket {
     connect() {
-        this.client = net.createConnection(SOCKETFILE)
+        this.socket = net.createConnection(SOCKETFILE)
             .on('connect', () => {
                 console.log("Connected");
             })
@@ -19,9 +19,12 @@ class UnixSocket {
     }
     
     async write(message) {
-        this.client.write(message)
-        await this.client.on('close')
-        this.client.destroy()
+        // Tell server we want to write, then send the message and close connection.
+        this.socket.write("WRITE", () => {
+            this.socket.write(message, () => {
+                this.socket.destroy()
+            })
+        })
     }
 }    
     
