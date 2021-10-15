@@ -55,9 +55,8 @@ client.connect();
                 if (process.platform !== "win32") {
                     // Connect and write if it connected.
                     const socket = new UnixServer();
-                    if(socket.connect()) {
-                        socket.write(message);
-                    }
+                    socket.connect()
+                    socket.write(message);
                 }
             }) 
             return;

@@ -7,15 +7,16 @@ const SOCKETFILE = '/tmp/NodeSocketMarkov.sock';
 
 class UnixSocket {
     connect() {
-        this.socket = net.createConnection(SOCKETFILE)
-            .on('connect', () => {
+        this.socket = net.createConnection(SOCKETFILE, () => {
+            this.socket.on('connect', () => {
                 console.log("Connected");
             })
-            .on('error', (error) => {
+            this.socket.on('error', (error) => {
                 console.log(error.code, 'SOCKET ERROR')
-                return false
+                this.socket.destroy();
+                throw error;
             })
-        return true;
+        })
     }
     
     async write(message) {
@@ -25,6 +26,11 @@ class UnixSocket {
                 this.socket.destroy()
             })
         })
+    }
+
+    // Does nothing now.
+    async read(message) {
+        return "DEPRECATED"
     }
 }    
     
