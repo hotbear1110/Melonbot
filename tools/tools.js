@@ -254,7 +254,6 @@ exports.banPhrase = async function(channel, message) {
         ban.push(regex.racism2.test(message));
         ban.push(regex.racism3.test(message));
         ban.push(regex.racism4.test(message));
-        ban.push(regex.racism5.test(message));
         ban.push(regex.url.test(message));
         ban.push(regex.invisChar.test(message));
 
@@ -263,6 +262,12 @@ exports.banPhrase = async function(channel, message) {
         
         switch (channel) {
             case "#nymn": {
+
+                const blockWords = [
+                    '?',
+                    '!'
+                ]
+                
                 ban.push(await axios.post("https://nymn.pajbot.com/api/v1/banphrases/test", {
                     headers: {
                         'content-type': 'application/json'
@@ -275,6 +280,10 @@ exports.banPhrase = async function(channel, message) {
                     tools.logger(err, "error")
                     throw err;
                 }))
+
+                // Check for channel specific words.
+                ban.push(blockWords.some(word => message.includes(word)))
+                
             }
         default:
             break;
