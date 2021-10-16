@@ -24,7 +24,7 @@ function help() {
 async function getStat(stat) {
     const sqlStat = await tools.query(`SELECT ${stat} FROM stats WHERE where_placeholder = 1`);
 
-    console.log(sqlStat);
+    console.log(sqlStat[0][stat]);
     return sqlStat[0][stat];
 }   
 
