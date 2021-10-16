@@ -33,7 +33,8 @@ exports.initDatabase = () => {
     })
 
     // Create a row in stats. We only require one row. and will update this when we want to.
-    tools.query("INSERT IGNORE INTO stats VALUES (1, 0)")
+    // [NOTE]: Add a 0, for every stats that gets added.
+    tools.query("INSERT IGNORE INTO stats VALUES (1, 0, 0)")
 }
 
 /**

@@ -29,7 +29,8 @@ client.connect();
 
         if ((channel === "#nymn") && (message.toLowerCase() === "forsen" || (message.includes("Nime") && message.toLowerCase().includes("forsen")))) {
             client.say(channel, "Nime ❗ ")
-            return
+            await tools.query("UPDATE stats SET forsen = forsen + 1 WHERE where_placeholder = 1;")
+            return;
         }
 
         // If message only has the prefix for example
