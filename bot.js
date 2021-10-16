@@ -27,9 +27,10 @@ client.connect();
         
         let input = message.split(" ");
 
+        // If someone if NymN's chat says forsen add to stats. Or sends a message which contains Nime AND forsen send Nime !.
         if ((channel === "#nymn") && (message.toLowerCase().includes("forsen"))) {
-            await tools.query("UPDATE stats SET forsen = forsen + 1 WHERE where_placeholder = 1;")
-            if (message.includes("Nime") || message.toLowerCase() === "forsen") {
+            tools.query("UPDATE stats SET forsen = forsen + 1 WHERE where_placeholder = 1;")
+            if (message.includes("Nime") || message === "forsen") {
                 client.say(channel, "Nime ❗ ");
                 return;
             }
