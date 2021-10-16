@@ -38,15 +38,19 @@ module.exports = {
             if (typeof input[0] === "undefined") {
                 return help();
             } else {
-                if (stats.indexOf(input[0].toLowerCase() > 1)) {
-                    
-                    if (input[0].toLowerCase() !== "forsen") {
-                        return `${input[0].toLowerCase()} has been used ${await getStat(input[0].toLowerCase())} times!`; 
-                    } else {
-                        return `${input[0].toLowerCase()} has been said ${await getStat(input[0].toLowerCase())} times!`
+                const stat = input[0].toLowerCase();
+                console.log(stats.indexOf(stat));
+                if (stats.indexOf(stat) !== -1 && stat[0] !== '.') {
+                    switch (stat) {
+                    case "forsen":
+                        return `${stat} has been used ${await getStat(stat)} times!`; 
+                    case "help":
+                        return help();
+                    default:
+                        return `${stat} has been said ${await getStat(stat)} times!`
                     }
                 } else {
-                    return help();
+                    return `${input.join(" ")} is not in my database.`
                 }
             }
         } catch (err) {
