@@ -31,7 +31,7 @@ async function getStat(stat) {
 module.exports = {
     name: "stats",
     ping: true,
-    description: "Returns stats about certian things. This can be configured to anything. Example NymN channel: 'melon stats forsen' Returns the amount of times the bot has said the forsen joke.",
+    description: "Returns stats about certian things. This can be configured to anything. Example NymN channel: 'melon stats forsen' Returns the amount of times NymNs chat has said 'forsen'.",
     perm: 100,
     execute: async (channel, user, input, perm) => {
         try {
@@ -39,7 +39,12 @@ module.exports = {
                 return help();
             } else {
                 if (stats.indexOf(input[0].toLowerCase() > 1)) {
-                    return `${input[0].toLowerCase()} has been used happened ${await getStat(input[0].toLowerCase())} times!`
+                    
+                    if (input[0].toLowerCase() !== "forsen") {
+                        return `${input[0].toLowerCase()} has been used ${await getStat(input[0].toLowerCase())} times!`; 
+                    } else {
+                        return `${input[0].toLowerCase()} has been said ${await getStat(input[0].toLowerCase())} times!`
+                    }
                 } else {
                     return help();
                 }
