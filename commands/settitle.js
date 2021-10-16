@@ -14,7 +14,7 @@ module.exports = {
                 throw "Mod Only Command."
             }
 
-            title = input.splice(0)
+            const title = input.splice(0)
                 .toString().replace(/,/g, ' ');
                 
             if (title === "") {

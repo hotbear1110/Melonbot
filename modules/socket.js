@@ -29,6 +29,7 @@ class UnixSocket {
     }
 
     // Does nothing now.
+    // eslint-disable-next-line no-unused-vars
     async read(message) {
         return "DEPRECATED"
     }

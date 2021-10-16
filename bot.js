@@ -2,7 +2,6 @@ require('dotenv').config()
 const tmi = require('tmi.js');
 const login = require('./credentials/login.js').options;
 const requireDir = require("require-dir");
-const fs = require('fs');
 const tools = require("./tools/tools")
 const creds = require("./credentials/config")
 const prefix = require("./tools/prefix")
@@ -32,9 +31,7 @@ client.connect();
             tools.query("UPDATE stats SET forsen = forsen + 1 WHERE where_placeholder = 1;")
             if (message.includes("Nime") || message === "forsen") {
                 client.say(channel, "Nime ❗ ");
-                return;
             }
-            return;
         }
 
         // If message only has the prefix for example
@@ -43,7 +40,7 @@ client.connect();
         let command = input[1];
         
         // No real reason for this. primarily just for fun. Checks the input against every prefix in [./tools/prefix.js] and does a condtitional
-        const hasPrefix = prefix.prefix(channel, user, message, self).map((prefix, _) => {
+        const hasPrefix = prefix.prefix(channel, user, message, self).map((prefix) => {
             let allowed = false;
             switch (input[0]) {
             case prefix.prefix:

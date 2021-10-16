@@ -3,11 +3,11 @@ const mysql = require("mysql");
 const tools = require("./tools.js");
 const fs = require('fs');
 const readline = require('readline')
-const got = require('got')
 const creds = require('./../credentials/config')
 const axios = require("axios");
 const humanize = require('humanize-duration');
 const regex = require("./regex")
+const process = require('process')
 
 /**
  * Initializes the database.
@@ -233,6 +233,7 @@ exports.humanizeDuration = (seconds) => {
  * @return {Boolean} Wether it is ascii or not.
  * @deprecated For now, i personally don't like the regex it is using.
  */
+// eslint-disable-next-line no-unused-vars
 exports.ascii = async function(message) {
     // return /^[\x00-\xFF]*$/.test(message);
     // return /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/.test(message)
@@ -286,8 +287,6 @@ exports.banPhrase = async function(channel, message) {
                 ban.push(blockWords.some(word => message.includes(word)))
                 
             }
-        default:
-            break;
         }
         
         console.log(ban)
