@@ -6,6 +6,9 @@ var net = require('net');
 const SOCKETFILE = '/tmp/NodeSocketMarkov.sock';
 
 class UnixSocket {
+    constructor() {
+        this.data = "";
+    }
     connect() {
         this.socket = net.createConnection(SOCKETFILE, () => {
             this.socket.on('connect', () => {
@@ -15,6 +18,10 @@ class UnixSocket {
                 console.log(error.code, 'SOCKET ERROR')
                 this.socket.destroy();
                 throw error;
+            })
+            this.socket.on('data', (data) => {
+                console.log(data.toString());
+                this.data = data.toString();
             })
         })
     }
@@ -32,11 +39,10 @@ class UnixSocket {
     async read(message) {
         this.socket.write("READ", () => {
             this.socket.write(message, () => {
-                this.socket.on('data', (data) => {
-                    console.log(data.toString());
+                setTimeout(() => {
                     this.client.destroy();
-                    return data.toString();
-                })
+                    return this.data;
+                }, 2000);
             })
         })
     }
