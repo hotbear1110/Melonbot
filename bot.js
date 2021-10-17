@@ -49,7 +49,7 @@ client.connect();
             return allowed
         })
 
-        // If the comment does not include a prefix we add it to the markov bot and then return.
+        // If the message does not include a prefix we add it to the markov bot and then return.
         if (!hasPrefix.includes(true)) { 
             (async () =>  {
                 // Send the input to the Markov Program. 

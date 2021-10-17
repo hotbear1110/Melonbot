@@ -35,19 +35,20 @@ module.exports = {
     perm: 100,
     execute: async (channel, user, input, perm) => {
         try {
+            // If no stat was specified
             if (typeof input[0] === "undefined") {
                 return help();
             } else {
                 const stat = input[0].toLowerCase();
-                console.log(stats.indexOf(stat));
+                // If the user chose a stat that exist
                 if (stats.indexOf(stat) !== -1 && stat[0] !== '.') {
                     switch (stat) {
-                    case "forsen":
-                        return `${stat} has been used ${await getStat(stat)} times!`; 
+                    case "forsen": // Forsen should say 'has been said' opposed to the normal 'has been used'.
+                        return `${stat} has been said ${await getStat(stat)} times!`
                     case "help":
                         return help();
                     default:
-                        return `${stat} has been said ${await getStat(stat)} times!`
+                        return `${stat} has been used ${await getStat(stat)} times!`; 
                     }
                 } else {
                     return `${input.join(" ")} is not in my database.`
