@@ -21,8 +21,8 @@ function help() {
     return `Current stats you can get: ${returnData}`
 }
 
-async function getStat(stat) {
-    const sqlStat = await tools.query(`SELECT ${stat} FROM stats WHERE where_placeholder = 1`);
+async function getStat(stat, channel) {
+    const sqlStat = await tools.query(`SELECT ${stat} FROM channel_stats WHERE Channel = ?`, [channel]);
 
     console.log(sqlStat[0][stat]);
     return sqlStat[0][stat];
@@ -44,11 +44,11 @@ module.exports = {
                 if (stats.indexOf(stat) !== -1 && stat[0] !== '.') {
                     switch (stat) {
                     case "forsen": // Forsen should say 'has been said' opposed to the normal 'has been used'.
-                        return `${stat} has been said ${await getStat(stat)} times!`
+                        return `${stat} has been said ${await getStat(stat, channel)} times in this channel!`
                     case "help":
                         return help();
                     default:
-                        return `${stat} has been used ${await getStat(stat)} times!`; 
+                        return `${stat} has been used ${await getStat(stat, channel)} times in this channel!`; 
                     }
                 } else {
                     return `${input.join(" ")} is not in my database.`

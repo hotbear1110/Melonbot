@@ -16,7 +16,7 @@ con.on('error', (err) => {
 });
 
 // Async function, keep pinging the sql server to keep it alive.
-const pingDatabase = async => {
+const pingDatabase = async () => {
     setInterval(function() {
         tools.query("SELECT 1");
     }, 60000)
@@ -36,7 +36,12 @@ const channelOptions = []
 async function res() {
     const channelList = []
 	channelList.push(await getChannels());
-	return await channelList[0].forEach(i => channelOptions.push(i.channel_name))
+	return await channelList[0].forEach(
+        i => {
+            channelOptions.push(i.channel_name)
+            tools.query("INSERT IGNORE INTO channel_stats (Channel) VALUES (?)", [i.channel_name])
+        } 
+    )
 }
 res()
 
@@ -56,4 +61,4 @@ const options = {
     channels: channelOptions,
 }
 
-module.exports = { options, con, pingDatabase }
+module.exports = { options, con, pingDatabase };

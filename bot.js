@@ -26,10 +26,11 @@ client.connect();
         
         let input = message.split(" ");
 
-        // If someone if NymN's chat says forsen [Does not trigger on forsenE, forsenY etc] add to stats. Or sends a message which contains Nime AND forsen send Nime !.
-        if ((channel === "#nymn") && (new RegExp(`\\bforsen\\b`).test(message.toLowerCase()))) {
-            tools.query("UPDATE stats SET forsen = forsen + 1 WHERE where_placeholder = 1;")
-            if (message.includes("Nime") || message === "forsen") {
+        // If someone says forsen [Does not trigger on forsenE, forsenY etc] add to channel stats.
+        // If NymN's viewers says Nime + forsen or just forsen, send Nime ❗ 
+        if ((new RegExp(`\\bforsen\\b`).test(message.toLowerCase()))) {
+            tools.query("UPDATE channel_stats SET forsen = forsen + 1 WHERE Channel = ?;", [channel.substring(1)]);
+            if ((channel === "#nymn") && (message.includes("Nime") || message === "forsen")) {
                 client.say(channel, "Nime ❗ ");
             }
         }
@@ -86,6 +87,8 @@ client.connect();
         
         // Increment the command to stats.
         tools.query("UPDATE stats SET commandsHandled = commandsHandled + 1 WHERE where_placeholder = 1;")
+        // Update channel stats
+        tools.query("UPDATE channel_stats SET CommandsHandled = CommandsHandled + 1 WHERE Channel = ?;", [realchannel])
 
         // Don't say anything if no message came back
         if(!result || result === "") {
