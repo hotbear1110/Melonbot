@@ -283,6 +283,19 @@ exports.banPhrase = async function(channel, message) {
                     throw err;
                 }))
 
+                ban.push(await axios.get(`https://paj.pajbot.com/api/channel/62300805/moderation/check_message?message=${encodeURIComponent(message)}`, {
+                    headers: {
+                        'content-type': 'application/json'
+                    },
+                    message: message
+                }).then((data => {
+                    return data.banned
+                }).catch((err) => {
+                    console.log(err);
+                    tools.logger(err, "error");
+                    throw err;
+                })))
+
                 // Check for channel specific words.
                 ban.push(blockWords.some(word => message.includes(word)))
                 

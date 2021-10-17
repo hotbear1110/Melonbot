@@ -37,7 +37,7 @@ exports.UnixSocket = (method, message) => {
             socket.write("READ", () => {
                 socket.write(message, () => {
                     setTimeout(() => {
-                        return data.toString();
+                        return data;
                     }, 2000);
                 })
             })
