@@ -19,14 +19,11 @@ class UnixSocket {
                 this.socket.destroy();
                 throw error;
             })
-            this.socket.on('data', (data) => {
-                console.log(data.toString());
-                this.data = data.toString();
-            })
+
         })
     }
     
-    async write(message) {
+    write(message) {
         // Tell server we want to write, then send the message and close connection.
         this.socket.write("WRITE", () => {
             this.socket.write(message, () => {
@@ -36,12 +33,17 @@ class UnixSocket {
     }
 
     // Does nothing now.
-    async read(message) {
+    read(message) {
         this.socket.write("READ", () => {
             this.socket.write(message, () => {
                 setTimeout(() => {
-                    this.client.destroy();
-                    return this.data;
+                    this.socket.on('data', (data) => {
+                        console.log(data.toString());
+                        this.client.end();
+                        return data.toString();
+                        // this.data = data.toString();
+                    })
+                    // return this.data;
                 }, 2000);
             })
         })

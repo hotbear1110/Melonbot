@@ -10,7 +10,7 @@ module.exports = {
         try {
             const socket = new UnixServer();
             socket.connect();
-            return await socket.read(input.join(" "));
+            return socket.read(input.join(" "));
         } catch (err) {
             return `Madge , bad command, you almost killed me! Notifying owner FeelsWeirdMan ${err}`
         }
