@@ -1,5 +1,5 @@
 const tools = require("../tools/tools")
-const UnixServer = require("./../modules/socket")
+const UnixServer = require("./../modules/socket").UnixSocket
 
 module.exports = {
     name: "markov",
@@ -8,9 +8,8 @@ module.exports = {
     perm: 100,
     execute: async (channel, user, input, perm) => {
         try {
-            const socket = new UnixServer();
-            socket.connect();
-            return socket.read(input.join(" "));
+            const socket = UnixServer;
+            return socket.Read(input.join(" "));
         } catch (err) {
             return `Madge , bad command, you almost killed me! Notifying owner FeelsWeirdMan ${err}`
         }

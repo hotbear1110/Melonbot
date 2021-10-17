@@ -7,7 +7,7 @@ const creds = require("./credentials/config")
 const prefix = require("./tools/prefix")
 const _ = require("underscore")
 const vm = require("vm")
-const UnixServer = require("./modules/socket")
+const UnixServer = require("./modules/socket").UnixSocket
 const process = require('process')
 
 const client = new tmi.client(login)
@@ -57,9 +57,8 @@ client.connect();
                 // This is disabled in windows as to my knowledge, windows does not have the socket i want. but i could be wrong.
                 if (process.platform !== "win32" && creds.DEVELOPMENT === true) { // Make sure production bot can't run it for now.
                     // Connect and write if it connected.
-                    const socket = new UnixServer();
-                    socket.connect()
-                    socket.write(message);
+                    const socket = new UnixServer;
+                    socket.Write(message);
                 }
             }) 
             return;

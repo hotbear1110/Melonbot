@@ -5,50 +5,37 @@ var net = require('net');
 // Our socket
 const SOCKETFILE = '/tmp/NodeSocketMarkov.sock';
 
-class UnixSocket {
-    constructor() {
-        this.data = "";
-    }
-    connect() {
-        this.socket = net.createConnection(SOCKETFILE, () => {
-            this.socket.on('connect', () => {
-                console.log("Connected");
-            })
-            this.socket.on('error', (error) => {
-                console.log(error.code, 'SOCKET ERROR')
-                this.socket.destroy();
-                throw error;
-            })
+const UnixSocket = net.createConnection(SOCKETFILE, () => {
+    UnixSocket.on('connect', () => {
+        console.log("Connected");
+    })
+    UnixSocket.on('error', (error) => {
+        console.log(error.code, 'SOCKET ERROR')
+        this.socket.destroy();
+        throw error;
+    })
+});
 
+function Write(message) {
+    UnixSocket.write("WRITE", () => {
+        UnixSocket.write(message, () => {
+            UnixSocket.destroy()
         })
-    }
-    
-    write(message) {
-        // Tell server we want to write, then send the message and close connection.
-        this.socket.write("WRITE", () => {
-            this.socket.write(message, () => {
-                this.socket.destroy()
-            })
-        })
-    }
+    })
+}
 
-    // Does nothing now.
-    read(message) {
-        this.socket.write("READ", () => {
-            this.socket.write(message, () => {
-                setTimeout(() => {
-                    this.socket.on('data', (data) => {
-                        console.log(data.toString());
-                        this.client.end();
-                        return data.toString();
-                        // this.data = data.toString();
-                    })
-                    // return this.data;
-                }, 2000);
-            })
+function Read(message) {
+    UnixSocket.write("READ", () => {
+        UnixSocket.write(message, () => {
+            setTimeout(() => {
+                UnixSocket.on('data', (data) => {
+                    console.log(data.toString());
+                    UnixSocket.destroy();
+                    return data.toString();
+                })
+            }, 2000);
         })
-    }
-}    
-    
+    })
+}
 
-module.exports = UnixSocket
+module.exports = { UnixSocket, Write, Read };
