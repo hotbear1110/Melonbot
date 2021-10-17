@@ -29,9 +29,16 @@ class UnixSocket {
     }
 
     // Does nothing now.
-    // eslint-disable-next-line no-unused-vars
     async read(message) {
-        return "DEPRECATED"
+        this.socket.write("READ", () => {
+            this.socket.write(message, () => {
+                this.socket.on('data', (data) => {
+                    console.log(data.toString());
+                    this.client.destroy();
+                    return data.toString();
+                })
+            })
+        })
     }
 }    
     
