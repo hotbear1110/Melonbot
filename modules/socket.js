@@ -6,6 +6,7 @@ var net = require('net');
 const SOCKETFILE = '/tmp/NodeSocketMarkov.sock';
 
 exports.UnixSocket = (method, message) => {
+    let data = "";
     const socket = net.createConnection(SOCKETFILE, () => {
         socket.on('connect', () => {
             console.log("Connected");
@@ -14,6 +15,11 @@ exports.UnixSocket = (method, message) => {
             console.log(error.code, 'SOCKET ERROR')
             socket.destroy();
             throw error;
+        })
+        socket.on('data', (data) => {
+            console.log(data.toString());
+            data = data.toString();
+            socket.destroy();
         })
     });
 
@@ -31,11 +37,7 @@ exports.UnixSocket = (method, message) => {
             socket.write("READ", () => {
                 socket.write(message, () => {
                     setTimeout(() => {
-                        socket.on('data', (data) => {
-                            console.log(data.toString());
-                            socket.destroy();
-                            return data.toString();
-                        })
+                        return data.toString();
                     }, 2000);
                 })
             })
