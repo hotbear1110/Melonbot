@@ -1,5 +1,5 @@
 const tools = require("../tools/tools")
-const UnixSocket = require("./../modules/socket");
+const UnixSocket = require("./../modules/socket").UnixSocket;
 
 module.exports = {
     name: "markov",

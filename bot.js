@@ -7,7 +7,7 @@ const creds = require("./credentials/config");
 const prefix = require("./tools/prefix");
 const _ = require("underscore");
 const vm = require("vm");
-const UnixSocket = require("./modules/socket");
+const UnixSocket = require("./modules/socket").UnixSocket;
 const process = require('process');
 
 const client = new tmi.client(login)

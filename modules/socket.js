@@ -5,14 +5,14 @@ var net = require('net');
 // Our socket
 const SOCKETFILE = '/tmp/NodeSocketMarkov.sock';
 
-function UnixSocket(method, message) {
+exports.UnixSocket = (method, message) => {
     const socket = net.createConnection(SOCKETFILE, () => {
         socket.on('connect', () => {
             console.log("Connected");
         })
         socket.on('error', (error) => {
             console.log(error.code, 'SOCKET ERROR')
-            this.socket.destroy();
+            socket.destroy();
             throw error;
         })
     });
@@ -44,5 +44,3 @@ function UnixSocket(method, message) {
     }
 }
 
-
-module.exports = { UnixSocket };
