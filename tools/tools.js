@@ -288,13 +288,14 @@ exports.banPhrase = async function(channel, message) {
                         'content-type': 'application/json'
                     },
                     message: message
-                }).then((data => {
-                    return data.banned
+                }).then((res => res.data)).then((data) => {
+                    console.log(data)
+                    return data.banned;
                 }).catch((err) => {
                     console.log(err);
                     tools.logger(err, "error");
                     throw err;
-                })))
+                }))
 
                 // Check for channel specific words.
                 ban.push(blockWords.some(word => message.includes(word)))
