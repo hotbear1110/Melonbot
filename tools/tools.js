@@ -246,9 +246,6 @@ exports.ascii = async function(message) {
  * @returns {Bool} True if there is a banphrase. False if it is safe. 
  */
 exports.banPhrase = async function(channel, message) {
-    // https://gist.github.com/RAnders00/5653be6d9bef01b314145062752e7aef | Example NymN's banphrases
-    // NymN, forsen and many others have personal banphrases tied to pajladas bot. 
-
     try {
         let ban = [];
         
@@ -261,13 +258,17 @@ exports.banPhrase = async function(channel, message) {
 
         // Does not work atm. Triggers on example: #
         // ban.push(await tools.ascii(message));
-        
+
+        // https://gist.github.com/RAnders00/5653be6d9bef01b314145062752e7aef | Example NymN's banphrases
+        // NymN, forsen and many others have personal banphrases tied to pajladas bot.         
         switch (channel) {
             case "#nymn": {
 
+                // Bot prefixes.
                 const blockWords = [
-                    '?',
-                    '!'
+                    '?', // Thepositivebot
+                    '!', // Botnextdoor
+                    '$', // Supibot
                 ]
                 
                 ban.push(await axios.post("https://nymn.pajbot.com/api/v1/banphrases/test", {
@@ -289,7 +290,6 @@ exports.banPhrase = async function(channel, message) {
                     },
                     message: message
                 }).then((res => res.data)).then((data) => {
-                    console.log(data)
                     return data.banned;
                 }).catch((err) => {
                     console.log(err);
