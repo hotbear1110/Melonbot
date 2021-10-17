@@ -5,37 +5,44 @@ var net = require('net');
 // Our socket
 const SOCKETFILE = '/tmp/NodeSocketMarkov.sock';
 
-const UnixSocket = net.createConnection(SOCKETFILE, () => {
-    UnixSocket.on('connect', () => {
-        console.log("Connected");
-    })
-    UnixSocket.on('error', (error) => {
-        console.log(error.code, 'SOCKET ERROR')
-        this.socket.destroy();
-        throw error;
-    })
-});
-
-function Write(message) {
-    UnixSocket.write("WRITE", () => {
-        UnixSocket.write(message, () => {
-            UnixSocket.destroy()
+function UnixSocket(method, message) {
+    const socket = net.createConnection(SOCKETFILE, () => {
+        socket.on('connect', () => {
+            console.log("Connected");
         })
-    })
-}
+        socket.on('error', (error) => {
+            console.log(error.code, 'SOCKET ERROR')
+            this.socket.destroy();
+            throw error;
+        })
+    });
 
-function Read(message) {
-    UnixSocket.write("READ", () => {
-        UnixSocket.write(message, () => {
-            setTimeout(() => {
-                UnixSocket.on('data', (data) => {
-                    console.log(data.toString());
-                    UnixSocket.destroy();
-                    return data.toString();
+    switch (method) {
+        case "WRITE": {
+            socket.write("WRITE", () => {
+                socket.write(message, () => {
+                    socket.destroy()
                 })
-            }, 2000);
-        })
-    })
+            })
+            break;
+        }
+
+        case "READ": {
+            socket.write("READ", () => {
+                socket.write(message, () => {
+                    setTimeout(() => {
+                        socket.on('data', (data) => {
+                            console.log(data.toString());
+                            socket.destroy();
+                            return data.toString();
+                        })
+                    }, 2000);
+                })
+            })
+            break;
+        }
+    }
 }
 
-module.exports = { UnixSocket, Write, Read };
+
+module.exports = { UnixSocket };
