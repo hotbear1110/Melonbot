@@ -44,11 +44,11 @@ module.exports = {
                 if (stats.indexOf(stat) !== -1 && stat[0] !== '.') {
                     switch (stat) {
                     case "forsen": // Forsen should say 'has been said' opposed to the normal 'has been used'.
-                        return `${stat} has been said ${await getStat(stat, channel)} times in this channel!`
+                        return `${stat} has been said ${await getStat(stat, channel)} times in this channel.`
                     case "help":
                         return help();
                     default:
-                        return `${stat} has been used ${await getStat(stat, channel)} times in this channel!`; 
+                        return `${stat} has been used ${await getStat(stat, channel)} times in this channel.`; 
                     }
                 } else {
                     return `${input.join(" ")} is not in my database.`

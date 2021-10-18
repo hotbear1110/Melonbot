@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const shell = require("child_process");
 const tools = require("../../../tools/tools")
+const process = require('process')
 
 /*
     stats: {
@@ -14,7 +15,7 @@ const tools = require("../../../tools/tools")
 */
 router
     .route("/")
-    .get(async function(res, res) {
+    .get(async function(req, res) {
 
     const ch = await tools.query("SELECT commandsHandled FROM stats;")
     

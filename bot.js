@@ -8,7 +8,6 @@ const prefix = require("./tools/prefix");
 const _ = require("underscore");
 const vm = require("vm");
 const UnixSocket = require("./modules/socket").UnixSocket;
-const process = require('process');
 
 const client = new tmi.client(login)
 client.connect();
@@ -62,13 +61,12 @@ client.connect();
             }) 
             return;
         }
-
         // Commands
         const commands = requireDir("./commands");
         
         // Was the message a command
         if(typeof commands[command] === "undefined") {
-            client.say(channel, `${user.username} undefined command FeelsDankMan`);
+            client.say(channel, `${user["username"]} undefined command FeelsDankMan`);
             return;
         }
         
