@@ -1,3 +1,5 @@
+const client = require("./../bot").client
+
 module.exports = {
     name: "github",
     ping: true,
@@ -5,7 +7,8 @@ module.exports = {
     perm: 100,
     execute: async (channel, user, input, perm) => {
         try {
-            return "https://github.com/JoachimFlottorp/Melonbot";
+            client.say(channel, "https://github.com/JoachimFlottorp/Melonbot");
+            return "";
         } catch (err) {
             console.log(err);
             return `Madge , bad command, you almost killed me! Notifying owner FeelsWeirdMan`
