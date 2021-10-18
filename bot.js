@@ -35,6 +35,10 @@ client.connect();
             }
         }
 
+        if ((new RegExp('\\bLatege\\b').test(message) && (channel === "#nymn"))) {
+            client.say(channel, "Nime *scams*")
+        }
+
         // If message only has the prefix for example
         if (input.length <= 1) { return; }
         
