@@ -1,5 +1,6 @@
 const tools = require("./../tools/tools")
 const creds = require("./../credentials/config")
+const client = require("./../bot").client
 
 module.exports = {
     name: "help",
@@ -9,7 +10,7 @@ module.exports = {
     execute: async (channel, user, input, perm) => {
         try {
 
-            if (input.length <= 0) { return `${creds.SERVER}/bot/commands`; }
+            if (input.length <= 0) { client.say(channel, `${creds.SERVER}/bot/commands`); return ""; }
 
             const description = await tools.query("SELECT description FROM commands WHERE name=?", input[0])
 

@@ -29,7 +29,7 @@ client.connect();
         // If someone says forsen [Does not trigger on forsenE, forsenY etc] add to channel stats.
         // If NymN's viewers says Nime + forsen or just forsen, send Nime ❗ 
         if ((new RegExp(`\\bforsen\\b`).test(message.toLowerCase()))) {
-            tools.query("UPDATE channel_stats SET forsen = forsen + 1 WHERE Channel = ?;", [channel.substring(1)]);
+            tools.updateStats(channel.substring(1), 'forsen');
             if ((channel === "#nymn") && (message.includes("Nime") || message === "forsen")) {
                 client.say(channel, "Nime ❗ ");
             }

@@ -18,20 +18,36 @@ function help() {
         }
     }
     
-    return `Current stats you can get: ${returnData}`
+    // [TODO]: Add a way to check stats per date.
+    return `Stats: ${returnData}`
 }
 
 async function getStat(stat, channel) {
     const sqlStat = await tools.query(`SELECT ${stat} FROM channel_stats WHERE Channel = ?`, [channel]);
 
-    console.log(sqlStat[0][stat]);
-    return sqlStat[0][stat];
+    // eslint-disable-next-line no-undef
+    const file = require(`${ROOT}/stats/${tools.YMD()}.json`)
+
+    let count = -1;
+    let today = file.map((c => {
+        count++;
+        if (c['channel'] === channel) {
+            return file[count].forsen;
+        }
+    })) 
+    
+    today = today.filter( Number )
+
+    return      {
+                    "alltime": Number(sqlStat[0][stat]),
+                    "today": Number(today)
+                }
 }   
 
 module.exports = {
     name: "stats",
     ping: true,
-    description: "Returns stats about certian things. This can be configured to anything. Example NymN channel: 'melon stats forsen' Returns the amount of times NymNs chat has said 'forsen'.",
+    description: "Returns stats about certain things. This can be configured to anything. Example NymN channel: 'melon stats forsen' Says the total amount of times your chat has said 'forsen', and today.",
     perm: 100,
     execute: async (channel, user, input, perm) => {
         try {
@@ -42,13 +58,14 @@ module.exports = {
                 const stat = input[0].toLowerCase();
                 // If the user chose a stat that exist
                 if (stats.indexOf(stat) !== -1 && stat[0] !== '.') {
+                    const a = await getStat(stat, channel);
                     switch (stat) {
                     case "forsen": // Forsen should say 'has been said' opposed to the normal 'has been used'.
-                        return `${stat} has been said ${await getStat(stat, channel)} times in this channel.`
+                        return `${stat} has been said ${a['alltime']} times in this channel. And ${a['today']} today.`
                     case "help":
                         return help();
                     default:
-                        return `${stat} has been used ${await getStat(stat, channel)} times in this channel.`; 
+                        return `${stat} has been used ${a['alltime']} times in this channel. And ${a['today']} today.`; 
                     }
                 } else {
                     return `${input.join(" ")} is not in my database.`

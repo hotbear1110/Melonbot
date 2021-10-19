@@ -85,7 +85,7 @@ exports.logger = async (error_message, type = "info") => {
 
 /**
  * @author JoachimFlottorp
- * @param {Int} timeInSeconds Converts time in seconds to HOUR:MINUTES:SECONDS 
+ * @param {Number} timeInSeconds Converts time in seconds to HOUR:MINUTES:SECONDS 
  * @returns HOUR:MINUTES:SECONDS as a String
  */
 exports.convertHMS = (timeInSeconds) => {
@@ -110,7 +110,7 @@ exports.convertHMS = (timeInSeconds) => {
  */
 exports.YMD = () => {
     let date = new Date();
-    return `${date.getFullYear()}-${("0" + (date.getMonth() + 1)).slice(-2)}-${("0" + date.getDate()).slice(-2)}.log` 
+    return `${date.getFullYear()}-${("0" + (date.getMonth() + 1)).slice(-2)}-${("0" + date.getDate()).slice(-2)}` 
 }
 
 /**
@@ -309,5 +309,78 @@ exports.banPhrase = async function(channel, message) {
         console.log(error);
         throw error;
     }
+
+}
+
+
+async function CreateStatFile() {
+    return new Promise((Resolve, Reject) => {
+        // eslint-disable-next-line no-undef
+        const fileName = `${ROOT}/stats/${tools.YMD()}.json`;
+        fs.stat(fileName, async function (err) {
+            if (err === null) { Resolve(fileName); return; }
+            // Create a json element for every channel.
+            const channels = await exports.query("SELECT * FROM channels");
+            const data = channels.map(channel => {
+                return {"channel": channel['channel_name'], "forsen": 0 }
+            })
+            // Write to file.
+            fs.writeFile(fileName, JSON.stringify(data, null, 2), err => {
+                if (err) Reject(err);
+            })
+        });
+        Resolve(fileName);
+    });
+}
+
+/**
+ * @author JoachimFlottorp
+ * @param {String} channel The channel to update
+ * @param {String} stat The stat to update
+ * @param {Number} increment The amount to update | Default - 1
+ */
+exports.updateStats = async function(channel, stat, increment = 1) {
+    // [TODO]: This will not count the first stat of the day, because require throws and error while the file gets created.
+    // Create if not exists.
+    CreateStatFile()
+    .catch((err) => {
+
+        throw err;
+        
+    }).then((fileName) => {
+        // Run this once the file is made.
+
+        const file = require(fileName)
+
+        switch (stat) {
+            case "forsen": {
+                
+                // Update total stats for forsen
+                tools.query("UPDATE channel_stats SET forsen = forsen + ? WHERE Channel = ?;", [increment, channel]);
+    
+                let count = -1;
+                file.map((c => {
+                    count++;
+                    if (c['channel'] === channel) {
+                        const forsen = file[count].forsen
+                        
+                        file[count].forsen = forsen + 1;
+
+                        fs.writeFile(fileName, JSON.stringify(file, null, 2), (err) => {
+                            if (err) throw err;
+                        })
+                    }
+                }))
+                
+                break;
+            }
+    
+            default: {
+                break;
+            }
+        }
+    })
+    
+    
 
 }
