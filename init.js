@@ -8,7 +8,8 @@ const fs = require('fs');
 global.ROOT = path.resolve(__dirname)
 
 // Could be wrong umask, no clue.
-fs.mkdir(`${ROOT}/stats`, 777, err => {
+// eslint-disable-next-line no-octal
+fs.mkdir(`${ROOT}/stats`, parseInt(022, 8), err => {
     if (err) {
         if (err.code === "EEXIST") return;
         console.log(err)
