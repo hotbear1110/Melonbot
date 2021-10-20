@@ -3,7 +3,6 @@ const router = express.Router();
 const creds = require('./../../credentials/config');
 const path = require("path")
 const tools = require("../../tools/tools");
-const { cp } = require("fs");
 
 // /Bot
 router

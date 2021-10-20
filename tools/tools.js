@@ -284,7 +284,7 @@ exports.banPhrase = async function(channel, message) {
                     throw err;
                 }))
 
-                ban.push(await axios.get(`https://paj.pajbot.com/api/channel/62300805/moderation/check_message?message=${encodeURIComponent(message)}`, {
+                ban.push(await axios.get(`https://paj.pajbot.com/api/channel/62300805/moderation/check_message?message=${encodeURIComponent(message).replace(/%0A/g, "")}`, {
                     headers: {
                         'content-type': 'application/json'
                     },
