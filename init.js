@@ -6,8 +6,8 @@ const fs = require('fs');
 
 
 global.ROOT = path.resolve(__dirname)
+global.WEBSITE_ROOT = path.resolve(__dirname + "/website")
 
-// Could be wrong umask, no clue.
 fs.mkdir(`${ROOT}/stats`, err => {
     if (err) {
         if (err.code === "EEXIST") return;

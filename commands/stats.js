@@ -3,7 +3,7 @@ const tools = require("../tools/tools")
 // Every stats that can be triggered.
 const stats = [
     ".", // indexOf for some reason does not work on index 0.
-    'forsen', // NymN channel specific.
+    'forsen', // forsen count 4Head.
     'help' // Returns every stats that the bot collects.
 ];
 
@@ -59,14 +59,10 @@ module.exports = {
                 // If the user chose a stat that exist
                 if (stats.indexOf(stat) !== -1 && stat[0] !== '.') {
                     const a = await getStat(stat, channel);
-                    switch (stat) {
-                    case "forsen": // Forsen should say 'has been said' opposed to the normal 'has been used'.
-                        return `${stat} has been said ${a['alltime']} times in this channel. And ${a['today']} today.`
-                    case "help":
+                    if (stat === "help") {
                         return help();
-                    default:
-                        return `${stat} has been used ${a['alltime']} times in this channel. And ${a['today']} today.`; 
                     }
+                    return `${stat} Total: ${a['alltime']}. Today: ${a['today']}.`
                 } else {
                     return `${input.join(" ")} is not in my database.`
                 }

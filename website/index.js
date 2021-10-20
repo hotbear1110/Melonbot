@@ -13,8 +13,6 @@ const port = creds.PORT;
 
 const LOG_FOLDER = "./logs/";
 
-global.WEBSITE_ROOT = path.resolve(__dirname)
-
 if (!fs.existsSync(LOG_FOLDER)) {
     fs.mkdirSync(LOG_FOLDER)
 }

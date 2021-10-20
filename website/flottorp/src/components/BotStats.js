@@ -31,7 +31,6 @@ export default class BotStats extends Component {
                     uptime: result.uptime,
                     commandsHandled: result.commandsHandled
                 });
-                console.log(result)
             },
 
             (error) => {
