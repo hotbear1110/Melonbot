@@ -39,12 +39,6 @@ client.connect();
             client.say(channel, "Nime *scams*")
         }
 
-        // [TODO]: Make this lick a random person in the chat.
-        if ((input[1] === "nymnLick") && (channel === "#nymn")) {
-            client.say(channel, `@${user['display-name']}, nymnLick`)
-            return;
-        } 
-
         // If message only has the prefix for example
         if (input.length <= 1) { return; }
         
