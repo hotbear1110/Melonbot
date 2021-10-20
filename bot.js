@@ -44,14 +44,12 @@ client.connect();
         
         let command = input[1];
         
-        // No real reason for this. primarily just for fun. Checks the input against every prefix in [./tools/prefix.js] and does a condtitional
+        // No real reason for this. primarily just for fun. Checks the input against every prefix in [./tools/prefix.js] and does a conditional.
         const hasPrefix = prefix.prefix(channel, user, message, self).map((prefix) => {
-            let allowed = false;
             switch (input[0]) {
             case prefix.prefix:
-                allowed = vm.runInNewContext(prefix.condition);
+                return vm.runInNewContext(prefix.condition);
             }
-            return allowed
         })
 
         // If the message does not include a prefix we add it to the markov bot and then return.

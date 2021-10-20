@@ -2,12 +2,12 @@ html, body {
     background-color: #1a1a1a;
 }
 
-.commandsTable th, td {
+.basic-table th, td {
     padding: 0;
     text-align: left;
 }
 
-.commandsTable {
+.basic-table {
     margin: 25px 0;
     font-family: sans-serif;
     min-width: 400px;
@@ -17,6 +17,6 @@ html, body {
     color: rgb(189, 189, 189)
 }
 
-.commandsTable td {
+.basic-table td {
     word-wrap: break-word;
 }

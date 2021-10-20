@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const express = require("express");
 const router = express.Router(); 
 const creds = require('./../../credentials/config');
@@ -8,8 +9,26 @@ const tools = require("../../tools/tools");
 router
     .route("/")
     .get(async function(req, res) {
-        res.sendFile(path.resolve(WEBSITE_ROOT, "flottorp/build/index.html"))
-    });
+
+    let stats = "";
+    console.log(req.query.channel);
+    if (req.query.channel === undefined) {
+        stats = await tools.query("SELECT * FROM channel_stats");
+    } else {
+        stats = await tools.query("SELECT * FROM channel_stats WHERE Channel = ?", req.query.channel)
+    }
+
+    console.log(stats);
+        
+    console.time('TimeRender')
+
+    res.render('BasicTable', {data: stats, type: "STATS"}, function(err, html) {
+        if (err) return console.log('Render error: ', err);
+        res.send(html);
+        console.timeEnd('TimeRender')
+    })
+        
+})
 
 // /Bot/Login
 router
@@ -36,23 +55,17 @@ router
 router
     .route("/commands")
     .get(async function(req, res) {
-        // Get array of json objects containing commands
-        /*
-            [
-                {id: 1, name: "foo", description: "bar", perm: 100}
-                {id: 2, name: "baz", description: "taz", perm: 100}
-            ]
-        */        
-        
         const commands = await tools.query("SELECT * FROM commands");
         console.time('TimeRender')
 
-        res.render('Commands', { data: commands, }, function(err, html) {
+        res.render('BasicTable', { data: commands, type: "COMMANDS"}, function(err, html) {
             if (err) return console.log('Render error: ', err);
             res.send(html);
             console.timeEnd('TimeRender')
         });
     })
+
+
 
 
 module.exports = router;
