@@ -10,7 +10,7 @@
     "build": "cd website/flottorp && npm install && npm audit fix && npm run build"
   },
   "nodemonConfig": {
-    "ext": "jsx, js, sql, sh, css, ts"
+    "ext": "jsx, js, sql, sh, css, ts, pug"
   },
   "author": "Melon095",
   "license": "MPL-2.0",
@@ -27,12 +27,12 @@
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
-    "express-react-views": "^0.11.0",
     "got": "^11.8.2",
     "humanize-duration": "^3.27.0",
     "ms": "^3.0.0-canary.1",
     "mysql": "^2.18.1",
     "node-twitch": "^0.4.5",
+    "pug": "^3.0.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "require-dir": "^1.2.0",

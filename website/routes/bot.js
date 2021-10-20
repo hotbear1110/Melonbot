@@ -11,18 +11,18 @@ router
     .get(async function(req, res) {
 
     let stats = "";
-    console.log(req.query.channel);
-    if (req.query.channel === undefined) {
+    let single = req.query.channel === undefined ? false : true 
+    if (!single) {
         stats = await tools.query("SELECT * FROM channel_stats");
     } else {
         stats = await tools.query("SELECT * FROM channel_stats WHERE Channel = ?", req.query.channel)
+        // Get the stats from files. Maybe we should not store this in files. Unsure.
     }
 
-    console.log(stats);
-        
+
     console.time('TimeRender')
 
-    res.render('BasicTable', {data: stats, type: "STATS"}, function(err, html) {
+    res.render('stats', {stats: stats, title: "Stats", specific: single}, function(err, html) {
         if (err) return console.log('Render error: ', err);
         res.send(html);
         console.timeEnd('TimeRender')
@@ -56,12 +56,10 @@ router
     .route("/commands")
     .get(async function(req, res) {
         const commands = await tools.query("SELECT * FROM commands");
-        console.time('TimeRender')
 
-        res.render('BasicTable', { data: commands, type: "COMMANDS"}, function(err, html) {
+        res.render('commands', { commands: commands, title: "Commands"}, function(err, html) {
             if (err) return console.log('Render error: ', err);
             res.send(html);
-            console.timeEnd('TimeRender')
         });
     })
 

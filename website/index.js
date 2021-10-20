@@ -22,13 +22,14 @@ app.use("/", router);
 app.use(express.static(path.resolve(__dirname, 'flottorp/build')))
 app.use(express.static(path.resolve(__dirname, 'public')))
 
+app.locals.basedir = path.resolve(__dirname);
+
 app.use(cors());
 
 app.use(express.json())
 
 app.set('views', __dirname + '/views');
-app.set('view engine', 'jsx');
-app.engine('jsx', require('express-react-views').createEngine());
+app.set('view engine', 'pug');
 
 async function logger(req, res, next) {
     var logToFile = fs.createWriteStream(LOG_FOLDER + tools.YMD(), {flags: 'a'});

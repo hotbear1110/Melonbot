@@ -1,0 +1,30 @@
+doctype html
+html 
+    head 
+        title= title
+
+        style 
+            include /css/stats.css
+
+    body 
+        include header.pug
+        table(class='basic-table') 
+            tr(class='TableHeader')
+                th(scope="col") ID
+                th(scope="col") Channel
+                th(scope="col") Commands Handled
+                th(scope="col") forsen
+            
+            for stat in stats
+                tr(key=stat.ID id='basic-row')
+                    th(scope='row')= stat.ID
+                    td
+                        a(href=`/bot?channel=${stat.Channel}`)=stat.Channel
+                    td= stat.CommandsHandled
+                    td= stat.forsen
+
+    
+
+        // If the user clicks on a specific user, show more stats.
+        if specific
+            h1 Hey
