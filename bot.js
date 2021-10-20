@@ -39,8 +39,10 @@ client.connect();
             client.say(channel, "Nime *scams*")
         }
 
+        // [TODO]: Make this lick a random person in the chat.
         if ((input[1] === "nymnLick") && (channel === "#nymn")) {
             client.say(channel, `@${user['display-name']}, nymnLick`)
+            return;
         } 
 
         // If message only has the prefix for example
@@ -77,7 +79,7 @@ client.connect();
             return;
         }
         
-        //[TODO]: Get perm done
+        // [TODO]: Get perm done
         const perm = 101;
         if (perm < 100) {
             return;
