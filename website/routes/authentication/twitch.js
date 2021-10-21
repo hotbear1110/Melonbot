@@ -35,7 +35,6 @@ router
                     "Accept": "application/json"
                 },
             }).json();
-            console.log(authorize)
             
             // Get some more info about the user, like user id and login name.
             const user = await got("https://api.twitch.tv/helix/users", {
@@ -45,7 +44,6 @@ router
                     "Client-Id": creds.TWITCH_CLIENT_ID,
                 }
             }).json();
-            console.log(user)
 
             const userInfo = {
                 user_id: user.data[0].id,

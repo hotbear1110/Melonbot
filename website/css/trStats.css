@@ -13,3 +13,14 @@
 .BotStats li:not(:last-child) {
     margin-bottom: 10px;
 }
+
+#stats span {
+    text-align: right;
+    white-space: nowrap;
+    margin-left: 5px;
+}
+
+#forsenKek {
+    height: '64px';
+    width: '64px';
+}

@@ -1,3 +1,15 @@
+.BotLogin {
+    position: absolute;
+    z-index: 15;
+    top: 50%;
+    left: 50%;
+}
+
+#emote {
+    width: 28px;
+    height: 28px;
+}
+
 .loggedIn {
     position: absolute;
     top: 50%;

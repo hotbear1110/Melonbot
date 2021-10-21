@@ -22,9 +22,6 @@
             }
         }
     ],
-    "plugins": [
-        "react"
-    ],
     "rules": {
     }
 }

@@ -19,7 +19,7 @@ if (!fs.existsSync(LOG_FOLDER)) {
 
 app.use("/", router);
 
-app.use(express.static(path.resolve(__dirname, 'flottorp/build')))
+// app.use(express.static(path.resolve(__dirname, 'flottorp/build')))
 app.use(express.static(path.resolve(__dirname, 'public')))
 
 app.locals.basedir = path.resolve(__dirname);
@@ -44,8 +44,16 @@ app.use(logger);
 //////////////////// Website //////////////////// 
 
 app.get("/", async function(req, res) {
-    res.sendFile(path.resolve(__dirname, "flottorp/build/index.html"));
-});
+
+        res.render('index', {title: "Index", server: creds.SERVER}, function(err, html) {
+            if (err) return console.log('Render error: ', err);
+            res.send(html);
+        })
+    })
+
+// app.get("/", async function(req, res) {
+//     res.sendFile(path.resolve(__dirname, "flottorp/build/index.html"));
+// });
 
 app.use('/bot', require('./routes/bot'))
 

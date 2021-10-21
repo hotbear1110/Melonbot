@@ -2,7 +2,6 @@
 const express = require("express");
 const router = express.Router(); 
 const creds = require('./../../credentials/config');
-const path = require("path")
 const tools = require("../../tools/tools");
 
 // /Bot
@@ -19,7 +18,6 @@ router
         // Get the stats from files. Maybe we should not store this in files. Unsure.
     }
 
-
     console.time('TimeRender')
 
     res.render('stats', {stats: stats, title: "Stats", specific: single}, function(err, html) {
@@ -34,7 +32,10 @@ router
 router
     .route("/login")
     .get(async function(req, res) {
-        res.sendFile(path.resolve(WEBSITE_ROOT, "flottorp/build/index.html"))
+        res.render('login', {title: "Login", server: creds.SERVER, LoggedIn: req.query.loggedIn}, function(err, html) {
+            if (err) return console.log('Render error: ', err);
+            res.send(html);
+        })
     });
 
 // /Bot/Login/Redirect

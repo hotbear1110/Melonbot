@@ -6,8 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node init.js",
-    "dev": "nodemon init.js",
-    "build": "cd website/flottorp && npm install && npm audit fix && npm run build"
+    "dev": "nodemon init.js"
   },
   "nodemonConfig": {
     "ext": "jsx, js, sql, sh, css, ts, pug"
@@ -18,7 +17,6 @@
     "@types/node": "^16.11.1",
     "@types/tmi.js": "^1.8.0",
     "eslint": "^8.0.1",
-    "eslint-plugin-react": "^7.26.1",
     "nodemon": "^2.0.13"
   },
   "dependencies": {
