@@ -2,9 +2,96 @@ doctype html
 html 
     head 
         title= title
+        meta(charset='utf-8')
 
         style 
             include /css/stats.css
+
+        script(type="text/javascript" defer).
+            // Does not support when february has 28 days.
+            // Can optimize it, don't feel like it though.
+            function days() {
+                switch (#{month}) {
+                    case 1: {
+                        return 31;
+                        break;
+                    }
+                    case 2: {
+                        return 30;
+                        break;
+                    }
+                    case 3: {
+                        return 31;
+                        break;
+                    }
+                    case 4: {
+                        return 30;
+                        break;
+                    }
+                    case 5: {
+                        return 31;
+                        break;
+                    }
+                    case 6: {
+                        return 30;
+                        break;
+                    }
+                    case 7: {
+                        return 31;
+                        break;
+                    }
+                    case 8: {
+                        return 30;
+                        break;
+                    }
+                    case 9: {
+                        return 30;
+                        break;
+                    }
+                    case 10: {
+                        return 31;
+                        break;
+                    }
+                    case 11: {
+                        return 30;
+                        break;
+                    }
+                    case 12: {
+                        return 31;
+                        break;
+                    }
+                }
+            }
+
+            function innerHTML() {
+                var a = "";
+                for (var i = 1; i < days() + 1; i++) {
+                    a += '<li id="day"><a '+`href="/bot?channel=!{stats[0].Channel}&year=!{year}&month=!{month}&day=${i}">${i}</a></li>`
+                }      
+                return a;
+            }
+        
+            window.onload = function FixPage() {
+                const m = new Array(12);
+                m[0] = "January";
+                m[1] = "February";
+                m[2] = "March";
+                m[3] = "April";
+                m[4] = "May";
+                m[5] = "June";
+                m[6] = "July";
+                m[7] = "August";
+                m[8] = "September";
+                m[9] = "October";
+                m[10] = "November";
+                m[11] = "December";
+
+                
+                document.getElementById('year').innerHTML = #{year}
+                document.getElementById('month').innerHTML = m[#{month} - 1]
+                document.getElementsByClassName("dates")[0].innerHTML = innerHTML();
+            }
+
 
     body 
         include header.pug
@@ -19,12 +106,37 @@ html
                 tr(key=stat.ID id='basic-row')
                     th(scope='row')= stat.ID
                     td
-                        a(href=`/bot?channel=${stat.Channel}`)=stat.Channel
+                        a(id="redirect" href=`/bot?channel=${stat.Channel}&year=${year}&month=${month}&day=${day}`)=stat.Channel   
                     td= stat.CommandsHandled
                     td= stat.forsen
 
     
+    if specific
+        h1 Stats
+        div(class="calender")
+            div(class="month")
+                ul
+                    li(class="prev") 
+                        a(href=`/bot?channel=${stats[0].Channel}&year=${year}&month=${month - 1}&day=${day}`) &#10094;
+                    li(class="next") 
+                        a(href=`/bot?channel=${stats[0].Channel}&year=${year}&month=${month + 1}&day=${day}`) &#10095;
+                    li(id="month")=month
+                    br
+                    span(style="font-size: 18px" id="year")=year
 
-        // If the user clicks on a specific user, show more stats.
-        if specific
-            h1 Hey
+
+            div(class="dates") Loading...
+            div(class="stat")
+                unless dayStat
+                
+                    p(id="empty") Sorry, there appears to be no data of this date.
+                    
+                else 
+
+                    div(class='stat-table')
+                        div(class="stat-row")
+                            div(class="stat-col tooltip") forsen 
+                                span(class="tooltip-text") This show how many times forsen was said that day in the chat.
+
+                        div(class="stat-row")
+                            div(class="stat-col")= dayStat.forsen

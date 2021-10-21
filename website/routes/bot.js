@@ -3,24 +3,64 @@ const express = require("express");
 const router = express.Router(); 
 const creds = require('./../../credentials/config');
 const tools = require("../../tools/tools");
+const requireDir = require('require-dir')
+
 
 // /Bot
 router
     .route("/")
     .get(async function(req, res) {
+        const date = new Date();
+    
+    // #[TODO]: Does not support switching years through the ui at the moment.
+    // #[TODO]: Sometimes it just fails. dayStat returns undefined, no idea why. Even though the file very clearly exists..
 
     let stats = "";
     let single = req.query.channel === undefined ? false : true 
+    let year = req.query.year === undefined ? date.getFullYear() : req.query.year;
+    let month = req.query.month === undefined ? (date.getMonth() + 1) : req.query.month;
+    let day = req.query.day === undefined ? (date.getDate()) : req.query.day;
+    let dayStat;
+
+    // Probably good enough 4Head
+    if (month >= 13) {
+        month = 12
+    }
+
+    if (month <= 0) {
+        month = 1;
+    }
+
     if (!single) {
         stats = await tools.query("SELECT * FROM channel_stats");
     } else {
         stats = await tools.query("SELECT * FROM channel_stats WHERE Channel = ?", req.query.channel)
         // Get the stats from files. Maybe we should not store this in files. Unsure.
-    }
+        const statFiles = requireDir("./../../stats");
 
+        // Key = file
+        // Value = every stat per file [Every Channel]
+        for (const [key, value] of Object.entries(statFiles)) {
+            const a = key.split("-")
+            const fileYear = a[0];
+            const fileMonth = a[1];
+            const fileDay = a[2];
+            // Get the correct file for the specified date.
+            if (fileYear === year && fileMonth === month && fileDay === day) {
+                for (var property of value) {
+                    if (property.channel === req.query.channel) {
+                        dayStat = property
+                        delete dayStat['channel']
+                        break;
+                    }
+                }
+            }
+        }
+        console.log(dayStat)
+    }
     console.time('TimeRender')
 
-    res.render('stats', {stats: stats, title: "Stats", specific: single}, function(err, html) {
+    res.render('stats', {stats: stats, title: "Stats", specific: single, year: year, month: Number(month), day: Number(day), dayStat: dayStat}, function(err, html) {
         if (err) return console.log('Render error: ', err);
         res.send(html);
         console.timeEnd('TimeRender')
@@ -50,9 +90,6 @@ router
     
 
 // /Bot/Commands
-// Unsure if there is a way to use a static react app considering i have to query the database.
-// I don't personally like that i have one server rendered page. And then the rest of the page is static react.
-
 router
     .route("/commands")
     .get(async function(req, res) {
