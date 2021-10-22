@@ -16,8 +16,6 @@ client.connect();
 // Create socket object if unix based system.
 (async () => {
 
-    let stack = [];
-
     async function messageHandler(channel, user, message, self) {
     try {
         // Don't listen to your own messages.
@@ -33,25 +31,8 @@ client.connect();
         if ((new RegExp(`\\bforsen\\b`).test(message.toLowerCase()))) {
             tools.updateStats(channel.substring(1), 'forsen');
             if ((channel === "#nymn") && (message.includes("Nime") || message === "forsen")) {
-                
-                if (stack[stack.lenth -1] === "scam") { return; }
-                
                 client.say(channel, "Nime ❗ ");
-                stack.push("forsen")
-                setTimeout(() => {
-                    stack.pop()
-                }, 5000);
             }
-        }
-
-        if ((new RegExp('\\bLatege\\b').test(message) && (channel === "#nymn"))) {
-            client.say(channel, "Nime *scams*")
-            if (stack[stack.length - 1] === "forsen") { return; }
-            
-            stack.push("scam")
-            setTimeout(() => {
-                stack.pop()
-            }, 5000);
         }
 
         if ((input[1] === "nymnLick") && (channel === "#nymn") && user['username'] === "tepidp") {
@@ -68,8 +49,6 @@ client.connect();
                 client.say(channel, `@${input[0]} nymnLick`)
             }
         }
-
-
 
         // If message only has the prefix for example
         if (input.length <= 1) { return; }
