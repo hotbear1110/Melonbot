@@ -318,10 +318,12 @@ async function CreateStatFile() {
         // eslint-disable-next-line no-undef
         const fileName = `${ROOT}/stats/${tools.YMD()}.json`;
         fs.stat(fileName, async function (err) {
-            if (err === null) { Resolve(fileName); return; }
+            if (err === null) { Reject(fileName); return; }
             // Create a json element for every channel.
             const channels = await exports.query("SELECT * FROM channels");
+            console.log("channels", channels)
             const data = channels.map(channel => {
+                console.log({"channel": channel['channel_name'], "forsen": 0 })
                 return {"channel": channel['channel_name'], "forsen": 0 }
             })
             // Write to file.
