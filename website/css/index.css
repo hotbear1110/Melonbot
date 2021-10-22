@@ -39,12 +39,8 @@
   display: none; 
 }
 
-.dropdown-item a {
+.dropdown-item {
   color: #bfbfbf;
-}
-
-.dropdown-item:hover {
-  background-color: #1f1f1f;
 }
 
 .btn:focus {
