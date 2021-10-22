@@ -33,6 +33,9 @@ client.connect();
         if ((new RegExp(`\\bforsen\\b`).test(message.toLowerCase()))) {
             tools.updateStats(channel.substring(1), 'forsen');
             if ((channel === "#nymn") && (message.includes("Nime") || message === "forsen")) {
+                
+                if (stack[stack.lenth -1] === "scam") { return; }
+                
                 client.say(channel, "Nime ❗ ");
                 stack.push("forsen")
                 setTimeout(() => {
@@ -43,9 +46,8 @@ client.connect();
 
         if ((new RegExp('\\bLatege\\b').test(message) && (channel === "#nymn"))) {
             client.say(channel, "Nime *scams*")
-            if (stack[stack.length - 1] === "forsen") {
-                return;
-            }
+            if (stack[stack.length - 1] === "forsen") { return; }
+            
             stack.push("scam")
             setTimeout(() => {
                 stack.pop()
