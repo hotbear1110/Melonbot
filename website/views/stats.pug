@@ -134,10 +134,23 @@ html
                     
                 else 
 
-                    div(class='stat-table')
-                        div(class="stat-row")
-                            div(class="stat-col tooltip") forsen 
-                                span(class="tooltip-text") This show how many times forsen was said that day in the chat.
+                    div(class="table-container")
+                        div(class='stat-table')
+                            div(class="stat-row")
+                                div(class="stat-col tooltip") forsen 
+                                    span(class="tooltip-text") This show how many times forsen was said that day in the chat.
+                                    
+                                div(class="stat-col tooltip") Placeholder 
+                                    span(class="tooltip-text") This is a placeholder to make it look nice.
+                                    
+                                div(class="stat-col tooltip") Placeholder 
+                                    span(class="tooltip-text") This is a placeholder to make it look nice.
+                                    
 
-                        div(class="stat-row")
-                            div(class="stat-col")= dayStat.forsen
+                            div(class="stat-row")
+                                div(class="stat-col")= dayStat.forsen
+
+                                div(class="stat-col") 0
+
+                                div(class="stat-col") 0
+
