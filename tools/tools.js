@@ -59,7 +59,7 @@ exports.query = (query, data = []) => new Promise((Resolve, Reject) => {
 /**
  * @author JoachimFlottorp
  * @param {String} error_message Error message
- * @param {String} type Info or Error. Default is info
+ * @param {String} type info or error. Default is info
  */
 exports.logger = async (error_message, type = "info") => {
     if (error_message === "") { return; }
@@ -380,7 +380,16 @@ exports.updateStats = async function(channel, stat, increment = 1) {
             }
         }
     })
-    
-    
+}
 
+/**
+ * @author JoachimFlottorp
+ * @param {String} channel Name of channel 
+ * @returns {Boolean} True if is live, False if not live.
+ */
+
+exports.Live = async (channel) => {
+    const isLive = await tools.query("SELECT live FROM channels WHERE channel_name = ?", [channel.split("#")[1]])
+    
+    return isLive['live']
 }

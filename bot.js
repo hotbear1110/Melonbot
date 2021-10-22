@@ -16,6 +16,8 @@ client.connect();
 // Create socket object if unix based system.
 (async () => {
 
+    let stack = [];
+
     async function messageHandler(channel, user, message, self) {
     try {
         // Don't listen to your own messages.
@@ -32,16 +34,40 @@ client.connect();
             tools.updateStats(channel.substring(1), 'forsen');
             if ((channel === "#nymn") && (message.includes("Nime") || message === "forsen")) {
                 client.say(channel, "Nime ❗ ");
+                stack.push("forsen")
+                setTimeout(() => {
+                    stack.pop()
+                }, 5000);
             }
         }
 
         if ((new RegExp('\\bLatege\\b').test(message) && (channel === "#nymn"))) {
             client.say(channel, "Nime *scams*")
+            if (stack[stack.length - 1] === "forsen") {
+                return;
+            }
+            stack.push("scam")
+            setTimeout(() => {
+                stack.pop()
+            }, 5000);
         }
 
-        if ((message === "melon nymnLick") && (channel === "#nymn") && user['username'] === "tepidp") {
-            client.say(channel, "@TepidP, nymnLick");
+        if ((input[1] === "nymnLick") && (channel === "#nymn") && user['username'] === "tepidp") {
+
+            const isLive = await tools.Live(channel);
+            console.log(isLive)
+            if (isLive) {
+                return;
+            }
+            
+            if (input[0] === "melon") {
+                client.say(channel, "@TepidP, nymnLick");
+            } else {
+                client.say(channel, `@${input[0]} nymnLick`)
+            }
         }
+
+
 
         // If message only has the prefix for example
         if (input.length <= 1) { return; }

@@ -23,3 +23,5 @@ require("./credentials/login").pingDatabase();
 require("./bot");
 // Website
 require("./website/index");
+// Loops.
+require("./loops/loops")
