@@ -39,6 +39,10 @@ client.connect();
             client.say(channel, "Nime *scams*")
         }
 
+        if ((message === "melon nymnLick") && (channel === "#nymn") && user['username'] === "tepidp") {
+            client.say(channel, "@TepidP, nymnLick");
+        }
+
         // If message only has the prefix for example
         if (input.length <= 1) { return; }
         
