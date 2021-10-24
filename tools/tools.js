@@ -269,6 +269,7 @@ exports.banPhrase = async function(channel, message) {
                     '?', // Thepositivebot
                     '!', // Botnextdoor
                     '$', // Supibot
+                    'bb', // BotBear
                 ]
                 
                 ban.push(await axios.post("https://nymn.pajbot.com/api/v1/banphrases/test", {
