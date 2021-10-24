@@ -55,26 +55,28 @@ app.get("/", async function(req, res) {
 //     res.sendFile(path.resolve(__dirname, "flottorp/build/index.html"));
 // });
 
-app.use('/bot', require('./routes/bot'))
+app.use('/bot', require('./routes/bot'));
 
 app.get("/favicon.ico", async function(req, res) {
-    res.sendFile(path.resolve(WEBSITE_ROOT, "public/favicon.ico"))
+    res.sendFile(path.resolve(WEBSITE_ROOT, "public/favicon.ico"));
 })
 
 //////////////////// API //////////////////// 
 
-app.use("/v1/stats", require("./routes/api/stats"))
+app.use("/v1/stats", require("./routes/api/stats"));
 
 //////////////////// LOGIN //////////////////// 
 
-app.use("/login/twitch", require("./routes/authentication/twitch"))
+app.use("/login/twitch", require("./routes/authentication/twitch"));
 
 //////////////////// MISC ////////////////////
 
+app.use("/game", require("./routes/game/game"));
+
 app.get("*", async function(req, res) {
-    res.sendFile(path.resolve(__dirname, "public/error_404.html"))
+    res.sendFile(path.resolve(__dirname, "public/error_404.html"));
 })
 
 app.listen(port, () => {
-    console.log(`App listening on port ${port}`)
+    console.log(`App listening on port ${port}`);
 });

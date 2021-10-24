@@ -24,6 +24,8 @@ client.connect();
         // Sometimes self doesn't work.
         if (user["username"] === creds.USERNAME) { return; }
         
+        if (channel === "#forsen") { channel === `#${creds.USERNAME}` };
+        
         let input = message.split(" ");
 
         // If someone says forsen [Does not trigger on forsenE, forsenY etc] add to channel stats.
