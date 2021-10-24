@@ -16,6 +16,9 @@ client.connect();
 // Create socket object if unix based system.
 (async () => {
 
+
+    let forsen = false;
+
     async function messageHandler(channel, user, message, self) {
     try {
         // Don't listen to your own messages.
@@ -33,7 +36,12 @@ client.connect();
         if ((new RegExp(`\\bforsen\\b`).test(message.toLowerCase()))) {
             tools.updateStats(channel.substring(1), 'forsen');
             if ((channel === "#nymn") && (message.includes("Nime") || message === "forsen")) {
-                client.say(channel, "Nime ❗ ");
+                if (!forsen) {
+                    client.say(channel, "Nime ❗ ");
+                } else {
+                    client.say(channel, "Nime ❗")
+                }
+                forsen = !forsen
             }
         }
 
