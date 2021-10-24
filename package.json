@@ -4,7 +4,7 @@
   "description": "Cool twitch bot",
   "main": "init.js",
   "scripts": {
-    "descripton": "Start - Production | Dev - Development | Game - Working on game",
+    "descripton": "Start - Production | Dev - Development | Game - Working on game - Run start and game concurrently",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "tsc && node init.js",
     "dev": "nodemon init.js",
