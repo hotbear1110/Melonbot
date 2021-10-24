@@ -272,7 +272,7 @@ exports.banPhrase = async function(channel, message) {
                     'bb', // BotBear
                 ]
                 // Check for channel specific words.
-                ban.push(/[$|/|.|?|!|-]|\bkb\b|\bbb\b/g.test(message)) 
+                ban.push(blockWords.some(word => message.includes(word)))
                 
                 ban.push(await axios.post("https://nymn.pajbot.com/api/v1/banphrases/test", {
                     headers: {
