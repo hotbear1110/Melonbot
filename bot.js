@@ -21,6 +21,7 @@ client.connect();
 
     async function messageHandler(channel, user, message, self) {
     try {
+        console.log(forsen)
         // Don't listen to your own messages.
         if (self) { return; }
         
@@ -36,7 +37,8 @@ client.connect();
         if ((new RegExp(`\\bforsen\\b`).test(message.toLowerCase()))) {
             tools.updateStats(channel.substring(1), 'forsen');
             if ((channel === "#nymn") && (message.includes("Nime") || message === "forsen")) {
-                client.say(channel, "Nime ❗ " + forsen === true ? " " : "");
+                const m = "Nime ❗" + (forsen === true ? "" : " 󠀀 "); 
+                client.say(channel, m);
                 forsen = !forsen
             }
         }
@@ -55,6 +57,7 @@ client.connect();
                 client.say(channel, `@${input[0]} nymnLick`)
             }
         }
+
 
         // If message only has the prefix for example
         if (input.length <= 1) { return; }
@@ -88,6 +91,15 @@ client.connect();
         if(typeof commands[command] === "undefined") {
             client.say(channel, `${user["username"]} undefined command FeelsDankMan`);
             return;
+        }
+
+        
+        
+        // If the command specifies it only works while offline then check if streamer is live.
+        if (commands[command].onlyOffline === true) {
+            if (await tools.Live(channel) === true) { 
+                return; 
+            };
         }
         
         // [TODO]: Get perm done

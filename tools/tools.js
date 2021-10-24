@@ -271,6 +271,8 @@ exports.banPhrase = async function(channel, message) {
                     '$', // Supibot
                     'bb', // BotBear
                 ]
+                // Check for channel specific words.
+                ban.push(/[$|/|.|?|!|-]|\bkb\b|\bbb\b/g.test(message)) 
                 
                 ban.push(await axios.post("https://nymn.pajbot.com/api/v1/banphrases/test", {
                     headers: {
@@ -297,10 +299,6 @@ exports.banPhrase = async function(channel, message) {
                     tools.logger(err, "error");
                     throw err;
                 }))
-
-                // Check for channel specific words.
-                ban.push(blockWords.some(word => message.includes(word)))
-                
             }
         }
         
@@ -394,5 +392,5 @@ exports.updateStats = async function(channel, stat, increment = 1) {
 exports.Live = async (channel) => {
     const isLive = await tools.query("SELECT live FROM channels WHERE channel_name = ?", [channel.split("#")[1]])
     
-    return isLive['live']
+    return isLive[0]['live'] === 1 ? true : false;
 }

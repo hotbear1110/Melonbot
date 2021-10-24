@@ -6,6 +6,7 @@ module.exports = {
     ping: false,
     description: "Returns a sentence parsed from a markov bot on the channel.",
     perm: 100,
+    onlyOffline: true,
     execute: async (channel, user, input, perm) => {
         try {
             return UnixSocket("READ", input.join(" "));

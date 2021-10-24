@@ -23,6 +23,7 @@ module.exports = {
     ping: false,
     description: "Pipes out the output of a command to another command. Only supports two commands, Example: pipe say 10 Okayge FeelsGoodMan | random",
     perm: 100,
+    onlyOffline: false,
     execute: async (channel, user, input, perm) => {
         // return `${user.username}, Does not work at the moment FeelsBadMan`
         try {

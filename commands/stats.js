@@ -49,6 +49,7 @@ module.exports = {
     ping: true,
     description: "Returns stats about certain things. This can be configured to anything. Example NymN channel: 'melon stats forsen' Says the total amount of times your chat has said 'forsen', and today.",
     perm: 100,
+    onlyOffline: false,
     execute: async (channel, user, input, perm) => {
         try {
             // If no stat was specified

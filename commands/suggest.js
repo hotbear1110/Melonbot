@@ -5,6 +5,7 @@ module.exports = {
     ping: true,
     description: "Allows a user to add a suggestion. This could be from adding new commands, to fixing bugs.",
     perm: 100,
+    onlyOffline: true,
     execute: async (channel, user, input, perm) => {
         try {
             input = input.splice(0)

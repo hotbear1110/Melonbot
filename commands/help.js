@@ -7,6 +7,7 @@ module.exports = {
     ping: true,
     description: "Prints out the description of a command if a command is specified.",
     perm: 100,
+    onlyOffline: false,
     execute: async (channel, user, input, perm) => {
         try {
 

@@ -5,6 +5,7 @@ module.exports = {
     ping: false,
     description: "Says what the user inputs.",
     perm: 100,
+    onlyOffline: true,
     execute: async (channel, user, input, perm) => {
         try {
             var amount = input[0];
