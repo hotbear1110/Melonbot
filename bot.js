@@ -36,11 +36,7 @@ client.connect();
         if ((new RegExp(`\\bforsen\\b`).test(message.toLowerCase()))) {
             tools.updateStats(channel.substring(1), 'forsen');
             if ((channel === "#nymn") && (message.includes("Nime") || message === "forsen")) {
-                if (!forsen) {
-                    client.say(channel, "Nime ❗ ");
-                } else {
-                    client.say(channel, "Nime ❗")
-                }
+                client.say(channel, "Nime ❗ " + forsen === true ? " " : "");
                 forsen = !forsen
             }
         }
