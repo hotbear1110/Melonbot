@@ -21,7 +21,5 @@ require("./tools/tools").initDatabase();
 require("./credentials/login").pingDatabase();
 // Bot
 require("./bot");
-// Website
-require("./website/index");
 // Loops.
 require("./loops/loops")
