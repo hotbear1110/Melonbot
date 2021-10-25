@@ -4,20 +4,22 @@
   "description": "Cool twitch bot",
   "main": "init.js",
   "scripts": {
+    "descripton": "Start - Production | Dev - Development | Game - Working on game - Run start and game concurrently",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node init.js",
     "dev": "nodemon init.js",
-    "build": "cd website/flottorp && npm install && npm audit fix && npm run build"
+    "game": "tsc --watch"
   },
   "nodemonConfig": {
-    "ext": "jsx, js, sql, sh, css"
+    "ext": "jsx, js, sql, sh, css, ts, pug"
   },
   "author": "Melon095",
   "license": "MPL-2.0",
   "devDependencies": {
-    "@types/node": "^16.10.5",
-    "@types/tmi.js": "^1.7.2",
-    "nodemon": "^2.0.12"
+    "@types/node": "^16.11.1",
+    "@types/tmi.js": "^1.8.0",
+    "eslint": "^8.0.1",
+    "nodemon": "^2.0.14"
   },
   "dependencies": {
     "@types/got": "^9.6.12",
@@ -25,14 +27,12 @@
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
-    "express-react-views": "^0.11.0",
     "got": "^11.8.2",
     "humanize-duration": "^3.27.0",
     "ms": "^3.0.0-canary.1",
     "mysql": "^2.18.1",
     "node-twitch": "^0.4.5",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
+    "pug": "^3.0.2",
     "require-dir": "^1.2.0",
     "tmi.js": "^1.8.5",
     "underscore": "^1.13.1"

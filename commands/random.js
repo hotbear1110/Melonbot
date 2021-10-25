@@ -19,6 +19,7 @@ module.exports = {
     ping: false,
     description: "Randomizes input.",
     perm: 100,
+    onlyOffline: false,
     execute: async (channel, user, input, perm) => {
         try {
             input = input.splice(0).toString().split(",");

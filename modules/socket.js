@@ -3,32 +3,46 @@
 var net = require('net');
 
 // Our socket
-const SOCKETFILE = '/tmp/EPSNodeSocketMarkov.sock';
+const SOCKETFILE = '/tmp/NodeSocketMarkov.sock';
 
-class UnixSocket {
-    connect() {
-        this.client = net.createConnection(SOCKETFILE)
-            .on('connect', () => {
-                console.log("Connected");
-            })
-            .on('error', (error) => {
-                console.log(error.code, 'SOCKET ERROR')
-                return false
-            })
-        return true;
-    }
-    
-    // Close connection, do this on SIGINT, which is triggered by nodemon, pm2 etc
-    // For hopefully a graceful disconnection.
-    close() {
-        this.client.destroy()
-    }
-    
-    async write(message) {
-        this.client.write(message)
-        await this.client.on('close')
-    }
-}    
-    
+exports.UnixSocket = (method, message) => {
+    let data = "";
+    const socket = net.createConnection(SOCKETFILE, () => {
+        socket.on('connect', () => {
+            console.log("Connected");
+        })
+        socket.on('error', (error) => {
+            console.log(error.code, 'SOCKET ERROR')
+            socket.destroy();
+            throw error;
+        })
+        socket.on('data', (data) => {
+            console.log(data.toString());
+            data = data.toString();
+            socket.destroy();
+        })
+    });
 
-module.exports = UnixSocket
+    switch (method) {
+        case "WRITE": {
+            socket.write("WRITE", () => {
+                socket.write(message, () => {
+                    socket.destroy()
+                })
+            })
+            break;
+        }
+
+        case "READ": {
+            socket.write("READ", () => {
+                socket.write(message, () => {
+                    setTimeout(() => {
+                        return data;
+                    }, 2000);
+                })
+            })
+            break;
+        }
+    }
+}
+

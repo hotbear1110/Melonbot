@@ -3,11 +3,11 @@ const mysql = require("mysql");
 const tools = require("./tools.js");
 const fs = require('fs');
 const readline = require('readline')
-const got = require('got')
 const creds = require('./../credentials/config')
 const axios = require("axios");
 const humanize = require('humanize-duration');
 const regex = require("./regex")
+const process = require('process')
 
 /**
  * Initializes the database.
@@ -33,6 +33,7 @@ exports.initDatabase = () => {
     })
 
     // Create a row in stats. We only require one row. and will update this when we want to.
+    // [NOTE]: Add a 0, for every stats that gets added.
     tools.query("INSERT IGNORE INTO stats VALUES (1, 0)")
 }
 
@@ -58,7 +59,7 @@ exports.query = (query, data = []) => new Promise((Resolve, Reject) => {
 /**
  * @author JoachimFlottorp
  * @param {String} error_message Error message
- * @param {String} type Info or Error. Default is info
+ * @param {String} type info or error. Default is info
  */
 exports.logger = async (error_message, type = "info") => {
     if (error_message === "") { return; }
@@ -84,7 +85,7 @@ exports.logger = async (error_message, type = "info") => {
 
 /**
  * @author JoachimFlottorp
- * @param {Int} timeInSeconds Converts time in seconds to HOUR:MINUTES:SECONDS 
+ * @param {Number} timeInSeconds Converts time in seconds to HOUR:MINUTES:SECONDS 
  * @returns HOUR:MINUTES:SECONDS as a String
  */
 exports.convertHMS = (timeInSeconds) => {
@@ -109,7 +110,7 @@ exports.convertHMS = (timeInSeconds) => {
  */
 exports.YMD = () => {
     let date = new Date();
-    return `${date.getFullYear()}-${("0" + (date.getMonth() + 1)).slice(-2)}-${("0" + date.getDate()).slice(-2)}.log` 
+    return `${date.getFullYear()}-${("0" + (date.getMonth() + 1)).slice(-2)}-${("0" + date.getDate()).slice(-2)}` 
 }
 
 /**
@@ -232,6 +233,7 @@ exports.humanizeDuration = (seconds) => {
  * @return {Boolean} Wether it is ascii or not.
  * @deprecated For now, i personally don't like the regex it is using.
  */
+// eslint-disable-next-line no-unused-vars
 exports.ascii = async function(message) {
     // return /^[\x00-\xFF]*$/.test(message);
     // return /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/.test(message)
@@ -244,9 +246,6 @@ exports.ascii = async function(message) {
  * @returns {Bool} True if there is a banphrase. False if it is safe. 
  */
 exports.banPhrase = async function(channel, message) {
-    // https://gist.github.com/RAnders00/5653be6d9bef01b314145062752e7aef | Example NymN's banphrases
-    // NymN, forsen and many others have personal banphrases tied to pajladas bot. 
-
     try {
         let ban = [];
         
@@ -254,13 +253,27 @@ exports.banPhrase = async function(channel, message) {
         ban.push(regex.racism2.test(message));
         ban.push(regex.racism3.test(message));
         ban.push(regex.racism4.test(message));
-        ban.push(regex.url.test(message))
+        ban.push(regex.url.test(message));
+        ban.push(regex.invisChar.test(message));
 
         // Does not work atm. Triggers on example: #
         // ban.push(await tools.ascii(message));
-        
+
+        // https://gist.github.com/RAnders00/5653be6d9bef01b314145062752e7aef | Example NymN's banphrases
+        // NymN, forsen and many others have personal banphrases tied to pajladas bot.         
         switch (channel) {
             case "#nymn": {
+
+                // Bot prefixes.
+                const blockWords = [
+                    '?', // Thepositivebot
+                    '!', // Botnextdoor
+                    '$', // Supibot
+                    'bb', // BotBear
+                ]
+                // Check for channel specific words.
+                ban.push(blockWords.some(word => message.includes(word)))
+                
                 ban.push(await axios.post("https://nymn.pajbot.com/api/v1/banphrases/test", {
                     headers: {
                         'content-type': 'application/json'
@@ -273,9 +286,20 @@ exports.banPhrase = async function(channel, message) {
                     tools.logger(err, "error")
                     throw err;
                 }))
+
+                ban.push(await axios.get(`https://paj.pajbot.com/api/channel/62300805/moderation/check_message?message=${encodeURIComponent(message).replace(/%0A/g, "")}`, {
+                    headers: {
+                        'content-type': 'application/json'
+                    },
+                    message: message
+                }).then((res => res.data)).then((data) => {
+                    return data.banned;
+                }).catch((err) => {
+                    console.log(err);
+                    tools.logger(err, "error");
+                    throw err;
+                }))
             }
-        default:
-            break;
         }
         
         console.log(ban)
@@ -285,4 +309,88 @@ exports.banPhrase = async function(channel, message) {
         throw error;
     }
 
+}
+
+
+async function CreateStatFile() {
+    return new Promise((Resolve, Reject) => {
+        // eslint-disable-next-line no-undef
+        const fileName = `${ROOT}/stats/${tools.YMD()}.json`;
+        fs.stat(fileName, async function (err) {
+            if (err === null) { Reject(fileName); return; }
+            // Create a json element for every channel.
+            const channels = await exports.query("SELECT * FROM channels");
+            console.log("channels", channels)
+            const data = channels.map(channel => {
+                console.log({"channel": channel['channel_name'], "forsen": 0 })
+                return {"channel": channel['channel_name'], "forsen": 0 }
+            })
+            // Write to file.
+            fs.writeFile(fileName, JSON.stringify(data, null, 2), err => {
+                if (err) Reject(err);
+            })
+        });
+        Resolve(fileName);
+    });
+}
+
+/**
+ * @author JoachimFlottorp
+ * @param {String} channel The channel to update
+ * @param {String} stat The stat to update
+ * @param {Number} increment The amount to update | Default - 1
+ */
+exports.updateStats = async function(channel, stat, increment = 1) {
+    // [TODO]: This will not count the first stat of the day, because require throws and error while the file gets created.
+    // Create if not exists.
+    CreateStatFile()
+    .catch((err) => {
+
+        throw err;
+        
+    }).then((fileName) => {
+        // Run this once the file is made.
+
+        const file = require(fileName)
+
+        switch (stat) {
+            case "forsen": {
+                
+                // Update total stats for forsen
+                tools.query("UPDATE channel_stats SET forsen = forsen + ? WHERE Channel = ?;", [increment, channel]);
+    
+                let count = -1;
+                file.map((c => {
+                    count++;
+                    if (c['channel'] === channel) {
+                        const forsen = file[count].forsen
+                        
+                        file[count].forsen = forsen + 1;
+
+                        fs.writeFile(fileName, JSON.stringify(file, null, 2), (err) => {
+                            if (err) throw err;
+                        })
+                    }
+                }))
+                
+                break;
+            }
+    
+            default: {
+                break;
+            }
+        }
+    })
+}
+
+/**
+ * @author JoachimFlottorp
+ * @param {String} channel Name of channel 
+ * @returns {Boolean} True if is live, False if not live.
+ */
+
+exports.Live = async (channel) => {
+    const isLive = await tools.query("SELECT live FROM channels WHERE channel_name = ?", [channel.split("#")[1]])
+    
+    return isLive[0]['live'] === 1 ? true : false;
 }

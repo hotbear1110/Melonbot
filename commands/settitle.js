@@ -8,13 +8,14 @@ module.exports = {
     ping: true,
     description: `Sets the title of a channel. Requires the broadcaster to login at the bots website: ${creds.SERVER}. Only mods and broadcaster may run this command.`,
     perm: 100,
+    onlyOffline: false,
     execute: async (channel, user, input, perm) => {
         try {
             if(!tools.isMod(user, channel)) {
                 throw "Mod Only Command."
             }
 
-            title = input.splice(0)
+            const title = input.splice(0)
                 .toString().replace(/,/g, ' ');
                 
             if (title === "") {

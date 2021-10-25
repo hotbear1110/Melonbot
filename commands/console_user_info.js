@@ -5,6 +5,7 @@ module.exports = {
     ping: true,
     description: "Console log user info, meant as debug.",
     perm: 100,
+    onlyOffline: true,
     execute: async (channel, user, input, perm) => {
         try {
             if(user['user-id'] == creds.OWNER_USER_ID) {

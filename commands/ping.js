@@ -1,18 +1,20 @@
 const shell = require("child_process")
 const tools = require("../tools/tools")
 const creds = require("../credentials/config")
+const process = require('process')
 
 module.exports = {
     name: "ping",
     ping: true,
     description: "Pings the user with some small info.",
     perm: 100,
+    onlyOffline: false,
     execute: async (channel, user, input, perm) => {
         try {
             const commitCount = shell.execSync("git rev-list --all --count")
             const commitSha = shell.execSync("git rev-parse --short HEAD")
 
-            const devBot = creds.DEVELOPMENT ? " Development Bot" : "";
+            const devBot = creds.DEVELOPMENT ? " Development Bot" : " ";
             
             return `pong FeelsOkayMan . Running for ${tools.humanizeDuration(process.uptime())}. master, ${commitSha}, commit ${commitCount}.${devBot}`;
         } catch (err) {
