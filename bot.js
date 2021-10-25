@@ -21,7 +21,6 @@ client.connect();
 
     async function messageHandler(channel, user, message, self) {
     try {
-        console.log(forsen)
         // Don't listen to your own messages.
         if (self) { return; }
         
