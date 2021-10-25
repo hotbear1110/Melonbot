@@ -19,6 +19,11 @@ module.exports = {
             prefix: "foo", 
             condition: `${user['user-id']} === ${creds.OWNER_USER_ID}`, 
             description: "Only work if command caller is owner of the bot."
+        },
+        {
+            prefix: "🍉",
+            condition: `"${creds.DEVELOPMENT}"" === "false"`,
+            description: "melon prefix but emote" 
         }
     ],
 }
