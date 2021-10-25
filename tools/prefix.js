@@ -22,7 +22,7 @@ module.exports = {
         },
         {
             prefix: "🍉",
-            condition: `"${creds.DEVELOPMENT}"" === "false"`,
+            condition: `!${creds.DEVELOPMENT}`,
             description: "melon prefix but emote" 
         }
     ],
