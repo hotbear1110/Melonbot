@@ -1,25 +1,25 @@
-require('dotenv').config();
-const tmi = require('tmi.js');
-const login = require('./credentials/login.js').options;
-const requireDir = require("require-dir");
-const tools = require("./tools/tools");
-const creds = require("./credentials/config");
-const prefix = require("./tools/prefix");
-const _ = require("underscore");
-const vm = require("vm");
-const UnixSocket = require("./modules/socket").UnixSocket;
-const process = require('process')
+import { ChatUserstate } from "tmi.js";
+import tmi from 'tmi.js';
+import { options as login } from './credentials/login.js';
+import requireDir from "require-dir";
+import * as tools from "./tools/tools";
+import * as creds from "./credentials/config";
+import * as prefix from "./tools/prefix";
+import _ from "underscore";
+import vm from "vm";
+import { UnixSocket } from "./modules/socket";
+import process from 'process';
 
-const client = new tmi.client(login)
+const client: tmi.Client = new tmi.client(login)
 client.connect();
 
 // Create socket object if unix based system.
-(async () => {
+export async function run(): Promise<void> {
 
 
     let forsen = false;
 
-    async function messageHandler(channel, user, message, self) {
+    async function messageHandler(channel: string, user: ChatUserstate, message: string, self: boolean) {
     try {
         // Don't listen to your own messages.
         if (self) { return; }
@@ -29,14 +29,14 @@ client.connect();
         
         if (channel === "#forsen") { channel === `#${creds.USERNAME}` };
         
-        let input = message.split(" ");
+        const input: Array<string> = message.split(" ");
 
         // If someone says forsen [Does not trigger on forsenE, forsenY etc] add to channel stats.
         // If NymN's viewers says Nime + forsen or just forsen, send Nime ❗ 
         if ((new RegExp(`\\bforsen\\b`).test(message.toLowerCase()))) {
             tools.updateStats(channel.substring(1), 'forsen');
             if ((channel === "#nymn") && (message.includes("Nime") || message === "forsen")) {
-                const m = "Nime ❗"; 
+                let m = "Nime ❗"; 
                 if (forsen) {
                     m += " 󠀀 "
                 }
@@ -47,7 +47,7 @@ client.connect();
 
         if ((input[1] === "nymnLick") && (channel === "#nymn") && user['username'] === "tepidp") {
 
-            const isLive = await tools.Live(channel);
+            const isLive: boolean = await tools.Live(channel);
             console.log(isLive)
             if (isLive) {
                 return;
@@ -64,7 +64,7 @@ client.connect();
         // If message only has the prefix for example
         if (input.length <= 1) { return; }
         
-        let command = input[1];
+        const command: string = input[1];
         
         // No real reason for this. primarily just for fun. Checks the input against every prefix in [./tools/prefix.js] and does a conditional.
         const hasPrefix = prefix.prefix(channel, user, message, self).map((prefix) => {
@@ -101,7 +101,7 @@ client.connect();
         if (commands[command].onlyOffline === true) {
             if (await tools.Live(channel) === true) { 
                 return; 
-            };
+            }
         }
         
         // [TODO]: Get perm done
@@ -110,8 +110,8 @@ client.connect();
             return;
         }
         
-        let realchannel = channel.substring(1);
-        let realinput = input.slice(2);
+        const realchannel = channel.substring(1);
+        const realinput = input.slice(2);
         // Run the command
         let result = await commands[command].execute(realchannel, user, realinput, perm);
         
@@ -143,11 +143,11 @@ client.connect();
     }
     }
 
-    client.on('message', async (channel, user, message, self) => {
+    client.on('message', async (channel: string, user: ChatUserstate, message: string, self: boolean) => {
         await messageHandler(channel, user, message, self);
     });
     
-    client.on('connected', async function (addr, port) {
+    client.on('connected', async function (addr: string, port: number) {
         console.log(`* Connected to ${addr}:${port}`);
 
         const commands = requireDir("./commands");
@@ -178,6 +178,6 @@ client.connect();
         })
     });
     
-})();
+}
 
 module.exports = { client };

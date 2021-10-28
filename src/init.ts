@@ -1,14 +1,10 @@
 /* eslint-disable no-undef */
 // Main entry of the bot, init database and stuff.
 
-const path = require('path')
-const fs = require('fs');
+import fs from 'fs';
+import * as creds from "./credentials/config"
 
-
-global.ROOT = path.resolve(__dirname)
-global.WEBSITE_ROOT = path.resolve(__dirname + "/website")
-
-fs.mkdir(`${ROOT}/stats`, err => {
+fs.mkdir(`${creds.ROOT}/stats`, err => {
     if (err) {
         if (err.code === "EEXIST") return;
         console.log(err)
@@ -20,6 +16,6 @@ require("./tools/tools").initDatabase();
 // Keep pinging database to keep the connection alive.
 require("./credentials/login").pingDatabase();
 // Bot
-require("./bot");
+require("./bot").run();
 // Loops.
 require("./loops/loops")
