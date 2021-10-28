@@ -1,3 +1,3 @@
 ./node_modules
 
-./src/credentials/config.ts
+src/credentials/config.ts
