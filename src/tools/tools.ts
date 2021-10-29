@@ -9,7 +9,6 @@ import humanize from 'humanize-duration';
 import * as regex from "./regex";
 import process from 'process';
 import { ChatUserstate } from 'tmi.js';
-import { stringify } from 'querystring';
 
 /**
  * Initializes the database.
@@ -153,7 +152,7 @@ export async function token(id: number): Promise<object> {
     return new Promise((Resolve, Reject) => {
         // Validate token [https://dev.twitch.tv/docs/authentication#validating-requests]
         try {
-            var access_token = await tools.query('SELECT access_token FROM tokens WHERE user_id = ?;', [id])
+            let access_token = await tools.query('SELECT access_token FROM tokens WHERE user_id = ?;', [id])
 
             if(access_token.length <= 0) {
                 return {status: "ERROR", token: `Sorry, user is not in our database. Please login: [ ${creds.SERVER} ]`}
@@ -161,7 +160,7 @@ export async function token(id: number): Promise<object> {
 
             access_token = access_token[0].access_token
 
-            const verifiedToken = await axios.get('https://id.twitch.tv/oauth2/validate', {
+            const verifiedToken: string = await axios.get('https://id.twitch.tv/oauth2/validate', {
                 headers: {
                     Authorization: `Bearer ${access_token}`
                 }
@@ -175,7 +174,7 @@ export async function token(id: number): Promise<object> {
                     // Refresh token
                     const refresh_token = await tools.query('SELECT refresh_token FROM tokens WHERE user_id = ?', [id]);
 
-                    const params = new URLSearchParams();
+                    const params: URLSearchParams = new URLSearchParams();
                     params.append("grant_type", "refresh_token");
                     params.append("refresh_token", refresh_token[0].refresh_token);
                     params.append("client_id", creds.TWITCH_CLIENT_ID);
@@ -210,28 +209,29 @@ export async function token(id: number): Promise<object> {
 
 // https://github.com/KUNszg/kbot/blob/19b5ec0648ff539b345013f36c8bb667d45f9ba0/lib/utils/utils.js#L197
 // Yoink TriHard
-const shortHumanize = humanize.humanizer({
-    language: 'shortEn',
-    languages: {
-        shortEn: {
-            y: () => 'y',
-            mo: () => 'mo',
-            w: () => 'w',
-            d: () => 'd',
-            h: () => 'h',
-            m: () => 'm',
-            s: () => 's',
+export function humanizeDuration(seconds: number): string {
+    const shortHumanize = humanize.humanizer({
+        language: 'shortEn',
+        languages: {
+            shortEn: {
+                y: () => 'y',
+                mo: () => 'mo',
+                w: () => 'w',
+                d: () => 'd',
+                h: () => 'h',
+                m: () => 'm',
+                s: () => 's',
+            },
         },
-    },
-});
-
-exports.humanizeDuration = (seconds) => {
-    const options = {
+    });
+    
+    const options: humanize.Options = {
         units: ['y', 'mo', 'd', 'h', 'm', 's'],
         largest: 3,
         round: true,
-        spacer: '',
+        spacer: '', 
     };
+
     return shortHumanize(seconds*1000, options);
 }
 
@@ -242,9 +242,10 @@ exports.humanizeDuration = (seconds) => {
  * @deprecated For now, i personally don't like the regex it is using.
  */
 // eslint-disable-next-line no-unused-vars
-exports.ascii = async function(message) {
+export function ascii(message: string): Boolean {
     // return /^[\x00-\xFF]*$/.test(message);
     // return /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/.test(message)
+    return false;
 }
 
 /**
@@ -253,70 +254,79 @@ exports.ascii = async function(message) {
  * @param {String} message The message that needs to get checked fo banphrases.
  * @returns {Bool} True if there is a banphrase. False if it is safe. 
  */
-exports.banPhrase = async function(channel, message) {
-    try {
-        let ban = [];
-        
-        ban.push(regex.racism1.test(message));
-        ban.push(regex.racism2.test(message));
-        ban.push(regex.racism3.test(message));
-        ban.push(regex.racism4.test(message));
-        ban.push(regex.url.test(message));
-        ban.push(regex.invisChar.test(message));
+export async function banPhrase(channel: string, message: string): Promise<boolean> {
+    return new Promise((Resolve, Reject) => {
+        try {
+            let ban = [];
+            
+            ban.push(regex.racism1.test(message));
+            ban.push(regex.racism2.test(message));
+            ban.push(regex.racism3.test(message));
+            ban.push(regex.racism4.test(message));
+            ban.push(regex.url.test(message));
+            ban.push(regex.invisChar.test(message));
 
-        // Does not work atm. Triggers on example: #
-        // ban.push(await tools.ascii(message));
+            // Does not work atm. Triggers on example: #
+            // ban.push(await tools.ascii(message));
 
-        // https://gist.github.com/RAnders00/5653be6d9bef01b314145062752e7aef | Example NymN's banphrases
+            // https://gist.github.com/RAnders00/5653be6d9bef01b314145062752e7aef | Example NymN's banphrases
+            // NymN, forsen and many others have personal banphrases tied to pajladas bot.         
         // NymN, forsen and many others have personal banphrases tied to pajladas bot.         
-        switch (channel) {
-            case "#nymn": {
+            // NymN, forsen and many others have personal banphrases tied to pajladas bot.         
+        // NymN, forsen and many others have personal banphrases tied to pajladas bot.         
+            // NymN, forsen and many others have personal banphrases tied to pajladas bot.         
+        // NymN, forsen and many others have personal banphrases tied to pajladas bot.         
+            // NymN, forsen and many others have personal banphrases tied to pajladas bot.         
+            switch (channel) {
+                case "#nymn": {
 
-                // Bot prefixes.
-                const blockWords = [
-                    '?', // Thepositivebot
-                    '!', // Botnextdoor
-                    '$', // Supibot
-                    'bb', // BotBear
-                ]
-                // Check for channel specific words.
-                ban.push(blockWords.some(word => message.includes(word)))
-                
-                ban.push(await axios.post("https://nymn.pajbot.com/api/v1/banphrases/test", {
-                    headers: {
-                        'content-type': 'application/json'
-                    },
-                    message: message
-                }).then((res => res.data)).then((data) => {
-                    return data.banned
-                }).catch((err) => {
-                    console.log(err)
-                    tools.logger(err, "error")
-                    throw err;
-                }))
+                    // Bot prefixes.
+                    const blockWords = [
+                        '?', // Thepositivebot
+                        '!', // Botnextdoor
+                        '$', // Supibot
+                        'bb', // BotBear
+                    ]
+                    // Check for channel specific words.
+                    ban.push(blockWords.some(word => message.includes(word)))
+                    
+                    ban.push(await axios.post("https://nymn.pajbot.com/api/v1/banphrases/test", {
+                        headers: {
+                            'content-type': 'application/json'
+                        },
+                        message: message
+                    }).then((res => res.data)).then((data) => {
+                        return data.banned
+                    }).catch((err) => {
+                        console.log(err)
+                        tools.logger(err, "error")
+                        throw err;
+                    }))
 
-                ban.push(await axios.get(`https://paj.pajbot.com/api/channel/62300805/moderation/check_message?message=${encodeURIComponent(message).replace(/%0A/g, "")}`, {
-                    headers: {
-                        'content-type': 'application/json'
-                    },
-                    message: message
-                }).then((res => res.data)).then((data) => {
-                    return data.banned;
-                }).catch((err) => {
-                    console.log(err);
-                    tools.logger(err, "error");
-                    throw err;
-                }))
+                    ban.push(await axios.get(`https://paj.pajbot.com/api/channel/62300805/moderation/check_message?message=${encodeURIComponent(message).replace(/%0A/g, "")}`, {
+                        headers: {
+                            'content-type': 'application/json'
+                        },
+                        data: {
+                            "message": message
+                        }
+                    }).then((res => res.data)).then((data) => {
+                        return data.banned;
+                    }).catch((err) => {
+                        console.log(err);
+                        tools.logger(err, "error");
+                        throw err;
+                    }))
+                }
             }
+            
+            console.log(ban)
+            return ban.includes(true) ? true : false;
+        } catch (error) {
+            console.log(error);
+            throw error;
         }
-        
-        console.log(ban)
-        return ban.includes(true) ? true : false;
-    } catch (error) {
-        console.log(error);
-        throw error;
-    }
-
+    })
 }
 
 

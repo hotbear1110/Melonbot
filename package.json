@@ -24,6 +24,7 @@
     "nodemon": "^2.0.14"
   },
   "dependencies": {
+    "@types/axios": "^0.14.0",
     "@types/got": "^9.6.12",
     "@types/humanize-duration": "^3.25.1",
     "@types/mysql": "^2.15.19",
