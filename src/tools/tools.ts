@@ -271,12 +271,6 @@ export async function banPhrase(channel: string, message: string): Promise<boole
 
             // https://gist.github.com/RAnders00/5653be6d9bef01b314145062752e7aef | Example NymN's banphrases
             // NymN, forsen and many others have personal banphrases tied to pajladas bot.         
-        // NymN, forsen and many others have personal banphrases tied to pajladas bot.         
-            // NymN, forsen and many others have personal banphrases tied to pajladas bot.         
-        // NymN, forsen and many others have personal banphrases tied to pajladas bot.         
-            // NymN, forsen and many others have personal banphrases tied to pajladas bot.         
-        // NymN, forsen and many others have personal banphrases tied to pajladas bot.         
-            // NymN, forsen and many others have personal banphrases tied to pajladas bot.         
             switch (channel) {
                 case "#nymn": {
 
@@ -321,10 +315,10 @@ export async function banPhrase(channel: string, message: string): Promise<boole
             }
             
             console.log(ban)
-            return ban.includes(true) ? true : false;
+            Resolve(ban.includes(true) ? true : false);
         } catch (error) {
             console.log(error);
-            throw error;
+            Reject(error);
         }
     })
 }
@@ -333,7 +327,7 @@ export async function banPhrase(channel: string, message: string): Promise<boole
 async function CreateStatFile() {
     return new Promise((Resolve, Reject) => {
         // eslint-disable-next-line no-undef
-        const fileName = `${ROOT}/stats/${tools.YMD()}.json`;
+        const fileName = `${creds.ROOT}/stats/${tools.YMD()}.json`;
         fs.stat(fileName, async function (err) {
             if (err === null) { Reject(fileName); return; }
             // Create a json element for every channel.

@@ -130,7 +130,10 @@ export async function run(): Promise<void> {
             result = `@${user['display-name']}, ${result}`;
         }
         
-        const banPhrase = await tools.banPhrase(channel, result);
+        const banPhrase = await tools.banPhrase(channel, result).catch((error) => {
+            console.log(error);
+            tools.logger(error, "error");
+        });
         if(banPhrase) {
             client.say(channel, "cmonBruh Banphrase detected.")
         } else {
