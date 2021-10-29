@@ -1,33 +1,37 @@
-const con = require('./../credentials/login.js').con
-const mysql = require("mysql");
-const tools = require("./tools.js");
-const fs = require('fs');
-const readline = require('readline')
-const creds = require('./../credentials/config')
-const axios = require("axios");
-const humanize = require('humanize-duration');
-const regex = require("./regex")
-const process = require('process')
+import { con } from './../credentials/login.js'
+import mysql from "mysql";
+import * as tools from "./tools.js";
+import fs from 'fs';
+import readline from 'readline';
+import * as creds from './../credentials/config';
+import axios from "axios";
+import humanize from 'humanize-duration';
+import * as regex from "./regex";
+import process from 'process';
+import { ChatUserstate } from 'tmi.js';
+import { stringify } from 'querystring';
 
 /**
  * Initializes the database.
  * @author JoachimFlottorp
  */
-exports.initDatabase = () => {
-    con.ping((err) => {
+export const initDatabase = () => {
+    con.ping((err: mysql.MysqlError) => {
         if (err) {
             console.log(err)
             process.exit(1);
         }
     })
     // Create a table for every line in init.sql
-    var rl = readline.createInterface({
+    const rl = readline.createInterface({
         input: fs.createReadStream('./init.sql'),
         terminal: false,
     });
     rl.on('line', async function(chunk) {
         await tools.query(chunk).catch((error) => {
-            fs.writeFile('INIT_DATABASE_ERROR.txt', `ERROR INITIALIZING TABLES ERROR: \r\n${error}`)
+            fs.writeFile('INIT_DATABASE_ERROR.txt', `ERROR INITIALIZING TABLES ERROR: \r\n${error}`, (error) => {
+                if (error) { throw error; };
+            })
             process.exit(1)
         })
     })
@@ -43,8 +47,9 @@ exports.initDatabase = () => {
  * @param {Array} data Array containing user input. Changes ? in query string to that of the array. 
  * @returns {Promise} Array of json with data. Access element as foo[0].bar
  */
-exports.query = (query, data = []) => new Promise((Resolve, Reject) => {
-    con.query(mysql.format(query, data), async (err, results) => {
+export async function query(query: string, data: Array<any> = []): Promise<any> {
+    return new Promise((Resolve, Reject) => {
+        con.query(mysql.format(query, data), async (err, results) => {
         if (err !== null) {
             await tools.query(`
                 INSERT INTO error_logs (error_message) VALUES (?)`,
@@ -54,14 +59,14 @@ exports.query = (query, data = []) => new Promise((Resolve, Reject) => {
             Resolve(results)
         }
     });
-})
+});
 
 /**
  * @author JoachimFlottorp
  * @param {String} error_message Error message
  * @param {String} type info or error. Default is info
  */
-exports.logger = async (error_message, type = "info") => {
+export async function logger(error_message: string, type: string = "info") {
     if (error_message === "") { return; }
     // Logs to a file stream and to the error_logs table.
     // type can be info or error.
@@ -86,19 +91,20 @@ exports.logger = async (error_message, type = "info") => {
 /**
  * @author JoachimFlottorp
  * @param {Number} timeInSeconds Converts time in seconds to HOUR:MINUTES:SECONDS 
- * @returns HOUR:MINUTES:SECONDS as a String
+ * @returns HH:MM:SS as a String
  */
-exports.convertHMS = (timeInSeconds) => {
+// [TODO]: Might not work.
+export function convertHMS(timeInSeconds: number): string | undefined {
     try {
-        const sec = parseInt(timeInSeconds, 10); // convert value to number if it's string
-        let hours   = Math.floor(sec / 3600); // get hours
-        let minutes = Math.floor((sec - (hours * 3600)) / 60); // get minutes
-        let seconds = sec - (hours * 3600) - (minutes * 60); //  get seconds
+        let hours   = Math.floor(timeInSeconds / 3600); // get hours
+        let minutes = Math.floor((timeInSeconds - (hours * 3600)) / 60); // get minutes
+        let seconds = timeInSeconds - (hours * 3600) - (minutes * 60); //  get seconds
         // add 0 if value < 10; Example: 2 => 02
-        if (hours   < 10) {hours   = "0"+hours;}
-        if (minutes < 10) {minutes = "0"+minutes;}
-        if (seconds < 10) {seconds = "0"+seconds;}
-        return hours+':'+minutes+':'+seconds; // Return is HH : MM : SS
+        let returnValue: string = "";
+        if (hours   < 10) {returnValue   += "0"+hours;}
+        if (minutes < 10) {returnValue += ":0"+minutes;}
+        if (seconds < 10) {returnValue += ":0"+seconds;}
+        return returnValue
     } catch (err) {
         console.error(err)
     }
@@ -106,18 +112,18 @@ exports.convertHMS = (timeInSeconds) => {
 
 /**
  * @author JoachimFlottorp
- * @returns Year Month Date 2021-10-09
+ * @returns {string} Year Month Date 2021-10-09
  */
-exports.YMD = () => {
+export function YMD(): string {
     let date = new Date();
     return `${date.getFullYear()}-${("0" + (date.getMonth() + 1)).slice(-2)}-${("0" + date.getDate()).slice(-2)}` 
 }
 
 /**
  * @author JoachimFlottorp
- * @returns Year Month Date Hour Minute Second 2021-10-09 02:35:33
+ * @returns {string} Year Month Date Hour Minute Second 2021-10-09 02:35:33
  */
-exports.YMDHMS = () => {
+export function YMDHMS(): string {
     let date = new Date();
     let hours = date.getHours();
     let minutes = date.getMinutes();
@@ -127,11 +133,11 @@ exports.YMDHMS = () => {
 
 /**
  * @author JoachimFlottorp
- * @param {*} user User variable TMI gives. 
- * @param {*} channel Channel variable TMI gives.
- * @returns true | false | If is mod
+ * @param {ChatUserstate} user User variable TMI gives. 
+ * @param {string} channel Channel variable TMI gives.
+ * @returns {boolean} true | false | If is mod
  */
-exports.isMod = (user, channel) => {
+export function isMod(user: ChatUserstate, channel: string): boolean {
     let isMod = user.mod || user['user-type'] === 'mod';
     let isBroadcaster = channel === user.username;
     let isModUp = isMod || isBroadcaster;
@@ -143,61 +149,63 @@ exports.isMod = (user, channel) => {
     @author JoachimFlottorp
     @param {Number} id User id of the requested user.
 */
-exports.token = async (id) => {
-    // Validate token [https://dev.twitch.tv/docs/authentication#validating-requests]
-    try {
-        var access_token = await tools.query('SELECT access_token FROM tokens WHERE user_id = ?;', [id])
+export async function token(id: number): Promise<object> {
+    return new Promise((Resolve, Reject) => {
+        // Validate token [https://dev.twitch.tv/docs/authentication#validating-requests]
+        try {
+            var access_token = await tools.query('SELECT access_token FROM tokens WHERE user_id = ?;', [id])
 
-        if(access_token.length <= 0) {
-            return {status: "ERROR", token: `Sorry, user is not in our database. Please login: [ ${creds.SERVER} ]`}
+            if(access_token.length <= 0) {
+                return {status: "ERROR", token: `Sorry, user is not in our database. Please login: [ ${creds.SERVER} ]`}
+            }
+
+            access_token = access_token[0].access_token
+
+            const verifiedToken = await axios.get('https://id.twitch.tv/oauth2/validate', {
+                headers: {
+                    Authorization: `Bearer ${access_token}`
+                }
+            }).then((data) => {
+                // Token works, no further action is required
+                tools.logger(`${id} has requested their access token and is alive for ${tools.convertHMS(data.data.expires_in)} hours`)
+                return access_token
+            }).catch(async function (error) {
+                if (error.response.data["message"] === "invalid access token") {
+                    // // https://discuss.dev.twitch.tv/t/status-400-missing-client-id-when-refreshing-user-token-with-granttype-refresh-token-on-postman-it-works/26371/2
+                    // Refresh token
+                    const refresh_token = await tools.query('SELECT refresh_token FROM tokens WHERE user_id = ?', [id]);
+
+                    const params = new URLSearchParams();
+                    params.append("grant_type", "refresh_token");
+                    params.append("refresh_token", refresh_token[0].refresh_token);
+                    params.append("client_id", creds.TWITCH_CLIENT_ID);
+                    params.append("client_secret", creds.TWITCH_CLIENT_SECRET);
+
+                    const refreshToken = axios({
+                        method: 'POST',
+                        url: "https://id.twitch.tv/oauth2/token",
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+                            Accept: "*/*",
+                            "Accept-Encoding": "gzip, deflate, br",
+                            Connection: "keep-alive"
+                        },
+                        data: params.toString()
+                    }).then(async function (data) {
+                        await tools.query(`UPDATE tokens SET access_token = "${data.data.access_token}", refresh_token = "${data.data.refresh_token}" WHERE user_id = ${id}`)
+                        return data.data.access_token
+                    }).catch((error) => {
+                        console.log(error)
+                        throw error
+                    })
+                    return refreshToken
+                }
+            })
+            Resolve( {status: "OK", token: verifiedToken} );
+        } catch (error) {
+            Reject( {status: "ERROR", token: error} );
         }
-
-        access_token = access_token[0].access_token
-
-        const verifiedToken = await axios.get('https://id.twitch.tv/oauth2/validate', {
-            headers: {
-                Authorization: `Bearer ${access_token}`
-            }
-        }).then((data) => {
-            // Token works, no further action is required
-            tools.logger(`${id} has requested their access token and is alive for ${tools.convertHMS(data.data.expires_in)} hours`)
-            return access_token
-        }).catch(async function (error) {
-            if (error.response.data["message"] === "invalid access token") {
-                // // https://discuss.dev.twitch.tv/t/status-400-missing-client-id-when-refreshing-user-token-with-granttype-refresh-token-on-postman-it-works/26371/2
-                // Refresh token
-                const refresh_token = await tools.query('SELECT refresh_token FROM tokens WHERE user_id = ?', [id]);
-
-                const params = new URLSearchParams();
-                params.append("grant_type", "refresh_token");
-                params.append("refresh_token", refresh_token[0].refresh_token);
-                params.append("client_id", creds.TWITCH_CLIENT_ID);
-                params.append("client_secret", creds.TWITCH_CLIENT_SECRET);
-
-                const refreshToken = axios({
-                    method: 'POST',
-                    url: "https://id.twitch.tv/oauth2/token",
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
-                        Accept: "*/*",
-                        "Accept-Encoding": "gzip, deflate, br",
-                        Connection: "keep-alive"
-                    },
-                    data: params.toString()
-                }).then(async function (data) {
-                    await tools.query(`UPDATE tokens SET access_token = "${data.data.access_token}", refresh_token = "${data.data.refresh_token}" WHERE user_id = ${id}`)
-                    return data.data.access_token
-                }).catch((error) => {
-                    console.log(error)
-                    throw error
-                })
-                return refreshToken
-            }
-        })
-        return {status: "OK", token: verifiedToken};
-    } catch (error) {
-        return {status: "ERROR", token: error}
-    }
+    })
 }
 
 // https://github.com/KUNszg/kbot/blob/19b5ec0648ff539b345013f36c8bb667d45f9ba0/lib/utils/utils.js#L197
