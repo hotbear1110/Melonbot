@@ -22,9 +22,9 @@ export const pingDatabase = async () => {
     }, 60000)
 }
 
-function getChannels(): Promise<Array<> {
-    new Promise((Resolve, Reject) => {
-        con.query('SELECT * FROM channels', (err, results) => {
+const getChannels = async (): Promise<object> => {
+    return new Promise((Resolve, Reject) => {
+        con.query('SELECT * FROM channels', (err: mysql.MysqlError | null, results) => {
             if (err) {
                 Reject(err);
             } else {
@@ -36,7 +36,7 @@ function getChannels(): Promise<Array<> {
 
 const channelOptions: string[] = []
 async function res() {
-    const channelList: Array<string> = []
+    const channelList: Array<Object> = []
 	channelList.push(await getChannels());
 	return await channelList[0].forEach(
         i => {
