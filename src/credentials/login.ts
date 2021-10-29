@@ -22,7 +22,7 @@ export const pingDatabase = async () => {
     }, 60000)
 }
 
-const getChannels = async (): Promise<object> => {
+const getChannels = async (): Promise<any> => {
     return new Promise((Resolve, Reject) => {
         con.query('SELECT * FROM channels', (err: mysql.MysqlError | null, results) => {
             if (err) {
@@ -32,14 +32,16 @@ const getChannels = async (): Promise<object> => {
             }
         });
     })
-});
+};
 
 const channelOptions: string[] = []
 async function res() {
-    const channelList: Array<Object> = []
-	channelList.push(await getChannels());
+    const channelList: Array<any> = []
+	channelList.push(await getChannels().catch((error) => {
+        throw error;
+    }));
 	return await channelList[0].forEach(
-        i => {
+        (i: { channel_name: string; }) => {
             channelOptions.push(i.channel_name)
             tools.query("INSERT IGNORE INTO channel_stats (Channel) VALUES (?)", [i.channel_name])
         } 
