@@ -5,6 +5,7 @@ import fs from 'fs';
 import * as creds from "./credentials/config"
 import { initDatabase } from "./tools/tools";
 import { pingDatabase } from "./credentials/login" 
+import { run } from './bot';
 
 fs.mkdir(`${creds.ROOT}/stats`, err => {
     if (err) {
@@ -18,6 +19,7 @@ initDatabase();
 // Keep pinging database to keep the connection alive.
 pingDatabase();
 // Bot
-require("./bot")
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+run().finally();
 // Loops.
 require("./loops/loops")

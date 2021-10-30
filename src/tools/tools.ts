@@ -1,7 +1,7 @@
 /* eslint-disable no-async-promise-executor */ 
 // Need this disabled for await inside async promise functions
 import { con } from './../credentials/login.js'
-import mysql from "mysql";
+import mysql, { MysqlError } from "mysql";
 import * as tools from "./tools.js";
 import fs from 'fs';
 import readline from 'readline';
@@ -48,9 +48,9 @@ export const initDatabase = () => {
  * @param {Array} data Array containing user input. Changes ? in query string to that of the array. 
  * @returns {Promise} Array of json with data. Access element as foo[0].bar
  */
-export async function query(query: string, data: Array<any> = []): Promise<any> {
+export async function query(query: string, data: Array<any> = []): Promise<MysqlError | any> {
     return new Promise((Resolve, Reject) => {
-        con.query(mysql.format(query, data), async (err, results) => {
+        con.query(mysql.format(query, data), async (err: MysqlError | null, results?: any) => {
         if (err !== null) {
             await tools.query(`
                 INSERT INTO error_logs (error_message) VALUES (?)`,

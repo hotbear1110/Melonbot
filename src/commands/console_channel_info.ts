@@ -9,7 +9,7 @@ export = {
     onlyOffline: true,
     execute: async (channel: string, user: ChatUserstate, input: string[], self: boolean) => {
         try {
-            if(user['user-id'] == creds.OWNER_USER_ID) {
+            if(Number(user['user-id']) == creds.OWNER_USER_ID) {
                 console.log(channel);
                 return 'Check console log BloodTrail'
             }

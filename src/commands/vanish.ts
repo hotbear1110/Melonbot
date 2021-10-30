@@ -1,5 +1,5 @@
-import { client } from 'bot';
-import { isMod } from 'tools/tools';
+import { client } from './../bot';
+import { isMod } from './../tools/tools';
 import { ChatUserstate } from 'tmi.js';
 
 module.exports = {

@@ -8,12 +8,13 @@ import Prefix from "./tools/prefix"
 import _ from "underscore";
 import vm from "vm";
 // import { UnixSocket } from "./modules/socket";
-import process from 'process';
+// import process from 'process';
 
 export const client: tmi.Client = new tmi.client(login)
 client.connect();
 
-// export async function run(): Promise<void> {
+
+export async function run(): Promise<void> {
 
     let forsen = false;
 
@@ -33,7 +34,7 @@ client.connect();
         // If NymN's viewers says Nime + forsen or just forsen, send Nime ❗ 
         if ((new RegExp(`\\bforsen\\b`).test(message.toLowerCase()))) {
             tools.updateStats(channel.substring(1), 'forsen');
-            if ((channel === "#nymn") && (message.includes("Nime") || message === "forsen")) {
+            if ((message.includes("Nime") || message === "forsen")) {
                 let m = "Nime ❗"; 
                 if (forsen) {
                     m += " 󠀀 "
@@ -42,7 +43,7 @@ client.connect();
                 forsen = !forsen
             }
         }
-
+        // (channel === "#nymn") && 
         if ((input[1] === "nymnLick") && (channel === "#nymn") && user['username'] === "tepidp") {
 
             const isLive: boolean = await tools.Live(channel);
@@ -86,6 +87,7 @@ client.connect();
             return;
         }
         const commands = requireDir("./commands");
+        console.log(commands[command])
         // Was the message a command
         if(typeof commands[command] === "undefined") {
             client.say(channel, `${user["username"]} undefined command FeelsDankMan`);
@@ -177,5 +179,4 @@ client.connect();
             } 
         })
     });
-    
-// }
+}

@@ -1,6 +1,6 @@
 import * as tools from './../tools/tools';
 import * as creds from './../credentials/config';
-import { config } from './../bot';
+import { client } from './../bot';
 import { ChatUserstate } from 'tmi.js';
 
 module.exports = {
@@ -14,7 +14,7 @@ module.exports = {
 
             if (input.length <= 0) { client.say(channel, `${creds.SERVER}/bot/commands`); return ""; }
 
-            const description = await tools.query("SELECT description FROM commands WHERE name=?", input[0])
+            const description = await tools.query("SELECT description FROM commands WHERE name=?", [input[0]])
 
             return description[0].description
         } catch (err) {
