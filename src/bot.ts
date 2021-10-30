@@ -2,20 +2,18 @@ import { ChatUserstate } from "tmi.js";
 import tmi from 'tmi.js';
 import { options as login } from './credentials/login.js';
 import requireDir from "require-dir";
-import * as tools from "./tools/tools";
+import * as tools from "./tools/tools"
 import * as creds from "./credentials/config";
-import * as prefix from "./tools/prefix";
+import Prefix from "./tools/prefix"
 import _ from "underscore";
 import vm from "vm";
-import { UnixSocket } from "./modules/socket";
+// import { UnixSocket } from "./modules/socket";
 import process from 'process';
 
-const client: tmi.Client = new tmi.client(login)
+export const client: tmi.Client = new tmi.client(login)
 client.connect();
 
-// Create socket object if unix based system.
-export async function run(): Promise<void> {
-
+// export async function run(): Promise<void> {
 
     let forsen = false;
 
@@ -27,7 +25,7 @@ export async function run(): Promise<void> {
         // Sometimes self doesn't work.
         if (user["username"] === creds.USERNAME) { return; }
         
-        if (channel === "#forsen") { channel === `#${creds.USERNAME}` };
+        if (channel === "#forsen") { channel === `#${creds.USERNAME}` }
         
         const input: Array<string> = message.split(" ");
 
@@ -66,26 +64,28 @@ export async function run(): Promise<void> {
         
         const command: string = input[1];
         
+        const p = new Prefix(channel, user, message, self).GetPrefix();
         // No real reason for this. primarily just for fun. Checks the input against every prefix in [./tools/prefix.js] and does a conditional.
-        const hasPrefix = prefix.prefix(channel, user, message, self).map((prefix) => {
-            switch (input[0]) {
-            case prefix.prefix:
-                return vm.runInNewContext(prefix.condition);
-            }
-        })
+        console.log(p.map)
+        // const hasPrefix = p.map((prefix) => {
+        //     switch (input[0]) {
+        //     case prefix.prefix:
+        //         return vm.runInNewContext(prefix.condition);
+        //     }
+        // })
 
         // If the message does not include a prefix we add it to the markov bot and then return.
-        if (!hasPrefix.includes(true)) { 
-            (async () =>  {
-                // Send the input to the Markov Program. 
-                // This is disabled in windows as to my knowledge, windows does not have the socket i want. but i could be wrong.
-                if (process.platform !== "win32" && creds.DEVELOPMENT === true) { // Make sure production bot can't run it for now.
-                    // Connect and write if it connected.
-                    UnixSocket("WRITE", message);
-                }
-            }) 
-            return;
-        }
+        // if (!hasPrefix.includes(true)) { 
+        //     (async () =>  {
+        //         // Send the input to the Markov Program. 
+        //         // This is disabled in windows as to my knowledge, windows does not have the socket i want. but i could be wrong.
+        //         // if (process.platform !== "win32" && creds.DEVELOPMENT === true) { // Make sure production bot can't run it for now.
+        //         //     // Connect and write if it connected.
+        //         //     UnixSocket("WRITE", message);
+        //         // }
+        //     }) 
+        //     return;
+        // }
         // Commands
         const commands = requireDir("./commands");
         
@@ -142,7 +142,7 @@ export async function run(): Promise<void> {
         }
     } catch (error) {
         console.log(error)
-        tools.logger(error, "error")
+        tools.logger(JSON.stringify(error), "error")
     }
     }
 
@@ -181,6 +181,4 @@ export async function run(): Promise<void> {
         })
     });
     
-}
-
-module.exports = { client };
+// }

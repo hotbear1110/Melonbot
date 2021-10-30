@@ -10,7 +10,8 @@ export const TWITCH_CLIENT_SECRET = "" // Twitch client secret 4Head
 export const USERNAME = "" // Bots username
 export const OWNER_USER_ID = 146910710 // Owners user id, curl example further down V
 export const DEVELOPMENT = false; // Default false, dont worry about this.
-export const ROOT = path.resolve(__dirname)
+export const ROOT = path.resolve(__dirname) // Root of the program
+export const SERVER = "http://localhost:3000" // URL of the website [ https://github.com/JoachimFlottorp/web.flottorp.org ] 
 
 
 /* 

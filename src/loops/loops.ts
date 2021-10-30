@@ -1,7 +1,7 @@
-const tools = require("./../tools/tools")
-const _ = require('underscore')
-const axios = require('axios');
-const creds = require("./../credentials/config")
+import * as tools from "./../tools/tools"
+import _ from 'underscore';
+import axios from 'axios'
+import * as creds from "./../credentials/config"
 
 // Every 20 seconds check if a streamer is live.
 setInterval(async () => {
@@ -37,6 +37,6 @@ setInterval(async () => {
         })
     } catch (error) {
         console.log(error)
-        tools.logger(error, "error")
+        tools.logger(JSON.stringify(error), "error")
     }
 }, 20000);

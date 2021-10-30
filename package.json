@@ -6,9 +6,9 @@
   "scripts": {
     "descripton": "Start - Production | Dev - Development | Game - Working on game - Run start and game concurrently",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node init.js",
+    "start": "npm run build && node build/init.js",
     "build": "tsc",
-    "dev": "nodemon -e ts --exec \"npm run build && build/init.js\" "
+    "dev": "nodemon -e ts --exec \"npm run start\""
   },
   "nodemonConfig": {
     "ext": "jsx, js, sql, sh, css, ts, pug"

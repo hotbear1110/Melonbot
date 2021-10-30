@@ -3,6 +3,8 @@
 
 import fs from 'fs';
 import * as creds from "./credentials/config"
+import { initDatabase } from "./tools/tools";
+import { pingDatabase } from "./credentials/login" 
 
 fs.mkdir(`${creds.ROOT}/stats`, err => {
     if (err) {
@@ -12,10 +14,10 @@ fs.mkdir(`${creds.ROOT}/stats`, err => {
 })
 
 // Init database
-require("./tools/tools").initDatabase();
+initDatabase();
 // Keep pinging database to keep the connection alive.
-require("./credentials/login").pingDatabase();
+pingDatabase();
 // Bot
-require("./bot").run();
+require("./bot")
 // Loops.
 require("./loops/loops")

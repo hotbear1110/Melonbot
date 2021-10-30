@@ -1,3 +1,5 @@
+/* eslint-disable no-async-promise-executor */ 
+// Need this disabled for await inside async promise functions
 import { con } from './../credentials/login.js'
 import mysql from "mysql";
 import * as tools from "./tools.js";
@@ -29,7 +31,7 @@ export const initDatabase = () => {
     rl.on('line', async function(chunk) {
         await tools.query(chunk).catch((error) => {
             fs.writeFile('INIT_DATABASE_ERROR.txt', `ERROR INITIALIZING TABLES ERROR: \r\n${error}`, (error) => {
-                if (error) { throw error; };
+                if (error) { throw error; }
             })
             process.exit(1)
         })
@@ -58,14 +60,14 @@ export async function query(query: string, data: Array<any> = []): Promise<any> 
             Resolve(results)
         }
     });
-});
+})}
 
 /**
  * @author JoachimFlottorp
  * @param {String} error_message Error message
  * @param {String} type info or error. Default is info
  */
-export async function logger(error_message: string, type: string = "info") {
+export async function logger(error_message: string, type = "info") {
     if (error_message === "") { return; }
     // Logs to a file stream and to the error_logs table.
     // type can be info or error.
@@ -77,8 +79,8 @@ export async function logger(error_message: string, type: string = "info") {
         fs.mkdirSync(LOG_FOLDER)
     }
 
-    var logToFile = fs.createWriteStream(LOG_FOLDER + tools.YMD(), {flags: 'a'});
-    logToFile.write(process.platform === "win32" ? `\r\n${tools.YMDHMS()} - ${error_message}` : `\n${tools.YMDHMS()} - ${error_message}`)
+    const logToFile = fs.createWriteStream(LOG_FOLDER + YMD(), {flags: 'a'});
+    logToFile.write(process.platform === "win32" ? `\r\n${YMDHMS()} - ${error_message}` : `\n${YMDHMS()} - ${error_message}`)
     
     if (type === "error") {
         await tools.query("INSERT INTO error_logs (error_message) VALUES (?)", [error_message]);
@@ -95,11 +97,11 @@ export async function logger(error_message: string, type: string = "info") {
 // [TODO]: Might not work.
 export function convertHMS(timeInSeconds: number): string | undefined {
     try {
-        let hours   = Math.floor(timeInSeconds / 3600); // get hours
-        let minutes = Math.floor((timeInSeconds - (hours * 3600)) / 60); // get minutes
-        let seconds = timeInSeconds - (hours * 3600) - (minutes * 60); //  get seconds
+        const hours   = Math.floor(timeInSeconds / 3600); // get hours
+        const minutes = Math.floor((timeInSeconds - (hours * 3600)) / 60); // get minutes
+        const seconds = timeInSeconds - (hours * 3600) - (minutes * 60); //  get seconds
         // add 0 if value < 10; Example: 2 => 02
-        let returnValue: string = "";
+        let returnValue = "";
         if (hours   < 10) {returnValue   += "0"+hours;}
         if (minutes < 10) {returnValue += ":0"+minutes;}
         if (seconds < 10) {returnValue += ":0"+seconds;}
@@ -114,7 +116,7 @@ export function convertHMS(timeInSeconds: number): string | undefined {
  * @returns {string} Year Month Date 2021-10-09
  */
 export function YMD(): string {
-    let date = new Date();
+    const date = new Date();
     return `${date.getFullYear()}-${("0" + (date.getMonth() + 1)).slice(-2)}-${("0" + date.getDate()).slice(-2)}` 
 }
 
@@ -123,10 +125,10 @@ export function YMD(): string {
  * @returns {string} Year Month Date Hour Minute Second 2021-10-09 02:35:33
  */
 export function YMDHMS(): string {
-    let date = new Date();
-    let hours = date.getHours();
-    let minutes = date.getMinutes();
-    let seconds = date.getSeconds();
+    const date = new Date();
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const seconds = date.getSeconds();
     return `${date.getFullYear()}-${("0" + (date.getMonth() + 1)).slice(-2)}-${("0" + date.getDate()).slice(-2)} ${hours < 10 ? "0" + hours : hours}:${minutes < 10 ? "0" + minutes : minutes}:${seconds < 10 ? "0" + seconds : seconds}` 
 }
 
@@ -137,9 +139,9 @@ export function YMDHMS(): string {
  * @returns {boolean} true | false | If is mod
  */
 export function isMod(user: ChatUserstate, channel: string): boolean {
-    let isMod = user.mod || user['user-type'] === 'mod';
-    let isBroadcaster = channel === user.username;
-    let isModUp = isMod || isBroadcaster;
+    const isMod = user.mod || user['user-type'] === 'mod';
+    const isBroadcaster = channel === user.username;
+    const isModUp = isMod || isBroadcaster;
     return isModUp
 }
 
@@ -149,10 +151,10 @@ export function isMod(user: ChatUserstate, channel: string): boolean {
     @param {Number} id User id of the requested user.
 */
 export async function token(id: number): Promise<object> {
-    return new Promise((Resolve, Reject) => {
+    return new Promise(async (Resolve, Reject) => {
         // Validate token [https://dev.twitch.tv/docs/authentication#validating-requests]
         try {
-            let access_token = await tools.query('SELECT access_token FROM tokens WHERE user_id = ?;', [id])
+            let access_token = await query('SELECT access_token FROM tokens WHERE user_id = ?;', [id])
 
             if(access_token.length <= 0) {
                 return {status: "ERROR", token: `Sorry, user is not in our database. Please login: [ ${creds.SERVER} ]`}
@@ -166,7 +168,7 @@ export async function token(id: number): Promise<object> {
                 }
             }).then((data) => {
                 // Token works, no further action is required
-                tools.logger(`${id} has requested their access token and is alive for ${tools.convertHMS(data.data.expires_in)} hours`)
+                logger(`${id} has requested their access token and is alive for ${convertHMS(data.data.expires_in)} hours`)
                 return access_token
             }).catch(async function (error) {
                 if (error.response.data["message"] === "invalid access token") {
@@ -242,7 +244,7 @@ export function humanizeDuration(seconds: number): string {
  * @deprecated For now, i personally don't like the regex it is using.
  */
 // eslint-disable-next-line no-unused-vars
-export function ascii(message: string): Boolean {
+export function ascii(message: string): boolean {
     // return /^[\x00-\xFF]*$/.test(message);
     // return /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/.test(message)
     return false;
@@ -255,9 +257,9 @@ export function ascii(message: string): Boolean {
  * @returns {Bool} True if there is a banphrase. False if it is safe. 
  */
 export async function banPhrase(channel: string, message: string): Promise<boolean> {
-    return new Promise((Resolve, Reject) => {
+    return new Promise(async (Resolve, Reject) => {
         try {
-            let ban = [];
+            const ban = [];
             
             ban.push(regex.racism1.test(message));
             ban.push(regex.racism2.test(message));
@@ -293,7 +295,7 @@ export async function banPhrase(channel: string, message: string): Promise<boole
                         return data.banned
                     }).catch((err) => {
                         console.log(err)
-                        tools.logger(err, "error")
+                        logger(err, "error")
                         throw err;
                     }))
 
@@ -308,7 +310,7 @@ export async function banPhrase(channel: string, message: string): Promise<boole
                         return data.banned;
                     }).catch((err) => {
                         console.log(err);
-                        tools.logger(err, "error");
+                        logger(err, "error");
                         throw err;
                     }))
                 }
@@ -324,16 +326,16 @@ export async function banPhrase(channel: string, message: string): Promise<boole
 }
 
 
-async function CreateStatFile() {
+async function CreateStatFile(): Promise<string> {
     return new Promise((Resolve, Reject) => {
         // eslint-disable-next-line no-undef
-        const fileName = `${creds.ROOT}/stats/${tools.YMD()}.json`;
+        const fileName = `${creds.ROOT}/stats/${YMD()}.json`;
         fs.stat(fileName, async function (err) {
             if (err === null) { Reject(fileName); return; }
             // Create a json element for every channel.
             const channels = await exports.query("SELECT * FROM channels");
             console.log("channels", channels)
-            const data = channels.map(channel => {
+            const data = channels.map((channel: { [x: string]: any; }) => {
                 console.log({"channel": channel['channel_name'], "forsen": 0 })
                 return {"channel": channel['channel_name'], "forsen": 0 }
             })
@@ -352,7 +354,7 @@ async function CreateStatFile() {
  * @param {String} stat The stat to update
  * @param {Number} increment The amount to update | Default - 1
  */
-exports.updateStats = async function(channel, stat, increment = 1) {
+export async function updateStats(channel: string, stat: string, increment = 1) {
     // [TODO]: This will not count the first stat of the day, because require throws and error while the file gets created.
     // Create if not exists.
     CreateStatFile()
@@ -363,6 +365,7 @@ exports.updateStats = async function(channel, stat, increment = 1) {
     }).then((fileName) => {
         // Run this once the file is made.
 
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
         const file = require(fileName)
 
         switch (stat) {
@@ -372,7 +375,7 @@ exports.updateStats = async function(channel, stat, increment = 1) {
                 tools.query("UPDATE channel_stats SET forsen = forsen + ? WHERE Channel = ?;", [increment, channel]);
     
                 let count = -1;
-                file.map((c => {
+                file.map(((c: { [x: string]: string; }) => {
                     count++;
                     if (c['channel'] === channel) {
                         const forsen = file[count].forsen
@@ -400,8 +403,7 @@ exports.updateStats = async function(channel, stat, increment = 1) {
  * @param {String} channel Name of channel 
  * @returns {Boolean} True if is live, False if not live.
  */
-
-exports.Live = async (channel) => {
+export async function Live(channel: string): Promise<boolean> {
     const isLive = await tools.query("SELECT live FROM channels WHERE channel_name = ?", [channel.split("#")[1]])
     
     return isLive[0]['live'] === 1 ? true : false;
