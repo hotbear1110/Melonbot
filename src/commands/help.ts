@@ -1,6 +1,7 @@
-const tools = require("./../tools/tools")
-const creds = require("./../credentials/config")
-const client = require("./../bot").client
+import * as tools from './../tools/tools';
+import * as creds from './../credentials/config';
+import { config } from './../bot';
+import { ChatUserstate } from 'tmi.js';
 
 module.exports = {
     name: "help",
@@ -8,7 +9,7 @@ module.exports = {
     description: "Prints out the description of a command if a command is specified.",
     perm: 100,
     onlyOffline: false,
-    execute: async (channel, user, input, perm) => {
+    execute: async (channel: string, user: ChatUserstate, input: string[], self: boolean) => {
         try {
 
             if (input.length <= 0) { client.say(channel, `${creds.SERVER}/bot/commands`); return ""; }

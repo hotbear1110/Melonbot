@@ -1,6 +1,6 @@
 /* eslint-disable no-useless-escape */
 // https://github.com/DatGuy1/common_badwords_twitch
-export const racism1 = /(?:(?:\b(?<![-=\.])(?<!\.com\/)|monka)(?:[Nn\x{00F1}]|[Ii7]V)|\/\\\/)[\s\.]*?[liI1y!j\/]+[\s\.]*?(?:[GgbB6934Q🅱qğĜƃ၅5\*][\s\.]*?){2,}(?!arcS|l|Ktlw|ylul|ie217|64|\d? ?times)\\?/u;
+export const racism1 = /(?:(?:\b(?<![-=\.])(?<!\.com\/)|monka)(?:[Nn\x{00F1}]|[Ii7]V)|\/\\\/)[\s\.]*?[liI1y!j\/]+[\s\.]*?(?:[GgbB6934Q🅱qğĜƃ၅5\*][\s\.]*?){2,}(?!arcS|l|Ktlw|ylul|ie217|64|\d? ?times)\\?/;
 export const racism2 = /(?<!monte)negr[o|u]s?(?<!ni)/;
 export const racism3 = /knee grow/;
 export const racism4 = /gibson.*dog/;

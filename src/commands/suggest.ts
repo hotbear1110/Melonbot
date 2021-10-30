@@ -1,14 +1,15 @@
-const tools = require("../tools/tools")
+import * as tools from './../tools/tools';
+import { ChatUserstate } from 'tmi.js';
 
-module.exports = {
+export = {
     name: "suggest",
     ping: true,
     description: "Allows a user to add a suggestion. This could be from adding new commands, to fixing bugs.",
     perm: 100,
     onlyOffline: true,
-    execute: async (channel, user, input, perm) => {
+    execute: async (channel: string, user: ChatUserstate, input: string[], self: boolean) => {
         try {
-            input = input.splice(0)
+            const joined = input.splice(0)
                 .toString().replace(/,/g, ' ')
 
             // const hasSuggested = await tools.query("SELECT suggestion FROM suggestions WHERE request_username = ?", [user['username']])
@@ -33,7 +34,7 @@ module.exports = {
                 // }
                 // return `Suggestion has been added, #${await insert(input)}`
             // } else {
-            await tools.query("INSERT INTO suggestions (suggestion, request_username) VALUES (?, ?)", [input, user.username]);
+            await tools.query("INSERT INTO suggestions (suggestion, request_username) VALUES (?, ?)", [joined, user.username]);
             const id = await tools.query("SELECT MAX(suggestion_id) AS id FROM suggestions WHERE request_username = ?", [user.username]);
             return `Suggestion has been added, #${id[0].id}`;
             // }

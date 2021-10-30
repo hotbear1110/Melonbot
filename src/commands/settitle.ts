@@ -1,15 +1,16 @@
-const got = require('got')
-const tools = require("./../tools/tools")
-const creds = require('./../credentials/config')
-const axios = require("axios")
+import got from 'got';
+import * as tools from "./../tools/tools";
+import * as creds from './../credentials/config';
+import axios from "axios";
+import { ChatUserstate } from 'tmi.js';
 
-module.exports = {
+export = {
     name: "settitle",
     ping: true,
     description: `Sets the title of a channel. Requires the broadcaster to login at the bots website: ${creds.SERVER}. Only mods and broadcaster may run this command.`,
     perm: 100,
     onlyOffline: false,
-    execute: async (channel, user, input, perm) => {
+    execute: async (channel: string, user: ChatUserstate, input: string[], self: boolean) => {
         try {
             if(!tools.isMod(user, channel)) {
                 throw "Mod Only Command."
@@ -22,10 +23,10 @@ module.exports = {
                 throw "Sorry, i am unable to set the title to nothing."
             }
 
-            const token = await tools.token(user['room-id'])
+            const token = await tools.token(Number(user['room-id']))
 
             if (token.status === "ERROR") {
-                throw token.token
+                throw token.error
             }
 
             const options = {

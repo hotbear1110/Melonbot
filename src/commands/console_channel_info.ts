@@ -1,15 +1,16 @@
-const creds = require("../credentials/config")
+import * as creds from './../credentials/config'
+import { ChatUserstate } from 'tmi.js';
 
-module.exports = {
-    name: "console_user_info",
+export = {
+    name: "console_channel_info",
     ping: true,
-    description: "Console log user info, meant as debug.",
+    description: "Console log channel info, only meant as a debugging tool.",
     perm: 100,
     onlyOffline: true,
-    execute: async (channel, user, input, perm) => {
+    execute: async (channel: string, user: ChatUserstate, input: string[], self: boolean) => {
         try {
             if(user['user-id'] == creds.OWNER_USER_ID) {
-                console.log(user);
+                console.log(channel);
                 return 'Check console log BloodTrail'
             }
             return "";

@@ -2,9 +2,15 @@
 import * as creds from "./../credentials/config"
 import { ChatUserstate } from "tmi.js";
 
+type PrefixArray = {
+    prefix: string,
+    condition: string,
+    description: string
+}
+
 export default class Prefix {
     description: string;
-    prefix: Array<object>;
+    prefix: PrefixArray[];
     constructor(channel: string, user: ChatUserstate, message: string, self: boolean) {
         this.description = "Every prefix that should trigger the bot. Does not support user input... Yet ?"
         

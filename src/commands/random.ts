@@ -1,6 +1,6 @@
-const util = require('util')
+import { ChatUserstate } from 'tmi.js';
 
-function shuffle(input) {
+function shuffle(input: string[]) {
     let currentIndex = input.length, randomIndex;
 
     while(currentIndex != 0) {
@@ -14,19 +14,17 @@ function shuffle(input) {
     return input
 }
 
-module.exports = {
+export = {
     name: "random",
     ping: false,
     description: "Randomizes input.",
     perm: 100,
     onlyOffline: false,
-    execute: async (channel, user, input, perm) => {
+    execute: async (channel: string, user: ChatUserstate, input: string[], self: boolean) => {
         try {
-            input = input.splice(0).toString().split(",");
-            
-            shuffle(input)
+            shuffle(input.splice(0).toString().split(","));
 
-            let message = input.join(" ")
+            const message = input.join(" ")
             
             return `${message}`;
         } catch (err) {

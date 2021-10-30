@@ -1,4 +1,4 @@
-const { client } = require("../bot");
+import { ChatUserstate } from 'tmi.js';
 
 module.exports = {
     name: "say",
@@ -6,27 +6,24 @@ module.exports = {
     description: "Says what the user inputs.",
     perm: 100,
     onlyOffline: true,
-    execute: async (channel, user, input, perm) => {
+    execute: async (channel: string, user: ChatUserstate, input: string[], self: boolean) => {
         try {
-            var amount = input[0];
+            let amount: number | string = input[0];
             // Is number
-            if(Number(amount)) {
+            if(typeof amount === "number") {
                 if(amount > 64) {
                     amount = 64;
                 }
-                input = input.splice(1)
+                const joined = input.splice(1)
                 .toString().replace(/,/g, ' ');
-                var message = "";
-                for (var i = 0; i < amount; i++) {
-                    message += input + " ";
+                let message = "";
+                for (let i = 0; i < amount; i++) {
+                    message += joined + " ";
                 }
                 return `${message}`;
             }
             else {
-                input = input.splice(0)
-                .toString().replace(/,/g, ' ');
-    
-                return `${input}`;
+                return input.splice(0).toString().replace(/,/g, ' ');
             }
         } catch (err) {
             return `Madge , bad command, you almost killed me! Notifying owner FeelsWeirdMan`

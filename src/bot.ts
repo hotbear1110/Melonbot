@@ -66,29 +66,26 @@ client.connect();
         
         const p = new Prefix(channel, user, message, self).GetPrefix();
         // No real reason for this. primarily just for fun. Checks the input against every prefix in [./tools/prefix.js] and does a conditional.
-        console.log(p.map)
-        // const hasPrefix = p.map((prefix) => {
-        //     switch (input[0]) {
-        //     case prefix.prefix:
-        //         return vm.runInNewContext(prefix.condition);
-        //     }
-        // })
+        const hasPrefix = p.map((prefix) => {
+            switch (input[0]) {
+            case prefix.prefix:
+                return vm.runInNewContext(prefix.condition);
+            }
+        })
 
         // If the message does not include a prefix we add it to the markov bot and then return.
-        // if (!hasPrefix.includes(true)) { 
-        //     (async () =>  {
-        //         // Send the input to the Markov Program. 
-        //         // This is disabled in windows as to my knowledge, windows does not have the socket i want. but i could be wrong.
-        //         // if (process.platform !== "win32" && creds.DEVELOPMENT === true) { // Make sure production bot can't run it for now.
-        //         //     // Connect and write if it connected.
-        //         //     UnixSocket("WRITE", message);
-        //         // }
-        //     }) 
-        //     return;
-        // }
-        // Commands
+        if (!hasPrefix.includes(true)) { 
+            (async () =>  {
+                // Send the input to the Markov Program. 
+                // This is disabled in windows as to my knowledge, windows does not have the socket i want. but i could be wrong.
+                // if (process.platform !== "win32" && creds.DEVELOPMENT === true) { // Make sure production bot can't run it for now.
+                //     // Connect and write if it connected.
+                //     UnixSocket("WRITE", message);
+                // }
+            }) 
+            return;
+        }
         const commands = requireDir("./commands");
-        
         // Was the message a command
         if(typeof commands[command] === "undefined") {
             client.say(channel, `${user["username"]} undefined command FeelsDankMan`);

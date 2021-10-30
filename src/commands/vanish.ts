@@ -1,5 +1,6 @@
-const client = require("../bot").client
-const isMod = require("../tools/tools").isMod
+import { client } from 'bot';
+import { isMod } from 'tools/tools';
+import { ChatUserstate } from 'tmi.js';
 
 module.exports = {
     name: "vanish",
@@ -8,13 +9,15 @@ module.exports = {
     perm: 100,
     live: true,
     onlyOffline: false,
-    execute: async (channel, user, input, perm) => {
+    execute: async (channel: string, user: ChatUserstate, input: string[], self: boolean) => {
         try {
             if(isMod(user, channel)) {
                 console.log("#",channel, "- Unable to vanish the rank mod or higher.")
                 return "";
             }
 
+            if (user['username'] === undefined) { return; }
+            
             client.timeout(channel, user['username'], 1, "Vanish command issued")
             return "";
         } catch (err) {

@@ -145,12 +145,18 @@ export function isMod(user: ChatUserstate, channel: string): boolean {
     return isModUp
 }
 
+
+type Token = {
+    status: string,
+    token: string,
+    error: string
+}
 /**
     Returns the access token of a twitch account.
     @author JoachimFlottorp
     @param {Number} id User id of the requested user.
 */
-export async function token(id: number): Promise<object> {
+export async function token(id: number): Promise<Token> {
     return new Promise(async (Resolve, Reject) => {
         // Validate token [https://dev.twitch.tv/docs/authentication#validating-requests]
         try {
@@ -202,9 +208,9 @@ export async function token(id: number): Promise<object> {
                     return refreshToken
                 }
             })
-            Resolve( {status: "OK", token: verifiedToken} );
+            Resolve( {status: "OK", token: verifiedToken, error: ""} );
         } catch (error) {
-            Reject( {status: "ERROR", token: error} );
+            Reject( {status: "ERROR", token: "", error: error} );
         }
     })
 }

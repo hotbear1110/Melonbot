@@ -1,4 +1,6 @@
-const tools = require("../tools/tools")
+import { ChatUserstate } from 'tmi.js';
+import * as tools from './../tools/tools';
+import * as creds from './../credentials/config';
 
 // Every stats that can be triggered.
 const stats = [
@@ -10,7 +12,7 @@ const stats = [
 function help() {
     let returnData;
                     
-    for (var i = 0; i < stats.length - 1; i++) {
+    for (let i = 0; i < stats.length - 1; i++) {
         if (i === 0) {
             returnData = `${stats[1]} `
         } else {
@@ -22,14 +24,15 @@ function help() {
     return `Stats: ${returnData}`
 }
 
-async function getStat(stat, channel) {
+async function getStat(stat: string, channel: string) {
     const sqlStat = await tools.query(`SELECT ${stat} FROM channel_stats WHERE Channel = ?`, [channel]);
 
     // eslint-disable-next-line no-undef
-    const file = require(`${ROOT}/stats/${tools.YMD()}.json`)
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const file = require(`${creds.ROOT}/stats/${tools.YMD()}.json`)
 
     let count = -1;
-    let today = file.map((c => {
+    let today = file.map(((c: { [x: string]: string; }) => {
         count++;
         if (c['channel'] === channel) {
             return file[count].forsen;
@@ -44,13 +47,13 @@ async function getStat(stat, channel) {
                 }
 }   
 
-module.exports = {
+export = {
     name: "stats",
     ping: true,
     description: "Returns stats about certain things. This can be configured to anything. Example NymN channel: 'melon stats forsen' Says the total amount of times your chat has said 'forsen', and today.",
     perm: 100,
     onlyOffline: false,
-    execute: async (channel, user, input, perm) => {
+    execute: async (channel: string, user: ChatUserstate, input: string[], self: boolean) => {
         try {
             // If no stat was specified
             if (typeof input[0] === "undefined") {
