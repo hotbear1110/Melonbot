@@ -30,6 +30,10 @@ client.connect();
         if (channel === "#forsen") { channel === `#${creds.USERNAME}` };
         
         let input = message.split(" ");
+        
+        if ((new RegExp(`\\b${creds.USERNAME}\\b`))) {
+            client.say(channel, `@${user.username}, docL`)
+        }
 
         // If someone says forsen [Does not trigger on forsenE, forsenY etc] add to channel stats.
         // If NymN's viewers says Nime + forsen or just forsen, send Nime ❗ 
