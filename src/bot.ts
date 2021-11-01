@@ -10,16 +10,16 @@ import vm from "vm";
 // import { UnixSocket } from "./modules/socket";
 // import process from 'process';
 
-export const client: tmi.Client = new tmi.client(login)
+const client: tmi.Client = new tmi.client(login)
 client.connect();
 
 
-export async function run(): Promise<void> {
+async function run(): Promise<void> {
 
     let forsen = false;
-
+    
     async function messageHandler(channel: string, user: ChatUserstate, message: string, self: boolean) {
-    try {
+        try {
         // Don't listen to your own messages.
         if (self) { return; }
         
@@ -29,12 +29,26 @@ export async function run(): Promise<void> {
         if (channel === "#forsen") { channel === `#${creds.USERNAME}` }
         
         const input: Array<string> = message.split(" ");
+        
+        // Chatterino adds two characters to let the user spam.
+        // We remove them because typescript and "use strict" stops this from working.
+        // Is my hypothesis specifically u-56128 u-56320
 
+        console.log(input[input.length - 1]);
+        if (input[input.length - 1].charAt(0) === "56128") {
+            input[input.length - 1].replace("\u56128", "");
+            input[input.length - 1].replace("\u56320", "");
+        }
+
+        for (let i = 0; i < message.length; i++) {
+            console.log(message.charCodeAt(i))
+        }
+        
         // If someone says forsen [Does not trigger on forsenE, forsenY etc] add to channel stats.
         // If NymN's viewers says Nime + forsen or just forsen, send Nime ❗ 
         if ((new RegExp(`\\bforsen\\b`).test(message.toLowerCase()))) {
             tools.updateStats(channel.substring(1), 'forsen');
-            if ((message.includes("Nime") || message === "forsen")) {
+            if (message.includes("Nime") || (message === "forsen")) {
                 let m = "Nime ❗"; 
                 if (forsen) {
                     m += " 󠀀 "
@@ -47,7 +61,7 @@ export async function run(): Promise<void> {
         if ((input[1] === "nymnLick") && (channel === "#nymn") && user['username'] === "tepidp") {
 
             const isLive: boolean = await tools.Live(channel);
-            console.log(isLive)
+
             if (isLive) {
                 return;
             }
@@ -180,3 +194,5 @@ export async function run(): Promise<void> {
         })
     });
 }
+
+export { client, run };
