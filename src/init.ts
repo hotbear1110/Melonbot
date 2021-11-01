@@ -20,6 +20,6 @@ initDatabase();
 pingDatabase();
 // Bot
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-    run().finally();
+run();
 // Loops.
 require("./loops/loops")
