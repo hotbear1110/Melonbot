@@ -31,7 +31,7 @@ client.connect();
         
         let input = message.split(" ");
         
-        if ((new RegExp(`\\b${creds.USERNAME}\\b`))) {
+        if ((new RegExp(`\\b${creds.USERNAME}\\b`).test(message))) {
             client.say(channel, `@${user.username}, docL`)
         }
 
