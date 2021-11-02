@@ -39,7 +39,7 @@ client.connect();
         // If NymN's viewers says Nime + forsen or just forsen, send Nime ❗ 
         if ((new RegExp(`\\bforsen\\b`).test(message.toLowerCase()))) {
             tools.updateStats(channel.substring(1), 'forsen');
-            if ((channel === "#nymn") && (message.includes("Nime") || message === "forsen")) {
+            if ((channel === "#nymn") && ((message.includes("Nime") || message.includes("nymnIme")) || message === "forsen")) {
                 const m = "Nime ❗" + (forsen === true ? "" : " 󠀀 "); 
                 client.say(channel, m);
                 forsen = !forsen
