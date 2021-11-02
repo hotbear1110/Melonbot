@@ -35,9 +35,6 @@ async function run(): Promise<void> {
         message.replace(/[\u56320]/, "")
 
         const input: Array<string> = message.split(" ");
-        
-
-        
 
         for (let i = 0; i < message.length; i++) {
             console.log(message.charCodeAt(i))
