@@ -6,3 +6,5 @@ exports.racism4 = /gibson.*dog/;
 /**/
 exports.url = /[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
 exports.invisChar = /[\u034f\u2800\u{E0000}\u180e\ufeff\u2000-\u200d\u206D]/gu;
+// If any user on twitch says that they are under 12, then they are automatically banned.
+exports.underage = /[Ii][Mm] (1[0-2]|[1-9])$/;

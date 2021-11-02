@@ -255,7 +255,7 @@ exports.banPhrase = async function(channel, message) {
         ban.push(regex.racism4.test(message));
         ban.push(regex.url.test(message));
         ban.push(regex.invisChar.test(message));
-        ban.push(message.includes("im 12"));
+        ban.push(regex.underage.test(message));
 
         // Does not work atm. Triggers on example: #
         // ban.push(await tools.ascii(message));
