@@ -1,3 +1,4 @@
+const { client } = require("../bot");
 const tools = require("../tools/tools")
 
 // Every stats that can be triggered.
@@ -63,10 +64,11 @@ module.exports = {
                     if (stat === "help") {
                         return help();
                     }
-                    return `${stat} Total: ${a['alltime']}. Today: ${a['today']}.`
+                    client.say(channel, `${stat} Total: ${a['alltime']}. Today: ${a['today']}.`);
                 } else {
-                    return `${input.join(" ")} is not in my database.`
+                    client.say(channel, `${input.join(" ")} is not in my database.`);
                 }
+                return;
             }
         } catch (err) {
             console.log(err)
