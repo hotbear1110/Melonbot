@@ -28,23 +28,13 @@ async function run(): Promise<void> {
         
         if (channel === "#forsen") { channel === `#${creds.USERNAME}` }
         
-        // Chatterino adds two characters to let the user spam.
-        // We remove them because typescript and "use strict" stops this from working.
-        // Is my hypothesis specifically u-56128 u-56320
-        message.replace(/[\u56128]/, "")
-        message.replace(/[\u56320]/, "")
-
         const input: Array<string> = message.split(" ");
 
-        for (let i = 0; i < message.length; i++) {
-            console.log(message.charCodeAt(i))
-        }
-        
         // If someone says forsen [Does not trigger on forsenE, forsenY etc] add to channel stats.
         // If NymN's viewers says Nime + forsen or just forsen, send Nime ❗ 
         if ((new RegExp(`\\bforsen\\b`).test(message.toLowerCase()))) {
             tools.updateStats(channel.substring(1), 'forsen');
-            if ((channel === "#nymn") && message.includes("Nime") || (message === "forsen")) {
+            if ((channel === "#nymn") && ((message.includes("Nime") || message.includes("nymnIme")) || message === "forsen")) {
                 let m = "Nime ❗"; 
                 if (forsen) {
                     m += " 󠀀 "
@@ -53,7 +43,7 @@ async function run(): Promise<void> {
                 forsen = !forsen
             }
         }
-        // (channel === "#nymn") && 
+
         if ((input[1] === "nymnLick") && (channel === "#nymn") && user['username'] === "tepidp") {
 
             const isLive: boolean = await tools.Live(channel);
@@ -74,6 +64,20 @@ async function run(): Promise<void> {
         if (input.length <= 1) { return; }
         
         const command: string = input[1];
+
+        // Chatterino adds two characters to let the user spam.
+        // We remove them because typescript and "use strict" stops this from working.
+        // Is my hypothesis specifically u-56128 u-56320
+
+        for (let i = 0; i < command.length; i++) {
+            console.log(command.charCodeAt(i));
+        }
+        
+        command.replace(/s+/g, ' ').trim();
+        command.replace(/[\u56128]/, "");
+        command.replace(/[\u56320]/, "");
+
+
         
         const p = new Prefix(channel, user, message, self).GetPrefix();
         // No real reason for this. primarily just for fun. Checks the input against every prefix in [./tools/prefix.js] and does a conditional.
@@ -97,6 +101,10 @@ async function run(): Promise<void> {
             return;
         }
         const commands = requireDir("./commands");
+        
+
+
+        console.log(command)
         console.log(commands[command])
         // Was the message a command
         if(typeof commands[command] === "undefined") {
