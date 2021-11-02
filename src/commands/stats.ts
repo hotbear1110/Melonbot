@@ -1,6 +1,7 @@
 import { ChatUserstate } from 'tmi.js';
 import * as tools from './../tools/tools';
 import * as creds from './../credentials/config';
+import { client } from './../bot';
 
 // Every stats that can be triggered.
 const stats = [
@@ -66,10 +67,11 @@ export = {
                     if (stat === "help") {
                         return help();
                     }
-                    return `${stat} Total: ${a['alltime']}. Today: ${a['today']}.`
+                    client.say(channel, `${stat} Total: ${a['alltime']}. Today: ${a['today']}.`);
                 } else {
-                    return `${input.join(" ")} is not in my database.`
+                    client.say(channel, `${input.join(" ")} is not in my database.`);
                 }
+                return;
             }
         } catch (err) {
             console.log(err)
